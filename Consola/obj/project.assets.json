@@ -1,0 +1,111 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Aplicacion/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Aplicacion.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Aplicacion.dll": {}
+        }
+      },
+      "Repositorios/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Aplicacion": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Repositorios.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Repositorios.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Aplicacion/1.0.0": {
+      "type": "project",
+      "path": "../Aplicacion/Aplicacion.csproj",
+      "msbuildProject": "../Aplicacion/Aplicacion.csproj"
+    },
+    "Repositorios/1.0.0": {
+      "type": "project",
+      "path": "../Repositorios/Repositorios.csproj",
+      "msbuildProject": "../Repositorios/Repositorios.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Aplicacion >= 1.0.0",
+      "Repositorios >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/home/mateo/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Consola/Consola.csproj",
+      "projectName": "Consola",
+      "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Consola/Consola.csproj",
+      "packagesPath": "/home/mateo/.nuget/packages/",
+      "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Consola/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/mateo/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj": {
+              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj"
+            },
+            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Repositorios/Repositorios.csproj": {
+              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Repositorios/Repositorios.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.115/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

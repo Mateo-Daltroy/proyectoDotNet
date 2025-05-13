@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj": {}
+    "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {}
   },
   "projects": {
-    "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj": {
+    "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj",
+        "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
         "projectName": "Aplicacion",
-        "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj",
+        "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
         "packagesPath": "/home/mateo/.nuget/packages/",
-        "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/obj/",
+        "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/mateo/.nuget/NuGet/NuGet.Config"

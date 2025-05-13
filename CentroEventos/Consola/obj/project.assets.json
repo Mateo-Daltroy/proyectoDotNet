@@ -51,11 +51,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Consola/Consola.csproj",
+      "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Consola/Consola.csproj",
       "projectName": "Consola",
-      "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Consola/Consola.csproj",
+      "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Consola/Consola.csproj",
       "packagesPath": "/home/mateo/.nuget/packages/",
-      "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Consola/obj/",
+      "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Consola/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/mateo/.nuget/NuGet/NuGet.Config"
@@ -70,11 +70,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj": {
-              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Aplicacion/Aplicacion.csproj"
+            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
+              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj"
             },
-            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Repositorios/Repositorios.csproj": {
-              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/Repositorios/Repositorios.csproj"
+            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Repositorios/Repositorios.csproj": {
+              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Repositorios/Repositorios.csproj"
             }
           }
         }

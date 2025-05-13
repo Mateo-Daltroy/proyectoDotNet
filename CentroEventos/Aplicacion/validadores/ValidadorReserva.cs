@@ -2,7 +2,7 @@ using System;
 
 namespace Aplicacion.validadores;
 
-public class ValidadorReserva
+public static class ValidadorReserva
 {
 
 }

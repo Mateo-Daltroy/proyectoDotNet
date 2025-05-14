@@ -7,13 +7,13 @@ namespace CentroEventos.Aplicacion.Entidades
     public class EventoDeportivo
     {
         // Propiedades
-        public int Id { get; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public DateTime FechaHoraInicio { get; set; }
-        public double DuracionHoras { get; set; }
-        public int CupoMaximo { get; set; }
-        public int ResponsableId { get; }
+        public int _id { get; }
+        public string _nombre { get; set; }
+        public string _descripcion { get; set; }
+        public DateTime _fechaHoraInicio { get; set; }
+        public double _duracionHoras { get; set; }
+        public int _cupoMaximo { get; set; }
+        public int _responsableId { get; }
 
         // Constructor con validaciones
         public EventoDeportivo(
@@ -40,62 +40,23 @@ namespace CentroEventos.Aplicacion.Entidades
             if (!repositorioPersona.ExistePersona(responsableId))
                 throw new ArgumentException("El responsable no existe.", nameof(responsableId));
 
-            Id = IdManager.ObtenerNuevoId("id_eventos.txt");  //NO HARDCODEAR PATH
-            Nombre = nombre;
-            Descripcion = descripcion;
-            FechaHoraInicio = fechaHoraInicio;
-            DuracionHoras = duracionHoras;
-            CupoMaximo = cupoMaximo;
-            ResponsableId = responsableId; //MODIFICAR PARA USAR LA INTERFAZ
-        }
-
-        public int Id{
-            get { return _id; }
-        }
-
-        public string Nombre
-        {
-            get { return _nombre; }
-            set { _nombre = value; }
-        }
-
-        public string Descripcion
-        {
-            get { return _descripcion; }
-            set { _descripcion = value; }
-        }
-
-        public DateTime FechaHoraInicio
-        {
-            get { return _fechaHoraInicio; }
-            set { _fechaHoraInicio = value; }
-        }
-
-        public double DuracionHoras
-        {
-            get { return _duracionHoras; }
-            set { _duracionHoras = value; }
-        }
-
-        public int CupoMaximo
-        {
-            get { return _cupoMaximo; }
-            set { _cupoMaximo = value; }
-        }
-
-        public int ResponsableId
-        {
-            get { return _responsableId; }
+            this._id = IdManager.obtenerNuevoId("id_eventos.txt");  //NO HARDCODEAR PATH
+            this._nombre = nombre;
+            this._descripcion = descripcion;
+            this._fechaHoraInicio = fechaHoraInicio;
+            this._duracionHoras = duracionHoras;
+            this._cupoMaximo = cupoMaximo;
+            this._responsableId = responsableId; //MODIFICAR PARA USAR LA INTERFAZ
         }
 
         public DateTime ObtenerFechaHoraFin()
         {
-            return FechaHoraInicio.AddHours(DuracionHoras);
+            return _fechaHoraInicio.AddHours(_duracionHoras);
         }
 
         public bool TieneCupoDisponible(int participantesActuales)
         {
-            return participantesActuales < CupoMaximo;
+            return participantesActuales < _cupoMaximo;
         }
     }
 }

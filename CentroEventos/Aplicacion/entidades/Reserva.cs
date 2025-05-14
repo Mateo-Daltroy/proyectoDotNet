@@ -1,7 +1,9 @@
 using System;
-using Console;
 
 namespace Aplicacion.entidades;
+
+using CentroEventos.Aplicacion.InterfacesRepo;
+using validadores;
 
 public class Reserva
 {
@@ -11,21 +13,18 @@ public class Reserva
     public DateTime _fechaAltaReserva { get; set; }
     public Asistencia _estadoAsistencia { get; set; }
 
-    public Reserva (int unaPer, int elEv) 
+    public Reserva (int unaPer, int elEv, IIdManager proveedor) 
     {
-        try {
-            //ValidadorReserva.validarDatos(unaPer, elEv, new DateTime Now);
+            ValidadorReserva.validarDatos(unaPer, elEv, DateTime.Now);
+            // validarDatos tira una excep, se tiene que manejar arriba porque no podes prevenir
+            // que el constructor cree el objeto, asi que tiene mas sentido simplemente no escribirlo
             this._personaId = unaPer;
             this._eventoDeportivoId = elEv;
-            this._fechaAltaReserva = new DateTime Now;
-            this._estadoAsistencia = Pendiente;
-            this._id = IdManager.obtenerNuevoId("Placeholder"); // To-Do: poner el path
-        } catch {
-            Console.writeln("To-Do excepcion");
-        }
+            this._fechaAltaReserva = DateTime.Now;
+            this._estadoAsistencia = Asistencia.Pendiente;
+            this._id = proveedor.obtenerNuevoId("Placeholder"); // To-Do: poner el path
     }
 
-    @Override
     public string toString() 
     {
         return($"idRes: {_id, -3} idPers: {_personaId, -3}, idEv: {_eventoDeportivoId, -3}, fecha: {_fechaAltaReserva.toString("d")}, estado: {_estadoAsistencia, -9}")

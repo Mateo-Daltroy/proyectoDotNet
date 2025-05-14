@@ -2,6 +2,6 @@ namespace CentroEventos.Aplicacion.InterfacesRepo
 {
     public interface IIdManager
     {
-        int ObtenerNuevoId(string idFilePath);
+        int obtenerNuevoId(string idFilePath);
     }
 }

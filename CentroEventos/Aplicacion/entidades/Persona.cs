@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Aplicacion.validadores;
 
 namespace Aplicacion.entidades;
 
@@ -18,6 +19,12 @@ public class Persona
         _apellido = apellido;
         _mail = mail;
         _telefono = telefono;
+    }
+
+    public bool RegistrarPersona (Persona p){
+        
+        return ValidacionPersona.ValidarPersona(p);
+
     }
 
     public string? Dni

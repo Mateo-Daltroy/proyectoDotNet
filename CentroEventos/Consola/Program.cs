@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Aplicacion.entidades;
-using Aplicacion.Validaciones;
-using Aplicacion.ValidacionPersona;
+using Aplicacion.validadores;
+
 
 Persona mostrarRegistro(){
 Console.Write("Ingrese sus datos: \n");
@@ -29,11 +29,12 @@ Console.WriteLine("Presione 1 para registrarse.");
 Console.WriteLine("Presione 2 para inciar sesion.");
 Console.WriteLine("Presione 3 para salir.");
 String? opcion = Console.ReadLine();
+Console.Clear();
 
 int opcionN;
 try{
     opcionN = Int32.Parse(opcion);
-}catch (FormatException){
+}catch (Exception){
     Console.WriteLine("Opcion no valida");
     return;
 }

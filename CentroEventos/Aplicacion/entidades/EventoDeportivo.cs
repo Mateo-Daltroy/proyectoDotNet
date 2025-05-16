@@ -1,7 +1,19 @@
 using System;
+
 using CentroEventos.Aplicacion.Validadores;
 using CentroEventos.Aplicacion.Interfaces;
+// los imports no se hacen asi por lo general, siendo que tu clase esta en CentroEventos.Aplicacion
+// harias un import del Aplicacion.directorio, recordando que no estan nombrados con mayuscula primero
+// mira CreadorReservas en interfacesServ para ver un codigo que hace muchos imports dentro de la misma solucion
 
+// te dejo abajo en comentario como se escribiria asi no se te pijea todo lo que codeas despues
+/*
+using Aplicacion.validadores;
+using Aplicacion.interfacesRepo;
+
+
+namespace Aplicacion.entidades
+*/
 namespace CentroEventos.Aplicacion.Entidades
 {
     public class EventoDeportivo

@@ -2,7 +2,7 @@ using System;
 
 namespace Aplicacion.excepciones;
 
-public class CupoExtendidoException
+public class CupoExtendidoException : Exception
 {
     // Constructor sin parámetros
     public CupoExtendidoException() 

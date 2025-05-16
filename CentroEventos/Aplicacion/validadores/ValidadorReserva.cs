@@ -1,21 +1,25 @@
 using System;
-using System.Security.Cryptography;
-using Aplicacion.entidades;
-using CentroEventos.Aplicacion.InterfacesRepo;
+using Aplicacion.excepciones;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.validadores;
 
-public class ValidadorReserva
+public static class ValidadorReserva
 {
-
-    private IRepositorioReserva _repoRes;
-    private IRepositorioEventoDeportivo _repoEv;
-    private IRepositorioPersona _repoPers;
-    public ValidadorReserva(IRepositorioReserva repoRes, IRepositorioEventoDeportivo repoEv, IRepositorioPersona repoPers) {
-        this._repoRes = repoRes;
-        this._repoEv = repoEv;
-        this._repoPers = repoPers;
+    public static void validarDatos(int idPers, int idEv, DateTime date, IRepositorioReserva repoRes, IRepositorioEventoDeportivo repoEv, IRepositorioPersona repoPers) 
+    {
+        if (!repoPers.Contiene(idPers) || !repoEv.Contiene(idEv)) 
+        {
+            throw new EntidadNotFoundException();
+        }
+        if (!repoRes.Contiene(idPers, idEv))
+        {
+            throw new DuplicadoException();
+        }
+        if (repoRes.GetAsistentes(idEv) >= repoEv.ObtenerPorId(idEv)._cupoMaximo)
+        {
+            throw new CupoExtendidoException();
+        }
     }
-    public static void validarDatos(int idPers, int idEv, )
 
 }

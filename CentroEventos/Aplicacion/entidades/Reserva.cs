@@ -10,24 +10,23 @@ public class Reserva
     public int _id { get; }
     public int _personaId { get; }
     public int _eventoDeportivoId { get; }
-    public DateTime _fechaAltaReserva { get; set; }
+    public DateTime _fechaAltaReserva { get; }
     public Asistencia _estadoAsistencia { get; set; }
 
-    public Reserva (int unaPer, int elEv, IIdManager proveedor) 
+    public Reserva (int unaPer, int elEv, int id) 
     {
-            ValidadorReserva.validarDatos(unaPer, elEv, DateTime.Now);
-            // validarDatos tira una excep, se tiene que manejar arriba porque no podes prevenir
-            // que el constructor cree el objeto, asi que tiene mas sentido simplemente no escribirlo
-            this._personaId = unaPer;
-            this._eventoDeportivoId = elEv;
-            this._fechaAltaReserva = DateTime.Now;
-            this._estadoAsistencia = Asistencia.Pendiente;
-            this._id = proveedor.obtenerNuevoId("Placeholder"); // To-Do: poner el path
+        // No se deberian crear reservas directamente desde new Reserva, 
+        // usar el metodo de CreadorReservas, que asegura una validacion apropiada
+        this._personaId = unaPer;
+        this._eventoDeportivoId = elEv;
+        this._fechaAltaReserva = DateTime.Now;
+        this._estadoAsistencia = Asistencia.Pendiente;
+        this._id = id;
     }
 
-    public string toString() 
+    public override string ToString() 
     {
-        return($"idRes: {_id, -3} idPers: {_personaId, -3}, idEv: {_eventoDeportivoId, -3}, fecha: {_fechaAltaReserva.toString("d")}, estado: {_estadoAsistencia, -9}")
+        return($"idRes: {_id, -3} idPers: {_personaId, -3}, idEv: {_eventoDeportivoId, -3}, fecha: {_fechaAltaReserva}, estado: {_estadoAsistencia, -9}");
     }
 
 }

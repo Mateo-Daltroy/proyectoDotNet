@@ -2,9 +2,13 @@
 using Aplicacion.entidades;
 using Aplicacion.validadores;
 
+Console.WriteLine("Bienvenido a la consola del Centro Deportivo Universitario!");
+Console.WriteLine("Ingresar su Id de usuario, ");
 
+/*
+// no se para que era este codigo asi que por las dudas no lo borro
 Persona mostrarRegistro(){
-Console.Write("Ingrese sus datos: \n");
+Console.Write("Ingrese sus datos: \n"); // Console.WriteLine te ahorra los \n
 Console.Write("DNI: ");
 String? dni = Console.ReadLine();
 Console.Write("\n");
@@ -52,3 +56,4 @@ if (opcionN == 1){
 
     }
 }
+*/

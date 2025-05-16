@@ -26,7 +26,7 @@ public class Reserva
 
     public override string ToString() 
     {
-        return($"idRes: {_id, -3} idPers: {_personaId, -3}, idEv: {_eventoDeportivoId, -3}, fecha: {_fechaAltaReserva}, estado: {_estadoAsistencia, -9}");
+        return($"[idRes: {_id, -3} idPers: {_personaId, -3}, idEv: {_eventoDeportivoId, -3}, fecha: {_fechaAltaReserva}, estado: {_estadoAsistencia, -9}]");
     }
 
 }

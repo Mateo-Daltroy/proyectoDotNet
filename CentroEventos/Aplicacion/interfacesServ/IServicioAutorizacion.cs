@@ -1,6 +1,7 @@
 using System;
+using Aplicacion.autorizacionProv;
 
-namespace Aplicacion.autorizacionProv;
+namespace Aplicacion.interfacesServ;
 
 public interface IServicioAutorizacion
 {

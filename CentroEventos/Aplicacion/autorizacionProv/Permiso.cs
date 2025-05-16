@@ -2,7 +2,7 @@ using System;
 
 namespace Aplicacion.autorizacionProv;
 
-public class Permiso
+public abstract class Permiso
 {
 
 }

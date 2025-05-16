@@ -29,9 +29,9 @@ public class CreadorReservas
     public void GenerarReserva(int idPers, int idEv, int idUser)
     {
         DateTime ahora = DateTime.Now;
-        try 
+        try
         {
-            _auto.PoseeElPermiso(idUser, new ReservaAltaPer());
+            if (!_auto.PoseeElPermiso(idUser, new ReservaAltaPer())) { throw new FalloAutorizacionException(); }
             ValidadorReserva.validarDatos(idPers, idEv, ahora, _miRepo, _repoEv, _repoPers);
             int id = _gestor.obtenerNuevoId("todo-path");
             Reserva resGenerada = new(idPers, idEv, id);

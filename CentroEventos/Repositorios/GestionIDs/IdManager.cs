@@ -1,9 +1,10 @@
 using System;
 using System.IO;
+using CentroEventos.Aplicacion.InterfacesRepo;
 
 namespace CentroEventos.Repositorios.GestionIDs
 {
-    public static class IdManager : IDManager
+    public static class IdManager : IIdManager
     // Clase para gestionar el ID de los eventos deportivos
     {
         // Lee el id actual del archivo, lo incrementa, lo guarda y retorna el nuevo id

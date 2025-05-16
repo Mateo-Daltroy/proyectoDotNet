@@ -13,5 +13,6 @@ public interface IRepositorioReserva
     void Actualizar(Reserva evento);
     void Eliminar(int id);
     Boolean Contiene(int idPers, int idEv); //retorna si existe un evento bajo el id, lo necesito para validar una reserva - mate
+    Boolean Contiene(int idRes); 
     int GetAsistentes(int idEv);
 }

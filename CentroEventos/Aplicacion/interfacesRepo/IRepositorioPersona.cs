@@ -5,5 +5,6 @@ namespace Aplicacion.interfacesRepo;
 public interface IRepositorioPersona
 {
 // mati gil
-    public Boolean Contiene(int unId);
+    public Boolean ExisteId(int unId);
+    public Boolean ExisteMail (String mail);
 }

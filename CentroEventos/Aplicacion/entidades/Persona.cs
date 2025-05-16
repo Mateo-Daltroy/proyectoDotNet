@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 
 namespace Aplicacion.entidades;
@@ -11,6 +12,7 @@ public class Persona
     private string _apellido;
     private string _mail;
     private string _telefono;
+    private List<Permiso> permisos;
 
     public Persona(string? dni, string nombre, string apellido, string mail, string telefono)
     {
@@ -21,10 +23,14 @@ public class Persona
         _telefono = telefono;
     }
 
-    public bool RegistrarPersona (Persona p){
-        
-        return ValidacionPersona.ValidarPersona(p);
+    public void RegistrarPersona(Persona p, IRepositorioPersona repoPersona){
 
+        try{
+            ValidacionPersona.ValidarPersona(p, repoPersona);
+            repoPersona.registrarPersona(p);
+        }catch (Exception e){
+            Console.WriteLine(e);
+        }
     }
 
     public string? Dni
@@ -55,5 +61,10 @@ public class Persona
     {
         get { return _telefono; }
         set { _telefono = value; }
+    }
+
+    public override string ToString()
+    {
+        return $"Dni: {Dni}, Nombre: {Nombre}, Apellido: {Apellido}, Mail: {Mail}, Telefono: {Telefono}";
     }
 }

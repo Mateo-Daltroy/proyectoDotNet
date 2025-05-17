@@ -24,9 +24,19 @@ public class Reserva
         this._id = id;
     }
 
-    public override string ToString() 
+    public Reserva(int idPropio, int idPers, int idEv, DateTime fecha, Asistencia unEstado)
     {
-        return($"[idRes: {_id, -3} idPers: {_personaId, -3}, idEv: {_eventoDeportivoId, -3}, fecha: {_fechaAltaReserva}, estado: {_estadoAsistencia, -9}]");
+        // Este metodo lo utiliza RepoReservasTxt para transformar los strings del .txt en instancias de Reserva
+        this._personaId = idPers;
+        this._eventoDeportivoId = idEv;
+        this._fechaAltaReserva = fecha;
+        this._estadoAsistencia = unEstado;
+        this._id = idPropio;
+    }
+
+    public override string ToString()
+    {
+        return ($"[idRes: {_id,-3} idPers: {_personaId,-3}, idEv: {_eventoDeportivoId,-3}, fecha: {_fechaAltaReserva}, estado: {_estadoAsistencia,-9}]");
     }
 
 }

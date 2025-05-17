@@ -47,7 +47,7 @@ public class CRUDReserva
     {
         try
         {
-            if (!_miRepo.Contiene(idRes)) { throw new EntidadNotFoundException(); }
+            if (!_miRepo.ExisteId(idRes)) { throw new EntidadNotFoundException(); }
             _miRepo.Eliminar(idRes);
         }
         catch (Exception e)
@@ -60,7 +60,7 @@ public class CRUDReserva
     {
         try
         {
-            if (!_miRepo.Contiene(Res._id)) { throw new EntidadNotFoundException(); }
+            if (!_miRepo.ExisteId(Res._id)) { throw new EntidadNotFoundException(); }
             _miRepo.Actualizar(Res);
         }
         catch (Exception e)

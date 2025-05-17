@@ -14,7 +14,7 @@ public class Persona
     private string _mail;
     private string _telefono;
     // No seria preferible usar un set?
-    private List<Permiso> permisos;
+    private List<Permiso> _permisos;
 
     public Persona(string? dni, string nombre, string apellido, string mail, string telefono)
     {
@@ -23,6 +23,7 @@ public class Persona
         _apellido = apellido;
         _mail = mail;
         _telefono = telefono;
+        _permisos = new(); 
     }
 
     public void RegistrarPersona(Persona p, IRepositorioPersona repoPersona){

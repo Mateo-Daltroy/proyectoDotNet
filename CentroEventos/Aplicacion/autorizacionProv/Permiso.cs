@@ -2,7 +2,7 @@ using System;
 
 namespace Aplicacion.autorizacionProv;
 
-public abstract class Permiso
+public enum Permiso
 {
-
+    EventoAlta, EventoModificacion, EventoBaja, ReservaAlta, ReservaModificacion, ReservaBaja, UsuarioAlta, UsuarioModificacion, UsuarioBaja
 }

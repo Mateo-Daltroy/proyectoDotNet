@@ -7,7 +7,6 @@ public class IdManagerReservaTxt : IIdManager
 {
     private string _miPath = Environment.CurrentDirectory + "/idReserva.txt";
 
-    //si borran el archivo explota pero confio en que no lo van a borrar
     public int ObtenerNuevoId()
     {
         FileInfo fileInfo = new FileInfo(_miPath);

@@ -5,10 +5,11 @@ using Aplicacion.validadores;
 using Aplicacion.excepciones;
 using CentroEventos.Aplicacion.InterfacesRepo;
 using Aplicacion.autorizacionProv;
+using Aplicacion.interfacesServ;
 
-namespace Aplicacion.interfacesServ;
+namespace Repositorios.CRUDs;
 
-public class ReservasCRUD
+public class CRUDReserva
 {
     IRepositorioReserva _miRepo;
     IRepositorioEventoDeportivo _repoEv;
@@ -16,7 +17,7 @@ public class ReservasCRUD
     IIdManager _gestor;
     IServicioAutorizacion _auth;
 
-    public ReservasCRUD(IRepositorioReserva unRepo, IRepositorioEventoDeportivo repositorioEvento,
+    public CRUDReserva(IRepositorioReserva unRepo, IRepositorioEventoDeportivo repositorioEvento,
                            IRepositorioPersona persona, IIdManager manager)
     {
         this._miRepo = unRepo;
@@ -30,7 +31,7 @@ public class ReservasCRUD
     {
         try
         {
-            if (!_auth.PoseeElPermiso(idUser, new ReservaAltaPer())) { throw new FalloAutorizacionException(); }
+            if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaAlta)) { throw new FalloAutorizacionException(); }
             ValidadorReserva.validarDatos(idPers, idEv, DateTime.Now, _miRepo, _repoEv, _repoPers);
             int id = _gestor.ObtenerNuevoId();
             Reserva resGenerada = new(idPers, idEv, id);

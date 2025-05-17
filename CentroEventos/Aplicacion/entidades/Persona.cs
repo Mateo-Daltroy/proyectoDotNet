@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Aplicacion.autorizacionProv;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 
@@ -12,6 +13,7 @@ public class Persona
     private string _apellido;
     private string _mail;
     private string _telefono;
+    // No seria preferible usar un set?
     private List<Permiso> permisos;
 
     public Persona(string? dni, string nombre, string apellido, string mail, string telefono)

@@ -1,26 +1,32 @@
 using System;
 using Aplicacion.interfacesRepo;
-using CentroEventos.Aplicacion.InterfacesRepo;
 
 namespace Repositorios.GestionIDs;
 
-public class IdManagerPersona: IIdManager
-{
 
-    public int obtenerNuevoId(string idFilePath){
+    public class IdManagerPersona : IIdManager
+    {
+
+        private readonly string _pathRepo = Path.Combine(
+    Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
+    "idPersonas.txt");
+
+        public int ObtenerNuevoId()
+        {
             int nuevoId = 1;
 
-            if (File.Exists(idFilePath))
+            if (File.Exists(_pathRepo))
             {
-                string contenido = File.ReadAllText(idFilePath);
+                string contenido = File.ReadAllText(_pathRepo);
                 if (int.TryParse(contenido, out int idActual))
                 {
                     nuevoId = idActual + 1;
                 }
             }
 
-            File.WriteAllText(idFilePath, nuevoId.ToString());
+            File.WriteAllText(_pathRepo, nuevoId.ToString());
             return nuevoId;
         }
 
-}
+    }
+

@@ -8,6 +8,7 @@ namespace Aplicacion.entidades;
 
 public class Persona
 {
+    private int _id;
     private string? _dni;
     private string _nombre;
     private string _apellido;
@@ -16,6 +17,17 @@ public class Persona
     // No seria preferible usar un set?
     private List<Permiso> _permisos;
 
+    public Persona(int id,string? dni, string nombre, string apellido, string mail, string telefono)
+    {
+        _id = id;
+        _dni = dni;
+        _nombre = nombre;
+        _apellido = apellido;
+        _mail = mail;
+        _telefono = telefono;
+        _permisos = new();
+    }
+
     public Persona(string? dni, string nombre, string apellido, string mail, string telefono)
     {
         _dni = dni;
@@ -23,15 +35,19 @@ public class Persona
         _apellido = apellido;
         _mail = mail;
         _telefono = telefono;
-        _permisos = new(); 
+        _permisos = new();
     }
 
-    public void RegistrarPersona(Persona p, IRepositorioPersona repoPersona){
+    public void RegistrarPersona(Persona p, IRepositorioPersona repoPersona)
+    {
 
-        try{
+        try
+        {
             ValidacionPersona.ValidarPersona(p, repoPersona);
             repoPersona.registrarPersona(p);
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e);
         }
     }
@@ -66,8 +82,20 @@ public class Persona
         set { _telefono = value; }
     }
 
+    public int Id
+    {
+        get { return _id; }
+        set { _id = value; }
+    }
+
     public override string ToString()
     {
-        return $"Dni: {Dni}, Nombre: {Nombre}, Apellido: {Apellido}, Mail: {Mail}, Telefono: {Telefono}";
+        return $"Dni:{Dni} Nombre:{Nombre}, Apellido:{Apellido}, Mail:{Mail}, Telefono:{Telefono}";
+    }
+
+
+    public String UnaLinea()
+    {
+        return ($"{Dni},{Nombre},{Apellido},{Mail},{Telefono}");
     }
 }

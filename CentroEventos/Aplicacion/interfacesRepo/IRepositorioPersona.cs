@@ -5,7 +5,6 @@ namespace Aplicacion.interfacesRepo;
 
 public interface IRepositorioPersona
 {
-    // mati gil
     public Boolean ExisteMail(String mail);
 
     public int getIdConMail(String mail);

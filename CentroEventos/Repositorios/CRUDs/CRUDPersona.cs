@@ -25,10 +25,6 @@ public class CRUDPersona
         }
         RepoPersonasTxt repo = new RepoPersonasTxt();
         repo.registrarPersona(p);
-
-
-
-
     }
 
 

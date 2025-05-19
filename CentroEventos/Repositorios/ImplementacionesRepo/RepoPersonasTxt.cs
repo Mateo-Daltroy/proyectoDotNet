@@ -128,7 +128,7 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         try
         {
             using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
-            escritor.WriteLine(managerId.ObtenerNuevoId(_pathRepoId) + "," + p.UnaLinea);
+            escritor.WriteLine(managerId.ObtenerNuevoId(_pathRepoId) + "," + p.UnaLinea());
         }
         catch (Exception e)
         {
@@ -143,7 +143,7 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         using (StreamReader sr = new StreamReader(_pathRepo))
         {
 
-            string linea;
+            string? linea;
             while ((linea = sr.ReadLine()) != null)
             {
                 if (linea.StartsWith(id.ToString()))

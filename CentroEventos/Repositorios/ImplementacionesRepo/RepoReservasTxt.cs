@@ -14,10 +14,6 @@ public class RepoReservasTxt : IRepositorioReserva
         "Reservas.txt"
     );
 
-    private readonly string _pathId = Path.Combine(
-        Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
-        "ReservasId.txt"
-    );
 
     public void Agregar(Reserva res)
     {

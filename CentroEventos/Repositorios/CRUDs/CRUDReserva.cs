@@ -48,10 +48,11 @@ public class CRUDReserva
         }
     }
 
-    public void ReservaBaja(int idRes)
+    public void ReservaBaja(int idRes, int idUser)
     {
         try
         {
+            if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaBaja)) { throw new FalloAutorizacionException(); }
             if (!_miRepo.ExisteId(idRes)) { throw new EntidadNotFoundException(); }
             _miRepo.Eliminar(idRes);
         }
@@ -61,10 +62,11 @@ public class CRUDReserva
         }
     }
 
-    public void ReservaModificacion(Reserva Res)
+    public void ReservaModificacion(Reserva Res, int idUser)
     {
         try
         {
+            if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaModificacion)) { throw new FalloAutorizacionException(); }
             if (!_miRepo.ExisteId(Res._id)) { throw new EntidadNotFoundException(); }
             _miRepo.Actualizar(Res);
         }
@@ -72,6 +74,23 @@ public class CRUDReserva
         {
             Console.WriteLine(e.Message);
         }
+    }
+
+    public IEnumerable<int> asistioAEvento(int idEv)
+    {
+        List<Reserva> reservas = (List<Reserva>) _miRepo.ObtenerTodos();
+        List<int> cumplen = new();
+        foreach (Reserva res in reservas)
+        {
+            if (res._eventoDeportivoId == idEv && res._estadoAsistencia == Asistencia.Presente)
+                cumplen.Add(res._id);
+        }
+        return cumplen;
+    }
+
+    public IEnumerable<Reserva> ListarTodas()
+    {
+        return (_miRepo.ObtenerTodos());
     }
 
 }

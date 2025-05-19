@@ -37,20 +37,20 @@ namespace Aplicacion.entidades
             IRepositorioPersona repositorioPersona)
         {
             // Validaciones
-            if (!ValidadorEventoDeportivo.ValidarNombre(nombre))
+            //if (!ValidadorEventoDeportivo.ValidarNombre(nombre))
                 throw new ArgumentException("El nombre no puede estar vacío.", nameof(nombre));
-            if (!ValidadorEventoDeportivo.ValidarDescripcion(descripcion))
+            //if (!ValidadorEventoDeportivo.ValidarDescripcion(descripcion))
                 throw new ArgumentException("La descripción no puede estar vacía.", nameof(descripcion));
-            if (!ValidadorEventoDeportivo.ValidarFechaHoraInicio(fechaHoraInicio))
+            //if (!ValidadorEventoDeportivo.ValidarFechaHoraInicio(fechaHoraInicio))
                 throw new ArgumentException("La fecha y hora de inicio debe ser igual o posterior a la actual.", nameof(fechaHoraInicio));
-            if (!ValidadorEventoDeportivo.ValidarDuracionHoras(duracionHoras))
+            //if (!ValidadorEventoDeportivo.ValidarDuracionHoras(duracionHoras))
                 throw new ArgumentException("La duración debe ser mayor que cero.", nameof(duracionHoras));
-            if (!ValidadorEventoDeportivo.ValidarCupoMaximo(cupoMaximo))
+            //if (!ValidadorEventoDeportivo.ValidarCupoMaximo(cupoMaximo))
                 throw new ArgumentException("El cupo máximo debe ser mayor que cero.", nameof(cupoMaximo));
-            if (!repositorioPersona.ExistePersona(responsableId))
+            //if (!repositorioPersona.ExistePersona(responsableId))
                 throw new ArgumentException("El responsable no existe.", nameof(responsableId));
 
-            this._id = IdManager.obtenerNuevoId("id_eventos.txt");  //NO HARDCODEAR PATH
+            //this._id = IdManager.obtenerNuevoId("id_eventos.txt");  //NO HARDCODEAR PATH
             this._nombre = nombre;
             this._descripcion = descripcion;
             this._fechaHoraInicio = fechaHoraInicio;

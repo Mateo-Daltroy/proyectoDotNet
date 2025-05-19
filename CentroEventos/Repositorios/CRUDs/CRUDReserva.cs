@@ -6,6 +6,7 @@ using Aplicacion.excepciones;
 using CentroEventos.Aplicacion.InterfacesRepo;
 using Aplicacion.autorizacionProv;
 using Aplicacion.interfacesServ;
+using CentroEventos.Repositorios.GestionIDs;
 
 namespace Repositorios.CRUDs;
 
@@ -16,6 +17,10 @@ public class CRUDReserva
     IRepositorioPersona _repoPers;
     IIdManager _gestor;
     IServicioAutorizacion _auth;
+    private readonly string _pathId = Path.Combine(
+        Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
+        "ReservasId.txt"
+    );
 
     public CRUDReserva(IRepositorioReserva unRepo, IRepositorioEventoDeportivo repositorioEvento,
                            IRepositorioPersona persona, IIdManager manager)
@@ -33,7 +38,7 @@ public class CRUDReserva
         {
             if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaAlta)) { throw new FalloAutorizacionException(); }
             ValidadorReserva.validarDatos(idPers, idEv, DateTime.Now, _miRepo, _repoEv, _repoPers);
-            int id = _gestor.ObtenerNuevoId();
+            int id = _gestor.ObtenerNuevoId(_pathId);
             Reserva resGenerada = new(idPers, idEv, id);
             this._miRepo.Agregar(resGenerada);
         }

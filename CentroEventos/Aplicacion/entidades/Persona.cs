@@ -8,12 +8,12 @@ namespace Aplicacion.entidades;
 
 public class Persona
 {
-    private int _id;
-    private string? _dni;
-    private string _nombre;
-    private string _apellido;
-    private string _mail;
-    private string _telefono;
+    public int _id { get; }
+    public string? _dni { get; }
+    public String _nombre { get; }
+    public string _apellido { get; }
+    public string _mail{ get; }
+    public string _telefono{ get; }
     // No seria preferible usar un set?
     private List<Permiso> _permisos;
 
@@ -55,37 +55,37 @@ public class Persona
     public string? Dni
     {
         get { return _dni; }
-        set { _dni = value; }
+
     }
 
     public string Nombre
     {
         get { return _nombre; }
-        set { _nombre = value; }
+        
     }
 
     public string Apellido
     {
         get { return _apellido; }
-        set { _apellido = value; }
+
     }
 
     public string Mail
     {
         get { return _mail; }
-        set { _mail = value; }
+
     }
 
     public string Telefono
     {
         get { return _telefono; }
-        set { _telefono = value; }
+        
     }
 
     public int Id
     {
         get { return _id; }
-        set { _id = value; }
+        
     }
 
     public override string ToString()

@@ -49,7 +49,7 @@ while (input.Equals("invalido"))
 if (DniLog == 1) Id = 1;
 else
 {
-    Id = cRUDPersona.getIdConDocumento(DniLog);
+    Id = cRUDPersona.getIdConDocumento(DniLog.ToString());
     if (Id == -1)
     {
         Console.WriteLine("DNI no registrado, recuerde que las cuentas se crean en secretaria");

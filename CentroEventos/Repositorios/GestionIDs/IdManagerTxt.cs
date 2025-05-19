@@ -1,4 +1,5 @@
 using System;
+using Aplicacion.excepciones;
 
 namespace Repositorios.GestionIDs;
 
@@ -7,8 +8,17 @@ public class IdManagerTxt
     private string _Archivo;
 
     public IdManagerTxt(string tipoArchivo)
+    // Recibe simplemente Persona, Reserva, EventoDeportivo
     {
-        this._Archivo = Environment.CurrentDirectory + tipoArchivo;
+        if (tipoArchivo.Equals("Reserva") || tipoArchivo.Equals("Persona") || tipoArchivo.Equals("EventoDeportivo"))
+        //Casco ve esto y se mata
+        {
+            this._Archivo = Environment.CurrentDirectory + tipoArchivo + ".txt";
+        }
+        else
+        {
+            throw new ValidacionException();
+        }
     }
 
     public int ObtenerNuevoId()

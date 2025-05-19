@@ -5,6 +5,7 @@ using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 using Aplicacion.interfacesServ;
+using CentroEventos.Aplicacion.InterfacesRepo;
 using CentroEventos.Repositorios.GestionIDs;
 
 namespace CentroEventos.Repositorios.implementacionesRepo;
@@ -22,6 +23,128 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
 
     private IdManager managerId = new IdManager();
 
+    public Boolean ExisteId(int id)
+    {
+        foreach (Persona p in ObtenerTodos())
+        {
+            if (p._id == id)
+            {
+                return true;
+            }
+        }
+        throw new EntidadNotFoundException();
+    
+}
+
+    public String listarTodos()
+    {
+        List<Persona> personas = ObtenerTodos().ToList();
+        if (personas.Count == 0)
+        {
+            return string.Empty;
+        }
+        return string.Join(Environment.NewLine, personas.Select(p => p.ToString() + "\n"));
+    }
+
+    public void Eliminar(int id)
+    {
+        string tempFilePath = _pathRepo + ".tmp";
+        bool found = false;
+        try
+        {
+            using (StreamReader lector = new StreamReader(_pathRepo))
+            using (StreamWriter escritor = new StreamWriter(tempFilePath))
+            {
+                string? linea;
+                while ((linea = lector.ReadLine()) != null)
+                {
+                    Persona persAct = StringToPers(linea);
+                    if (persAct._id != id)
+                    {
+                        escritor.WriteLine(linea);
+                    }
+                    else
+                    {
+                        found = true;
+                    }
+                }
+            }
+            if (!found)
+            {
+                throw new EntidadNotFoundException();
+            }
+            File.Delete(_pathRepo);
+            File.Move(tempFilePath, _pathRepo);
+        }
+        catch (ValidacionException)
+        {
+            Console.WriteLine("El repositorio Personas.txt fue corrompido");
+        }
+        catch (EntidadNotFoundException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    } 
+
+    public void Actualizar(Persona per)
+    {
+        string tempFilePath = _pathRepo + ".tmp";
+        bool actualizado = false;
+        try
+        {
+            using StreamReader lector = new StreamReader(_pathRepo);
+            using StreamWriter escritor = new StreamWriter(tempFilePath);
+            string? linea;
+            while ((linea = lector.ReadLine()) != null)
+            {
+                try
+                {
+                    Persona PersAct = StringToPers(linea);
+                    escritor.WriteLine(PersAct._id == per._id ? per.UnaLinea() : linea);
+                    actualizado |= PersAct._id == per._id;
+                }
+                catch (ValidacionException)
+                {
+                    Console.WriteLine("Advertencia: línea salteada porque no respetaba el formato");
+                }
+            }
+            if (!actualizado)
+            {
+                throw new EntidadNotFoundException($"Persona con ID {per._id} no encontrada para actualizar.");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error al actualizar reserva: {e.Message}");
+        }
+        File.Replace(tempFilePath, _pathRepo, null);
+    }
+
+
+
+    public String getNombreConId(int id)
+    {
+
+        using (StreamReader sr = new StreamReader(_pathRepo))
+        {
+
+            string? linea;
+            string[] partes = new string[6];
+            while ((linea = sr.ReadLine()) != null)
+            {
+                if (linea.StartsWith(id.ToString()))
+                {
+                    partes = linea.Split(',');
+                    break;
+                }
+
+            }
+            return partes[2];
+
+        }
+
+    }
+
     public Boolean ExisteDocumento(String documento)
     {
         foreach (Persona p in ObtenerTodos())
@@ -34,6 +157,8 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         throw new EntidadNotFoundException();
 
     }
+
+
 
     private static Persona StringToPers(string unaLinea)
     {
@@ -122,7 +247,7 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
 
     }
 
-    public void registrarPersona(Persona p)
+    public void registrarPersona(Persona p, IIdManager managerId)
     {
 
         try

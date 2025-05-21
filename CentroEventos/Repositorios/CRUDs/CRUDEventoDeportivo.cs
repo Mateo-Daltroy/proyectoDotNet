@@ -103,4 +103,19 @@ public class CRUDEventoDeportivo
     {
         return _repo.ObtenerTodos();
     }
+
+    public IEnumerable<EventoDeportivo> ListarEventosConCupoDisponible(IRepositorioReserva repoReserva)
+    {
+        List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
+        foreach (var evento in _repo.ObtenerTodos())
+        {
+            int participantesActuales = repoReserva.GetAsistentes(evento._id);
+            if (evento.TieneCupoDisponible(participantesActuales))
+            {
+                eventosConCupo.Add(evento);
+            }
+        }
+        return eventosConCupo;
+    }
+
 }

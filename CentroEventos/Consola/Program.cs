@@ -62,7 +62,7 @@ while (Id == -1) {
 if (Id != 1)
 {
     Console.WriteLine("Cuenta conectada, mostrando los eventos disponibles: ");
-    List<string> eventos = cRUDEventoDeportivo.ListarEventosConCupoDisponible();
+    List<string> eventos = (List<string>) cRUDEventoDeportivo.ListarEventosConCupoDisponible(repoTempRes);
     foreach (string ev in eventos)
     {
         Console.WriteLine(ev);

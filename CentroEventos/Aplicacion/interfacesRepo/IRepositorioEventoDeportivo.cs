@@ -1,4 +1,4 @@
-using CentroEventos.Aplicacion.Entidades;
+using Aplicacion.entidades;
 
 namespace Aplicacion.interfacesRepo;
 public interface IRepositorioEventoDeportivo

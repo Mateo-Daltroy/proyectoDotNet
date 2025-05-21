@@ -27,19 +27,19 @@
     ]
   },
   "packageFolders": {
-    "/home/mateo/.nuget/packages/": {}
+    "/Users/usuario/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Repositorios/Repositorios.csproj",
+      "projectUniqueName": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Repositorios/Repositorios.csproj",
       "projectName": "Repositorios",
-      "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Repositorios/Repositorios.csproj",
-      "packagesPath": "/home/mateo/.nuget/packages/",
-      "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Repositorios/obj/",
+      "projectPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Repositorios/Repositorios.csproj",
+      "packagesPath": "/Users/usuario/.nuget/packages/",
+      "outputPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Repositorios/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/mateo/.nuget/NuGet/NuGet.Config"
+        "/Users/usuario/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -51,8 +51,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
-              "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj"
+            "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
+              "projectPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj"
             }
           }
         }
@@ -61,6 +61,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -82,7 +87,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.116/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.409/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

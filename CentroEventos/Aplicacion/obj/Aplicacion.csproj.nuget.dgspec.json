@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {}
+    "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {}
   },
   "projects": {
-    "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
+    "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
+        "projectUniqueName": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
         "projectName": "Aplicacion",
-        "projectPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
-        "packagesPath": "/home/mateo/.nuget/packages/",
-        "outputPath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/obj/",
+        "projectPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
+        "packagesPath": "/Users/usuario/.nuget/packages/",
+        "outputPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/mateo/.nuget/NuGet/NuGet.Config"
+          "/Users/usuario/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -53,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.116/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.409/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

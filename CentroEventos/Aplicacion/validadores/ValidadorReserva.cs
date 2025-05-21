@@ -12,7 +12,7 @@ public static class ValidadorReserva
         {
             throw new EntidadNotFoundException();
         }
-        if (!repoRes.Contiene(idPers, idEv))
+        if (!repoRes.ExisteId(idPers, idEv))
         {
             throw new DuplicadoException();
         }

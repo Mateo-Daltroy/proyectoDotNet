@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {}
+    "/Users/usuario/Desktop/GithubForro/CentroEventos/Aplicacion/Aplicacion.csproj": {}
   },
   "projects": {
-    "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj": {
+    "/Users/usuario/Desktop/GithubForro/CentroEventos/Aplicacion/Aplicacion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
+        "projectUniqueName": "/Users/usuario/Desktop/GithubForro/CentroEventos/Aplicacion/Aplicacion.csproj",
         "projectName": "Aplicacion",
-        "projectPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
+        "projectPath": "/Users/usuario/Desktop/GithubForro/CentroEventos/Aplicacion/Aplicacion.csproj",
         "packagesPath": "/Users/usuario/.nuget/packages/",
-        "outputPath": "/Users/usuario/Desktop/Proyecto Dotnet/proyectoDotNet/CentroEventos/Aplicacion/obj/",
+        "outputPath": "/Users/usuario/Desktop/GithubForro/CentroEventos/Aplicacion/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/usuario/.nuget/NuGet/NuGet.Config"

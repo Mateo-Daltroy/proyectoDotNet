@@ -78,7 +78,7 @@ public class CRUDReserva
 
     public IEnumerable<int> asistioAEvento(int idEv)
     {
-        List<Reserva> reservas = (List<Reserva>) _miRepo.ObtenerTodos();
+        List<Reserva> reservas = (List<Reserva>)_miRepo.ObtenerTodos();
         List<int> cumplen = new();
         foreach (Reserva res in reservas)
         {
@@ -91,6 +91,11 @@ public class CRUDReserva
     public IEnumerable<Reserva> ListarTodas()
     {
         return (_miRepo.ObtenerTodos());
+    }
+    
+    public Reserva obtenerPorId(int id)
+    {
+        return _miRepo.ObtenerPorId(id);
     }
 
 }

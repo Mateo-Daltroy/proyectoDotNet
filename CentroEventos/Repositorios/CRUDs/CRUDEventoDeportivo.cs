@@ -29,7 +29,7 @@ public class CRUDEventoDeportivo
         _auth = new ServicioAuthProvisional(); // solo devuelve true para user id 1
     }
 
-    public void Alta(EventoDeportivo evento, int idUsuario, IRepositorioPersona repoPersona, ValidadorEventoDeportivo validadorEventoDeportivo)
+    public void Alta(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
     {
         try
         {
@@ -116,6 +116,13 @@ public class CRUDEventoDeportivo
             }
         }
         return eventosConCupo;
+    }
+
+    public EventoDeportivo obtenerPorId(int id)
+    {
+
+        return _repo.ObtenerPorId(id);
+
     }
 
 }

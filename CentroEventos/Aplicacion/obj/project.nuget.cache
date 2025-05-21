@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AvH2E7tnd4YNJ02+C2ZYA0jBbJxNJDwtUyIzQXYeQpB3mmuL9uwWH8ksh4Bjt6ZPhq5tODbX/1yYJ8GN+Y6XsQ==",
+  "dgSpecHash": "1G7jVCfkziA=",
   "success": true,
-  "projectFilePath": "/media/mateo/Area Compartida/Facultad_files/Semestre5/DotNet/proyectoDotNet/CentroEventos/Aplicacion/Aplicacion.csproj",
+  "projectFilePath": "/Users/usuario/Desktop/GithubForro/CentroEventos/Aplicacion/Aplicacion.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

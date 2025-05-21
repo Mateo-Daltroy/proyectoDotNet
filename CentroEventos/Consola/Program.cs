@@ -25,8 +25,8 @@ CRUDEventoDeportivo cRUDEventoDeportivo = new CRUDEventoDeportivo(repoTempEv, re
 
 // Display
 Console.WriteLine("-----------------------------------------------");
-Console.WriteLine("|        Bienvenido a la consola del 	     |");
-Console.WriteLine("|       Centro Deportivo Universitario! 	     |");
+Console.WriteLine("|        Bienvenido a la consola del 	      |");
+Console.WriteLine("|       Centro Deportivo Universitario!	      |");
 Console.WriteLine("-----------------------------------------------");
 while (Id == -1)
 {
@@ -108,7 +108,7 @@ else
         Console.WriteLine("-----------------------------------------------");
         Console.WriteLine("| 14 |   Listar eventos con cupo disponible   |");
         Console.WriteLine("-----------------------------------------------");
-        Console.WriteLine("| 15 |   Cerrar la consola   |");
+        Console.WriteLine("| 15 |    	 Cerrar la consola	      |");
         Console.WriteLine("-----------------------------------------------");
         Console.Write("| -> ");
         input = "invalido";

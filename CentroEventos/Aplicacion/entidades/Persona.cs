@@ -38,19 +38,6 @@ public class Persona
         _permisos = new();
     }
 
-    public void RegistrarPersona(Persona p, IRepositorioPersona repoPersona)
-    {
-
-        try
-        {
-            ValidacionPersona.ValidarPersona(p, repoPersona);
-            repoPersona.registrarPersona(p);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
 
     public string? Dni
     {

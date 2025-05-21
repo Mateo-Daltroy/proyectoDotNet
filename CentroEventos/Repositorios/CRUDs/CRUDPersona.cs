@@ -3,19 +3,21 @@ using System.Diagnostics.Contracts;
 using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
+using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
+using CentroEventos.Aplicacion.InterfacesRepo;
 using CentroEventos.Repositorios.GestionIDs;
-using CentroEventos.Repositorios.implementacionesRepo;
+
 
 
 namespace Repositorios.CRUDs;
 
 public class CRUDPersona
 {
-    private RepoPersonasTxt _miRepo;
-    private IdManager _repoId;
+    private IRepositorioPersona _miRepo;
+    private IIdManager _repoId;
 
-    public CRUDPersona(RepoPersonasTxt miRepo, IdManager repoId)
+    public CRUDPersona(IRepositorioPersona miRepo, IIdManager repoId)
     {
         this._miRepo = miRepo;
         this._repoId = repoId;
@@ -45,45 +47,41 @@ public class CRUDPersona
     {
         try
         {
-            ValidacionPersona.ValidarPersona(p, new RepoPersonasTxt());
+            ValidacionPersona.ValidarPersona(p, _miRepo);
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Data);
             return;
         }
-        RepoPersonasTxt repo = new RepoPersonasTxt();
-        repo.registrarPersona(p, _repoId);
+        _miRepo.registrarPersona(p, _repoId);
     }
 
     public void modificarPersona(Persona p)
     {
-        RepoPersonasTxt repo = new RepoPersonasTxt();
-        repo.Actualizar(p);
+        _miRepo.Actualizar(p);
     }
 
     public void EliminarPersona(int id)
     {
-        RepoPersonasTxt repo = new RepoPersonasTxt();
-        repo.Eliminar(id);
+        _miRepo.Eliminar(id);
     }
 
     public List<String> devuelveListaNombres(List<int> listaId)
     {
         List<String> listaNombres = new List<string>();
-        RepoPersonasTxt repo = new RepoPersonasTxt();
+  
         foreach (int id in listaId)
         {
-            listaNombres.Add(repo.getNombreConId(id));
+            listaNombres.Add(_miRepo.getNombreConId(id));
         }
         return listaNombres;
     }
 
     public String ListadoCompleto()
     {
-        RepoPersonasTxt repo = new RepoPersonasTxt();
 
-        return repo.listarTodos();
+        return _miRepo.listarTodos();
     }
 
     public Boolean PoseeElPermiso(int id, Permiso permiso)

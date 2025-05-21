@@ -32,7 +32,7 @@ namespace Aplicacion.validadores
         }
         public static bool ValidarResponsable(int responsableId, IRepositorioPersona repoPersona)
         {
-            return repoPersona.ExisteId(responsableId));
+            return repoPersona.ExisteId(responsableId);
         }
 
         public void Validar(EventoDeportivo evento, IRepositorioPersona repoPersona)

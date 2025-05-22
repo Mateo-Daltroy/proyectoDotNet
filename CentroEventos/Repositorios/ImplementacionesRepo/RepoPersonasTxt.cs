@@ -23,6 +23,12 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
 
     private IdManager managerId = new IdManager();
 
+    /*public RepoPersonasTxt()
+    {
+        Console.WriteLine(_pathRepo);
+        Console.WriteLine(_pathRepoId);
+    }*/
+
     public Boolean ExisteId(int id)
     {
         foreach (Persona p in ObtenerTodos())
@@ -33,8 +39,8 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
             }
         }
         throw new EntidadNotFoundException();
-    
-}
+
+    }
 
     public String listarTodos()
     {
@@ -100,8 +106,8 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
                 try
                 {
                     Persona PersAct = StringToPers(linea);
-                    escritor.WriteLine(PersAct._id == per._id ? per.UnaLinea() : linea);
-                    actualizado |= PersAct._id == per._id;
+                    escritor.WriteLine(PersAct._dni == per._dni ? per.UnaLinea() : linea);
+                    actualizado |= PersAct._dni == per._dni;
                 }
                 catch (ValidacionException)
                 {
@@ -115,7 +121,7 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error al actualizar reserva: {e.Message}");
+            Console.WriteLine($"Error al actualizar Persona: {e.Message}");
         }
         File.Replace(tempFilePath, _pathRepo, null);
     }
@@ -154,7 +160,7 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
                 return true;
             }
         }
-        throw new EntidadNotFoundException();
+        return false;
 
     }
 
@@ -231,7 +237,8 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
                 return true;
             }
         }
-        throw new EntidadNotFoundException();
+        return false;
+        //throw new EntidadNotFoundException();
 
     }
     public int getIdConMail(String mail)

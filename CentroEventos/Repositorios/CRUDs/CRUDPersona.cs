@@ -48,13 +48,14 @@ public class CRUDPersona
         try
         {
             ValidacionPersona.ValidarPersona(p, _miRepo);
+            _miRepo.registrarPersona(p, _repoId);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Data);
+            Console.WriteLine(e);
             return;
         }
-        _miRepo.registrarPersona(p, _repoId);
+        
     }
 
     public void modificarPersona(Persona p)

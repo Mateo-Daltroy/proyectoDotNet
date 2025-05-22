@@ -17,7 +17,7 @@ public class Persona
     // No seria preferible usar un set?
     private List<Permiso> _permisos;
 
-    public Persona(int id,string? dni, string nombre, string apellido, string mail, string telefono)
+    public Persona(int id,string dni, string nombre, string apellido, string mail, string telefono)
     {
         _id = id;
         _dni = dni;
@@ -28,7 +28,7 @@ public class Persona
         _permisos = new();
     }
 
-    public Persona(string? dni, string nombre, string apellido, string mail, string telefono)
+    public Persona(string dni, string nombre, string apellido, string mail, string telefono)
     {
         _dni = dni;
         _nombre = nombre;

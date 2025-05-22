@@ -161,7 +161,7 @@ else
                 string nuevoTelefono = Console.ReadLine() ?? "";
                 Console.Write("Nuevo email: ");
                 string nuevoEmail = Console.ReadLine() ?? "";
-                Persona personaModificada = new(dniMod, nuevoNombre, nuevoApellido, nuevoTelefono, nuevoEmail); // dni no se cambia
+                Persona personaModificada = new(cRUDPersona.getIdConDocumento(dniMod),dniMod, nuevoNombre, nuevoApellido, nuevoTelefono, nuevoEmail); // dni no se cambia
                 cRUDPersona.modificarPersona(personaModificada);
                 break;
 
@@ -336,32 +336,3 @@ else
 
     }
 }
-
-
-
-
-
-
-/*
-// no se para que era este codigo asi que por las dudas no lo borro
-Persona mostrarRegistro(){
-    Console.Write("Ingrese sus datos: \n"); // Console.WriteLine te ahorra los \n
-    Console.Write("DNI: ");
-    String? dni = Console.ReadLine();
-    Console.Write("\n");
-    Console.Write("Nombre: ");
-    String? nombre = Console.ReadLine();
-    Console.Write("\n");
-    Console.Write("Apellido: ");
-    String? apellido = Console.ReadLine();
-    Console.Write("\n");
-    Console.Write("Mail: ");
-    String? mail = Console.ReadLine();
-    Console.Write("\n");
-    Console.Write("Telefono: ");
-    String? telefono = Console.ReadLine();
-    Console.Write("\n");
-    return new Persona(dni, nombre, apellido, mail, telefono);
-}
-int opcionN = Int32.Parse(opcion ?? "3") ;
-*/

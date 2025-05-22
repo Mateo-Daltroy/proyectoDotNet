@@ -17,14 +17,18 @@ public class RepoReservasTxt : IRepositorioReserva
 
     public void Agregar(Reserva res)
     {
+        using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
         try
         {
-            using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
             escritor.WriteLine(ResToString(res));
         }
         catch (Exception e)
         {
             Console.WriteLine($"Error al agregar reserva: {e.Message}");
+        }
+        finally
+        {
+            escritor.Close();
         }
     }
 
@@ -41,10 +45,10 @@ public class RepoReservasTxt : IRepositorioReserva
     {
         string tempFilePath = _pathRepo + ".tmp";
         bool actualizado = false;
+        using StreamReader lector = new StreamReader(_pathRepo);
+        using StreamWriter escritor = new StreamWriter(tempFilePath);
         try
         {
-            using StreamReader lector = new StreamReader(_pathRepo);
-            using StreamWriter escritor = new StreamWriter(tempFilePath);
             string? linea;
             while ((linea = lector.ReadLine()) != null)
             {
@@ -68,6 +72,11 @@ public class RepoReservasTxt : IRepositorioReserva
         {
             Console.WriteLine($"Error al actualizar reserva: {e.Message}");
         }
+        finally
+        {
+            lector.Close();
+            escritor.Close();
+        }
         File.Replace(tempFilePath, _pathRepo, null);
     }
 
@@ -81,23 +90,21 @@ public class RepoReservasTxt : IRepositorioReserva
     {
         string tempFilePath = _pathRepo + ".tmp";
         bool found = false;
+        using (StreamReader lector = new StreamReader(_pathRepo))
+        using (StreamWriter escritor = new StreamWriter(tempFilePath))
         try
         {
-            using (StreamReader lector = new StreamReader(_pathRepo))
-            using (StreamWriter escritor = new StreamWriter(tempFilePath))
+            string? linea;
+            while ((linea = lector.ReadLine()) != null)
             {
-                string? linea;
-                while ((linea = lector.ReadLine()) != null)
+                Reserva resAct = StringToRes(linea);
+                if (resAct._id != res._id)
                 {
-                    Reserva resAct = StringToRes(linea);
-                    if (resAct._id != res._id)
-                    {
-                        escritor.WriteLine(linea);
-                    }
-                    else
-                    {
-                        found = true;
-                    }
+                    escritor.WriteLine(linea);
+                }
+                else
+                {
+                    found = true;
                 }
             }
             if (!found)
@@ -114,6 +121,11 @@ public class RepoReservasTxt : IRepositorioReserva
         catch (EntidadNotFoundException e)
         {
             Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            lector.Close();
+            escritor.Close();
         }
     }
 
@@ -176,9 +188,9 @@ public class RepoReservasTxt : IRepositorioReserva
     public IEnumerable<Reserva> ObtenerTodos()
     {
         List<Reserva> reservas = new List<Reserva>();
+        using StreamReader lector = new StreamReader(_pathRepo);
         try
         {
-            using StreamReader lector = new StreamReader(_pathRepo);
             string? linea;
             while ((linea = lector.ReadLine()) != null)
             {
@@ -196,6 +208,10 @@ public class RepoReservasTxt : IRepositorioReserva
         {
             Console.WriteLine("El repositorio no fue encontrado. Creando uno nuevo...");
             File.Create(_pathRepo).Close();
+        }
+        finally
+        {
+            lector.Close();
         }
         return reservas;
     }

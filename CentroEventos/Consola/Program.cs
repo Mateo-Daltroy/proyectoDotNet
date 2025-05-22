@@ -67,10 +67,10 @@ while (Id == -1)
 if (Id != 1)
 {
     Console.WriteLine("Cuenta conectada, mostrando los eventos disponibles: ");
-    List<string> eventos = (List<string>)cRUDEventoDeportivo.ListarEventosConCupoDisponible(repoTempRes);
-    foreach (string ev in eventos)
+    List<EventoDeportivo> eventos = (List<EventoDeportivo>)cRUDEventoDeportivo.ListarEventosConCupoDisponible(repoTempRes);
+    foreach (EventoDeportivo ev in eventos)
     {
-        Console.WriteLine(ev);
+        Console.WriteLine(ev.ToString());
     }
 }
 else
@@ -201,8 +201,11 @@ else
 
             case 6:
                 // Modificar Reserva
-                List<EventoDeportivo> listadoReservas = (List<EventoDeportivo>)cRUDReserva.ListarTodas(); // Listar eventos disponibles
-                Console.WriteLine("Listado de reservas:" + listadoReservas);
+                List<Reserva> listadoReservas = (List<Reserva>)cRUDReserva.ListarTodas(); // Listar eventos disponibles
+                Console.WriteLine("Listado de reservas:");
+                foreach (Reserva ev in listadoReservas) {
+                    Console.WriteLine(ev.ToString());
+                }
 
                 Console.Write("Ingrese el ID de la reserva elegida a modificar: ");
                 int idReserva = int.Parse(Console.ReadLine() ?? "-1");
@@ -237,10 +240,14 @@ else
 
             case 7:
                 // Eliminar Reserva
-                List<EventoDeportivo> listadoReservas2 = (List<EventoDeportivo>)cRUDReserva.ListarTodas(); // Listar eventos disponibles
-                Console.WriteLine("Listado de reservas:" + listadoReservas2);
+                List<Reserva> listadoReservas2 = (List<Reserva>)cRUDReserva.ListarTodas(); // Listar eventos disponibles
+                Console.WriteLine("Listado de reservas:");
 
-                Console.Write("Ingrese el ID de la reserva elegida a modificar: ");
+            foreach (Reserva re in listadoReservas2) {
+                    Console.WriteLine(re.ToString());
+                }
+
+                Console.Write("Ingrese el ID de la reserva elegida a eliminar: ");
                 int idResEliminar = int.Parse(Console.ReadLine() ?? "-1");
                 cRUDReserva.ReservaBaja(idResEliminar, Id);
                 break;

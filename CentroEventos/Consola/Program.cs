@@ -354,13 +354,18 @@ else
             case 13:
                 // Listar asistencia a un evento
                 List<EventoDeportivo> listadoEventos = (List<EventoDeportivo>)cRUDEventoDeportivo.Listado(); // Listar eventos disponibles
-                Console.WriteLine("Eventos disponibles para eliminar:" + listadoEventos);
-                Console.Write("Ingrese el ID de uno de los anteriores eventos que quiera eliminar: ");
-                int idListarAsistencia = int.Parse(Console.ReadLine() ?? "-1");
-                var idAsistentes = cRUDReserva.asistioAEvento(idListarAsistencia);
-                foreach (var id2 in idAsistentes)
+                Console.WriteLine("Eventos pasados:");
+                foreach (EventoDeportivo e in listadoEventos)
                 {
-                    Console.WriteLine($"Asistente con ID de reserva: {id2}"); // MUESTRA LOS IDS DE LAS PERSONONAS QUE ASISTEN, QUIZA DEBERIA MOSTRAR MAS DATOS DE LAS MISMAS
+                    Console.WriteLine(e.ToString());
+                }
+                Console.Write("Ingrese el ID de uno de los anteriores eventos pasados: ");
+                int idListarAsistencia = int.Parse(Console.ReadLine() ?? "-1");
+                List<int> idAsistentes = (List<int>)cRUDReserva.asistioAEvento(idListarAsistencia);
+                foreach (int id2 in idAsistentes)
+                {
+                    String p = repoTempPers.getNombreConId(id2);
+                    Console.WriteLine(p+" participo en el evento." ); 
                 }
                 break;
 

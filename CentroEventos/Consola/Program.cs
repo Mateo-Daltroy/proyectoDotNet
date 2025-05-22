@@ -272,7 +272,7 @@ else
             case 10:
                 // Modificar Evento Deportivo
                 List<EventoDeportivo> eventosConCupo2 = (List<EventoDeportivo>)cRUDEventoDeportivo.Listado(); // Listar eventos disponibles
-                Console.WriteLine("Eventos disponibles para modificar:" + eventosConCupo2.ToString());
+                Console.WriteLine("Eventos disponibles para modificar:" + eventosConCupo2);
                 Console.Write("Ingrese el ID de uno de los anteriores eventos que quiera modificar: ");
                 int idEvModificar = int.Parse(Console.ReadLine() ?? "-1");
 

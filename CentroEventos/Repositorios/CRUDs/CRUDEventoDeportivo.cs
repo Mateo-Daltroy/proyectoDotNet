@@ -6,6 +6,7 @@ using Aplicacion.validadores;
 using CentroEventos.Repositorios.GestionIDs;
 using Aplicacion.autorizacionProv;
 using CentroEventos.Aplicacion.InterfacesRepo;
+using System.Runtime.InteropServices;
 
 namespace Repositorios.CRUDs;
 
@@ -13,6 +14,7 @@ public class CRUDEventoDeportivo
 {
     private readonly IRepositorioEventoDeportivo _repo;
     private readonly IRepositorioPersona _repoPersona;
+    private readonly IRepositorioReserva _repoReserva;
     private readonly IIdManager _gestor;
     private readonly IServicioAutorizacion _auth;
 
@@ -21,10 +23,11 @@ public class CRUDEventoDeportivo
         "EventosId.txt"
     );
 
-    public CRUDEventoDeportivo(IRepositorioEventoDeportivo repoEvento, IRepositorioPersona repoPersona, IIdManager gestor)
+    public CRUDEventoDeportivo(IRepositorioEventoDeportivo repoEvento, IRepositorioPersona repoPersona, IRepositorioReserva repoReserva, IIdManager gestor)
     {
         _repo = repoEvento;
         _repoPersona = repoPersona;
+        _repoReserva = repoReserva;
         _gestor = gestor;
         _auth = new ServicioAuthProvisional(); // solo devuelve true para user id 1
     }
@@ -104,20 +107,33 @@ public class CRUDEventoDeportivo
         return _repo.ObtenerTodos();
     }
 
+    public IEnumerable<EventoDeportivo> listadoSinReservas()
+    {
+        List<EventoDeportivo> l = new List<EventoDeportivo>();
+        foreach (EventoDeportivo e in _repo.ObtenerTodos())
+        {
+            if (_repoReserva.GetAsistentes(e._id) == 0)
+            {
+                l.Add(e);
+            }
+        }
+        return l;
+    }
+
     public IEnumerable<EventoDeportivo> ListarEventosConCupoDisponible(IRepositorioReserva repoReserva)
     {
         List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
-        int i = 0;
-        foreach (var evento in _repo.ObtenerTodos())
+
+        foreach (EventoDeportivo evento in _repo.ObtenerTodos())
         {
             int participantesActuales = repoReserva.GetAsistentes(evento._id);
             if (evento.TieneCupoDisponible(participantesActuales))
             {
                 eventosConCupo.Add(evento);
             }
-            i++;
+
         }
-        Console.WriteLine(i);
+
         return eventosConCupo;
     }
 

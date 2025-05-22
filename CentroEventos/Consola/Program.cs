@@ -1,4 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Collections;
+using System.Diagnostics;
 using Aplicacion.entidades;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
@@ -20,7 +22,7 @@ IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoTxt();
 IIdManager gestor = new IdManager();
 CRUDReserva cRUDReserva = new CRUDReserva(repoTempRes, repoTempEv, repoTempPers, gestor);
 CRUDPersona cRUDPersona = new CRUDPersona(repoTempPers, gestor);
-CRUDEventoDeportivo cRUDEventoDeportivo = new CRUDEventoDeportivo(repoTempEv, repoTempPers, gestor);
+CRUDEventoDeportivo cRUDEventoDeportivo = new CRUDEventoDeportivo(repoTempEv, repoTempPers, repoTempRes,gestor);
 
 
 //repoTempPers.metodo();
@@ -163,7 +165,7 @@ else
                 string nuevoTelefono = Console.ReadLine() ?? "";
                 Console.Write("Nuevo email: ");
                 string nuevoEmail = Console.ReadLine() ?? "";
-                Persona personaModificada = new(cRUDPersona.getIdConDocumento(dniMod),dniMod, nuevoNombre, nuevoApellido, nuevoTelefono, nuevoEmail); // dni no se cambia
+                Persona personaModificada = new(cRUDPersona.getIdConDocumento(dniMod), dniMod, nuevoNombre, nuevoApellido, nuevoTelefono, nuevoEmail); // dni no se cambia
                 cRUDPersona.modificarPersona(personaModificada);
                 break;
 
@@ -187,7 +189,10 @@ else
                 int idPersona = cRUDPersona.getIdConDocumento(dniPersona);
 
                 List<EventoDeportivo> eventosConCupo = (List<EventoDeportivo>)cRUDEventoDeportivo.ListarEventosConCupoDisponible(repoTempRes); // Listar eventos disponibles
-                Console.WriteLine("Eventos disponibles a reservar:" + eventosConCupo);
+                foreach (EventoDeportivo ev in eventosConCupo)
+                {
+                    Console.WriteLine(ev.ToString());
+                }
                 Console.Write("Ingrese el ID de uno de los anteriores eventos disponibles en el que quiera realizar la reserva: ");
                 int idEventoRes = int.Parse(Console.ReadLine() ?? "-1");
 
@@ -272,31 +277,67 @@ else
             case 10:
                 // Modificar Evento Deportivo
                 List<EventoDeportivo> eventosConCupo2 = (List<EventoDeportivo>)cRUDEventoDeportivo.Listado(); // Listar eventos disponibles
-                Console.WriteLine("Eventos disponibles para modificar:" + eventosConCupo2);
+                Console.WriteLine("Eventos disponibles para modificar:" );
+                foreach (EventoDeportivo ev in eventosConCupo2) {
+                    Console.WriteLine(ev.ToString());
+                }
                 Console.Write("Ingrese el ID de uno de los anteriores eventos que quiera modificar: ");
                 int idEvModificar = int.Parse(Console.ReadLine() ?? "-1");
-
+                EventoDeportivo eventoMod = repoTempEv.ObtenerPorId(idEvModificar);
+                
                 Console.Write("Nuevo nombre: ");
                 string nombreNuevoEv = Console.ReadLine() ?? "";
+                if (!nombreNuevoEv.Equals(""))
+                {
+                    eventoMod._nombre = nombreNuevoEv;
+                }
+
                 Console.Write("Nueva descripción: ");
                 string descNuevoEv = Console.ReadLine() ?? "";
-                Console.Write("Nueva fecha y hora (yyyy-MM-dd HH:mm): ");
-                DateTime nuevaFecha = DateTime.Parse(Console.ReadLine() ?? "");
-                Console.Write("Nueva duración en horas: ");
-                int nuevaDuracion = int.Parse(Console.ReadLine() ?? "-1");
-                Console.Write("Nuevo cupo: ");
-                int nuevoCupo = int.Parse(Console.ReadLine() ?? "-1");
-                Console.Write("ID Responsable: ");
-                int idResponsable = int.Parse(Console.ReadLine() ?? "-1");
+                if (!descNuevoEv.Equals(""))
+                {
+                    eventoMod._descripcion = descNuevoEv;
+                }
 
-                EventoDeportivo eventoMod = new(idEvModificar, nombreNuevoEv, descNuevoEv, nuevaFecha, nuevaDuracion, nuevoCupo, idResponsable);
+                Console.Write("Nueva fecha y hora (yyyy-MM-dd HH:mm): ");
+                String nuevaFechaa = Console.ReadLine() ?? "";
+                if (!nuevaFechaa.Equals(""))
+                {
+                    DateTime nuevaFecha = DateTime.Parse(nuevaFechaa);
+                    eventoMod._fechaHoraInicio = nuevaFecha;
+                }
+
+                Console.Write("Nueva duración en horas: ");
+                String nuevaDuracion = Console.ReadLine() ?? "";
+                if (!nuevaDuracion.Equals(""))
+                {
+                    eventoMod._duracionHoras = int.Parse(nuevaDuracion);
+                }
+
+                Console.Write("Nuevo cupo: ");
+                String nuevoCupo = Console.ReadLine() ?? "";
+                if (!nuevoCupo.Equals(""))
+                {
+                    eventoMod._cupoMaximo = int.Parse(nuevoCupo);
+                }
+
+                Console.Write("ID Responsable: ");
+                String idResponsable = Console.ReadLine() ?? "";
+                if (!idResponsable.Equals(""))
+                {
+                    eventoMod._responsableId = int.Parse(idResponsable);
+                }
                 cRUDEventoDeportivo.Modificacion(eventoMod, Id, new ValidadorEventoDeportivo());
                 break;
 
             case 11:
                 // Eliminar Evento Deportivo
-               List<EventoDeportivo> listadoEventos2 = (List<EventoDeportivo>)cRUDEventoDeportivo.Listado(); // Listar eventos disponibles
-                Console.WriteLine("Eventos disponibles para eliminar:" + listadoEventos2);
+                List<EventoDeportivo> listadoEventos2 = (List<EventoDeportivo>)cRUDEventoDeportivo.listadoSinReservas(); // Listar eventos disponibles
+
+                Console.WriteLine("Eventos disponibles para eliminar:");
+                foreach (EventoDeportivo e in listadoEventos2) {
+                    Console.WriteLine(e.ToString());
+                }
                 Console.Write("Ingrese el ID de uno de los anteriores eventos que quiera eliminar: ");
                 int idEvEliminar = int.Parse(Console.ReadLine() ?? "-1");
                 cRUDEventoDeportivo.Baja(idEvEliminar, Id);
@@ -325,9 +366,9 @@ else
 
             case 14:
                 // Listar eventos con cupo
-                foreach (var evento in cRUDEventoDeportivo.ListarEventosConCupoDisponible(repoTempRes))
+                foreach (var eventoo in cRUDEventoDeportivo.ListarEventosConCupoDisponible(repoTempRes))
                 {
-                    Console.WriteLine(evento.ToString());
+                    Console.WriteLine(eventoo.ToString());
                 }
                 break;
 

@@ -18,7 +18,7 @@ namespace Aplicacion.entidades
         public DateTime _fechaHoraInicio { get; set; }
         public double _duracionHoras { get; set; }
         public int _cupoMaximo { get; set; }
-        public int _responsableId { get; }
+        public int _responsableId { get; set; }
 
         // Constructor con validaciones
         public EventoDeportivo(

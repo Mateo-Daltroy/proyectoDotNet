@@ -107,6 +107,7 @@ public class CRUDEventoDeportivo
     public IEnumerable<EventoDeportivo> ListarEventosConCupoDisponible(IRepositorioReserva repoReserva)
     {
         List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
+        int i = 0;
         foreach (var evento in _repo.ObtenerTodos())
         {
             int participantesActuales = repoReserva.GetAsistentes(evento._id);
@@ -114,7 +115,9 @@ public class CRUDEventoDeportivo
             {
                 eventosConCupo.Add(evento);
             }
+            i++;
         }
+        Console.WriteLine(i);
         return eventosConCupo;
     }
 

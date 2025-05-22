@@ -14,7 +14,6 @@ public class RepoReservasTxt : IRepositorioReserva
         "Reservas.txt"
     );
 
-
     public void Agregar(Reserva res)
     {
         using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
@@ -76,8 +75,8 @@ public class RepoReservasTxt : IRepositorioReserva
         {
             lector.Close();
             escritor.Close();
+            File.Replace(tempFilePath, _pathRepo, null);
         }
-        File.Replace(tempFilePath, _pathRepo, null);
     }
 
     public void Actualizar(int id)

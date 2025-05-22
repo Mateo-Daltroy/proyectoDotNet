@@ -16,14 +16,18 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
 
     public void Agregar(EventoDeportivo ev)
     {
+        using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
         try
         {
-            using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
             escritor.WriteLine(EventoToString(ev));
         }
         catch (Exception e)
         {
             Console.WriteLine($"Error al agregar evento: {e.Message}");
+        }
+        finally
+        {
+            escritor.Close();
         }
     }
 
@@ -40,13 +44,11 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
     {
         string tempFilePath = _pathRepo + ".tmp";
         bool actualizado = false;
-
-        try
-        {
             using StreamReader lector = new StreamReader(_pathRepo);
             using StreamWriter escritor = new StreamWriter(tempFilePath);
+        try
+        {
             string? linea;
-
             while ((linea = lector.ReadLine()) != null)
             {
                 try
@@ -68,69 +70,77 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
         {
             Console.WriteLine($"Error al actualizar evento: {e.Message}");
         }
-
-        File.Replace(tempFilePath, _pathRepo, null);
+        finally
+        {
+            lector.Close();
+            escritor.Close();
+            File.Replace(tempFilePath, _pathRepo, null);
+        }
     }
 
     public void Eliminar(int id)
     {
         string tempFilePath = _pathRepo + ".tmp";
-    bool eliminado = false;
-
-    try
-    {
+        bool eliminado = false;
         using StreamReader lector = new StreamReader(_pathRepo);
         using StreamWriter escritor = new StreamWriter(tempFilePath);
-        string? linea;
-
-        while ((linea = lector.ReadLine()) != null)
+        try
         {
-            EventoDeportivo ev = StringToEvento(linea);
-            if (ev._id != id)
+            string? linea;
+
+            while ((linea = lector.ReadLine()) != null)
             {
-                escritor.WriteLine(EventoToString(ev));
+                EventoDeportivo ev = StringToEvento(linea);
+                if (ev._id != id)
+                {
+                    escritor.WriteLine(EventoToString(ev));
+                }
+                else
+                {
+                    eliminado = true;
+                }
             }
-            else
-            {
-                eliminado = true;
-            }
+
+            if (!eliminado)
+                throw new EntidadNotFoundException($"No se encontró el evento con ID {id} para eliminar.");
+
+            File.Replace(tempFilePath, _pathRepo, null);
         }
-
-        if (!eliminado)
-            throw new EntidadNotFoundException($"No se encontró el evento con ID {id} para eliminar.");
-
-        File.Replace(tempFilePath, _pathRepo, null);
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine($"Error al eliminar evento: {e.Message}");
-    }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error al eliminar evento: {e.Message}");
+        }
+        finally
+        {
+            lector.Close();
+            escritor.Close();
+        }
     }
 
     public IEnumerable<EventoDeportivo> ObtenerTodos()
     {
         List<EventoDeportivo> lista = new();
+        using StreamReader lector = new StreamReader(_pathRepo);
+        if (!File.Exists(_pathRepo))
+        {
+            lector.Close();
+            return lista;
+        }
 
-    if (!File.Exists(_pathRepo))
-    {
+        string? linea;
+        while ((linea = lector.ReadLine()) != null)
+        {
+            try
+            {
+                lista.Add(StringToEvento(linea));
+            }
+            catch (ValidacionException)
+            {
+                Console.WriteLine("Línea corrupta ignorada en archivo Eventos.txt.");
+            }
+        }
+        lector.Close();
         return lista;
-    }
-
-    using StreamReader lector = new StreamReader(_pathRepo);
-    string? linea;
-    while ((linea = lector.ReadLine()) != null)
-    {
-        try
-        {
-            lista.Add(StringToEvento(linea));
-        }
-        catch (ValidacionException)
-        {
-            Console.WriteLine("Línea corrupta ignorada en archivo Eventos.txt.");
-        }
-    }
-
-    return lista;
     }
 
     public bool Contiene(int id)

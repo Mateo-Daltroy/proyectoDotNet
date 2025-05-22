@@ -22,3 +22,5 @@ debe retornar true, en cualquier otro caso, false para todos los permisos.
 El usuario normal solo puede ver los eventos actuales con cupo disponible, por ende
 se muestran automáticamente una vez que se valida que su cuenta existe.
 
+Nota: los Archivos CRUD que estan ubicados en Repositorios, deberian estar ubicados en Casos de uso. Pero nos dimos cuenta poco tiempo antes de la entrega de esto y al moverlos daban muchos errores y no nos daba el tiempo. por lo que decidimos dejarlos ubicados en la carpeta de repositorios
+

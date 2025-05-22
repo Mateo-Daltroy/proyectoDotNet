@@ -260,10 +260,11 @@ else
                 int duracion = int.Parse(Console.ReadLine() ?? "-1");
                 Console.Write("Cupo máximo: ");
                 int cupo = int.Parse(Console.ReadLine() ?? "-1");
-                Console.Write("ID Responsable: ");
-                int idResp = int.Parse(Console.ReadLine() ?? "-1");
+                Console.Write("Documento del Responsable: ");
+                int doc = int.Parse(Console.ReadLine() ?? "-1");
+                int idresp = repoTempPers.getIdConDocumento(doc.ToString());
 
-                EventoDeportivo nuevoEvento = new(nombreEv, descEv, fecha, duracion, cupo, idResp);
+                EventoDeportivo nuevoEvento = new(nombreEv, descEv, fecha, duracion, cupo, idresp);
                 //EL SIGUIENTE METODO ALTA() SE ENCARGARA DE ASIGNARLE EL ID CORRESPONDIENTE A EVENTO
                 cRUDEventoDeportivo.Alta(nuevoEvento, Id, new ValidadorEventoDeportivo());
                 break;
@@ -271,7 +272,7 @@ else
             case 10:
                 // Modificar Evento Deportivo
                 List<EventoDeportivo> eventosConCupo2 = (List<EventoDeportivo>)cRUDEventoDeportivo.Listado(); // Listar eventos disponibles
-                Console.WriteLine("Eventos disponibles para modificar:" + eventosConCupo2);
+                Console.WriteLine("Eventos disponibles para modificar:" + eventosConCupo2.ToString());
                 Console.Write("Ingrese el ID de uno de los anteriores eventos que quiera modificar: ");
                 int idEvModificar = int.Parse(Console.ReadLine() ?? "-1");
 

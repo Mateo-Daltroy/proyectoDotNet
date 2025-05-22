@@ -18,4 +18,5 @@ public interface IRepositorioPersona
     public String getNombreConId(int id);
     public String listarTodos();
     public Boolean PoseeElPermiso(int id, Permiso permiso);
+
 }

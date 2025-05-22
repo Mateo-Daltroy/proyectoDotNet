@@ -12,12 +12,12 @@ public class Persona
     public string? _dni { get; }
     public String _nombre { get; }
     public string _apellido { get; }
-    public string _mail{ get; }
-    public string _telefono{ get; }
+    public string _mail { get; }
+    public string _telefono { get; }
     // No seria preferible usar un set?
     private List<Permiso> _permisos;
 
-    public Persona(int id,string dni, string nombre, string apellido, string mail, string telefono)
+    public Persona(int id, string dni, string nombre, string apellido, string mail, string telefono)
     {
         _id = id;
         _dni = dni;
@@ -48,7 +48,7 @@ public class Persona
     public string Nombre
     {
         get { return _nombre; }
-        
+
     }
 
     public string Apellido
@@ -66,23 +66,30 @@ public class Persona
     public string Telefono
     {
         get { return _telefono; }
-        
+
     }
 
     public int Id
     {
         get { return _id; }
-        
+
     }
 
     public override string ToString()
     {
-        return $"Dni:{Dni} Nombre:{Nombre}, Apellido:{Apellido}, Mail:{Mail}, Telefono:{Telefono}";
+        return $"Dni:{Dni}, Nombre:{Nombre}, Apellido:{Apellido}, Mail:{Mail}, Telefono:{Telefono}";
     }
 
 
     public String UnaLinea()
     {
+        return ($"{Id},{Dni},{Nombre},{Apellido},{Mail},{Telefono}");
+    }
+
+    public String UnaLineaSinId()
+    {
         return ($"{Dni},{Nombre},{Apellido},{Mail},{Telefono}");
     }
+
+
 }

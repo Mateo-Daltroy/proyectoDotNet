@@ -90,7 +90,8 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         {
             Console.WriteLine(e.Message);
         }
-    } 
+    }
+
 
     public void Actualizar(Persona per)
     {
@@ -118,11 +119,16 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
             {
                 throw new EntidadNotFoundException($"Persona con ID {per._id} no encontrada para actualizar.");
             }
+            lector.Close();
+            escritor.Close();
         }
         catch (Exception e)
         {
             Console.WriteLine($"Error al actualizar Persona: {e.Message}");
         }
+
+
+
         File.Replace(tempFilePath, _pathRepo, null);
     }
 
@@ -171,7 +177,9 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         try
         {
             string[] partes = unaLinea.Split(',');
-            return new Persona(
+
+           
+            Persona p = new Persona(
                 int.Parse(partes[0]),
                 partes[1],
                 partes[2],
@@ -179,16 +187,22 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
                 partes[4],
                 partes[5]
             );
+            
+            return p;
         }
         catch (Exception)
         {
             throw new ValidacionException();
         }
+        finally
+        {
+
+        }
     }
 
     public IEnumerable<Persona> ObtenerTodos()
     {
-        List<Persona> reservas = new List<Persona>();
+        List<Persona> p = new List<Persona>();
         try
         {
             using StreamReader lector = new StreamReader(_pathRepo);
@@ -197,20 +211,22 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
             {
                 try
                 {
-                    reservas.Add(StringToPers(linea));
+                    p.Add(StringToPers(linea));
                 }
                 catch (ValidacionException)
                 {
-                    Console.WriteLine("Advertencia: línea salteada porque no respetaba el formato");
+                    Console.WriteLine("Advertencia: línea salteada porque no respetaba el formato (obtenerTodos())");
                 }
             }
+            lector.Close();
         }
         catch (FileNotFoundException)
         {
             Console.WriteLine("El repositorio no fue encontrado. Creando uno nuevo...");
             File.Create(_pathRepo).Close();
         }
-        return reservas;
+        
+        return p;
     }
 
     
@@ -238,8 +254,6 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
             }
         }
         return false;
-        //throw new EntidadNotFoundException();
-
     }
     public int getIdConMail(String mail)
     {
@@ -260,7 +274,8 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
         try
         {
             using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
-            escritor.WriteLine(managerId.ObtenerNuevoId(_pathRepoId) + "," + p.UnaLinea());
+            escritor.WriteLine(managerId.ObtenerNuevoId(_pathRepoId) + "," + p.UnaLineaSinId());
+            escritor.Close();
         }
         catch (Exception e)
         {
@@ -284,6 +299,7 @@ public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
                     break;
                 }
             }
+            sr.Close();
         }
         foreach (String palabra in palabras)
         {

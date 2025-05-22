@@ -18,6 +18,7 @@ namespace CentroEventos.Repositorios.GestionIDs
                 if (int.TryParse(contenido, out int idActual))
                 {
                     nuevoId = idActual + 1;
+
                 }
             }
 

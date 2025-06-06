@@ -25,8 +25,6 @@ CRUDPersona cRUDPersona = new CRUDPersona(repoTempPers, gestor);
 CRUDEventoDeportivo cRUDEventoDeportivo = new CRUDEventoDeportivo(repoTempEv, repoTempPers, repoTempRes,gestor);
 
 
-//repoTempPers.metodo();
-
 // Display
 Console.WriteLine("-----------------------------------------------");
 Console.WriteLine("|        Bienvenido a la consola del 	      |");

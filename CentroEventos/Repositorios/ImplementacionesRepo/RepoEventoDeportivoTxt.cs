@@ -10,9 +10,12 @@ namespace Repositorios.ImplementacionesRepo;
 public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
 {
     private readonly string _pathRepo = Path.Combine(
+    Path.Combine(
         Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
-        "Eventos.txt"
-    );
+        "Repositorios"
+    ),
+    "Eventos.txt"
+);
 
     public void Agregar(EventoDeportivo ev)
     {

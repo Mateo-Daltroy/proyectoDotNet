@@ -12,22 +12,29 @@ namespace CentroEventos.Repositorios.implementacionesRepo;
 
 public class RepoPersonasTxt : IRepositorioPersona, IServicioAutorizacion
 {
-
-    private readonly string _pathRepo = Path.Combine(
+        private readonly string _pathRepo = Path.Combine(
+    Path.Combine(
         Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
-        "Personas.txt");
+        "Repositorios"
+    ),
+    "Personas.txt"
+);
 
-    private readonly string _pathRepoId = Path.Combine(
+private readonly string _pathRepoId = Path.Combine(
+    Path.Combine(
         Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
-        "idPersonas.txt");
+        "Repositorios"
+    ),
+    "idPersonas.txt"
+);
 
     private IdManager managerId = new IdManager();
 
-    /*public RepoPersonasTxt()
+    public RepoPersonasTxt()
     {
         Console.WriteLine(_pathRepo);
         Console.WriteLine(_pathRepoId);
-    }*/
+    }
 
     public Boolean ExisteId(int id)
     {

@@ -9,10 +9,7 @@ namespace Repositorios.ImplementacionesRepo;
 
 public class RepoReservasTxt : IRepositorioReserva
 {
-    /*private readonly string _pathRepo = Path.Combine(
-        Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
-        "Reservas.txt"
-    );*/
+ 
     private readonly string _pathRepo = Path.Combine(
     Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName,
     "Repositorios",

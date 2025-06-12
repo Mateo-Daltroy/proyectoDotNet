@@ -32,51 +32,8 @@ public class CRUDEventoDeportivo
         _auth = new ServicioAuthProvisional(); // solo devuelve true para user id 1
     }
 
-    public void Alta(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
-    {
-        try
-        {
-            if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
-                throw new FalloAutorizacionException();
 
-            validadorEventoDeportivo.Validar(evento, _repoPersona);
-
-            int nuevoId = _gestor.ObtenerNuevoId(_pathId);
-            EventoDeportivo eventoFinal = new(
-                id: nuevoId,
-                nombre: evento._nombre,
-                descripcion: evento._descripcion,
-                fechaHoraInicio: evento._fechaHoraInicio,
-                duracionHoras: evento._duracionHoras,
-                cupoMaximo: evento._cupoMaximo,
-                responsableId: evento._responsableId
-            );
-
-            _repo.Agregar(eventoFinal);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-    }
-
-    public void Baja(int id, int idUsuario)
-    {
-        try
-        {
-            if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
-                throw new FalloAutorizacionException();
-
-            if (!_repo.Contiene(id))
-                throw new EntidadNotFoundException();
-
-            _repo.Eliminar(id);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-    }
+    
 
     public void Modificacion(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
     {

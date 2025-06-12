@@ -26,7 +26,7 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error al agregar evento: {e.Message}");
+            throw new Exception ($"Error al agregar evento: {e.Message}");
         }
         finally
         {
@@ -62,7 +62,7 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
                 }
                 catch (ValidacionException)
                 {
-                    Console.WriteLine("Advertencia: línea salteada porque no respetaba el formato.");
+                    throw new Exception ("Advertencia: línea salteada porque no respetaba el formato.");
                 }
             }
 
@@ -71,7 +71,7 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error al actualizar evento: {e.Message}");
+            throw new Exception ($"Error al actualizar evento: {e.Message}");
         }
         finally
         {
@@ -111,7 +111,7 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error al eliminar evento: {e.Message}");
+            throw new Exception ($"Error al eliminar evento: {e.Message}");
         }
         finally
         {
@@ -139,7 +139,7 @@ public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
             }
             catch (ValidacionException)
             {
-                Console.WriteLine("Línea corrupta ignorada en archivo Eventos.txt.");
+                throw new Exception ("Línea corrupta ignorada en archivo Eventos.txt.");
             }
         }
         lector.Close();

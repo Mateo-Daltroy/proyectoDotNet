@@ -1,4 +1,5 @@
 using Aplicacion.entidades;
+using Aplicacion.excepciones;
 using Aplicacion.validadores;
 
 
@@ -25,7 +26,7 @@ public class AltaEvento
                 cupoMaximo: evento._cupoMaximo,
                 responsableId: evento._responsableId
             );
-
+            
             _repo.Agregar(eventoFinal);
         }
         catch (Exception e)

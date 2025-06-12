@@ -7,7 +7,6 @@ using Aplicacion.validadores;
 using CentroEventos.Aplicacion.InterfacesRepo;
 using CentroEventos.Repositorios.GestionIDs;
 using CentroEventos.Repositorios.implementacionesRepo;
-using Repositorios.CRUDs;
 using Repositorios.ImplementacionesRepo;
 
 // Variables Globales
@@ -22,9 +21,6 @@ IRepositorioReserva repoTempRes = new RepoReservasTxt();
 IRepositorioPersona repoTempPers = new RepoPersonasTxt();
 IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoTxt();
 IIdManager gestor = new IdManager();
-CRUDReserva cRUDReserva = new CRUDReserva(repoTempRes, repoTempEv, repoTempPers, gestor);
-CRUDPersona cRUDPersona = new CRUDPersona(repoTempPers, gestor);
-CRUDEventoDeportivo cRUDEventoDeportivo = new CRUDEventoDeportivo(repoTempEv, repoTempPers, repoTempRes,gestor);
 
 
 // Display

@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using Aplicacion.autorizacionProv;
+using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 
@@ -17,9 +18,29 @@ public class Persona
     
     private List<Permiso> _permisos;
 
-    public Persona(int id, string dni, string nombre, string apellido, string mail, string telefono)
+    public Persona(string dni, string nombre, string apellido, string mail, string telefono)
     {
-        _id = id;
+        if (!ValidacionPersona.ValidarDni(dni))
+        {
+            throw new ValidacionException("El formato del Dni no es correcto.");
+        }
+        if (!ValidacionPersona.ValidarNombre(nombre))
+        {
+            throw new ValidacionException("El formato del Nombre no es correcto.");
+        }
+        if (!ValidacionPersona.ValidarApellido(apellido))
+        {
+            throw new ValidacionException("El formato del Apellido no es correcto.");
+        }
+        if (!ValidacionPersona.ValidarMail(mail))
+        {
+            throw new ValidacionException("El formato del Mail no es correcto.");
+        }
+        if (!ValidacionPersona.ValidarTelefono(telefono))
+        {
+            throw new ValidacionException("El formato del Telefono no es correcto.");
+        }
+
         _dni = dni;
         _nombre = nombre;
         _apellido = apellido;
@@ -28,15 +49,7 @@ public class Persona
         _permisos = new();
     }
 
-    public Persona(string dni, string nombre, string apellido, string mail, string telefono)
-    {
-        _dni = dni;
-        _nombre = nombre;
-        _apellido = apellido;
-        _mail = mail;
-        _telefono = telefono;
-        _permisos = new();
-    }
+    public Persona(){}
 
 
     public string? Dni

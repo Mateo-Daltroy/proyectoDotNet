@@ -8,13 +8,13 @@ namespace Aplicacion.entidades;
 
 public class Persona
 {
-    public int _id { get; }
-    public string? _dni { get; }
-    public String _nombre { get; }
-    public string _apellido { get; }
-    public string _mail { get; }
-    public string _telefono { get; }
-    // No seria preferible usar un set?
+    public int _id { get; private set; }
+    public string? _dni { get; private set; }
+    public String _nombre { get; private set; }
+    public string _apellido { get; private set; }
+    public string _mail { get; private set; }
+    public string _telefono { get; private set; }
+    
     private List<Permiso> _permisos;
 
     public Persona(int id, string dni, string nombre, string apellido, string mail, string telefono)

@@ -34,6 +34,11 @@ public class Reserva
         this._id = idPropio;
     }
 
+    protected Reserva()
+    {
+        // Constructor protegido sin parametros para Entity Framework Core
+    }
+    
     public override string ToString()
     {
         return ($"[idRes: {_id,-3} idPers: {_personaId,-3}, idEv: {_eventoDeportivoId,-3}, fecha: {_fechaAltaReserva}, estado: {_estadoAsistencia,-9}]");

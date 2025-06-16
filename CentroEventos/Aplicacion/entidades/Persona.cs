@@ -49,8 +49,10 @@ public class Persona
         _permisos = new();
     }
 
-    public Persona(){}
-
+    protected Persona()
+        {
+            // Constructor protegido sin parametros para Entity Framework Core
+        }        
 
     public string? Dni
     {

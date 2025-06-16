@@ -1,7 +1,7 @@
 using Aplicacion.entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace Aplicacion.Context;
+namespace Repositorios.Context;
 
 public class CentroEventoContext : DbContext
 {

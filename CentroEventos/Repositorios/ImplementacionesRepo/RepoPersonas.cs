@@ -18,7 +18,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(per => per.Dni == p.Dni || per.Mail == p.Mail);
+            var persona = context.Personas.FirstOrDefault(per => per._dni == p._dni || per._mail == p._mail);
             if (persona == null)
             {
                 context.Personas.Add(p);
@@ -36,9 +36,10 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
+                new RepoReservas.EliminarPorPersona(id);
                 context.Personas.Remove(persona);
                 context.SaveChanges();
             }
@@ -48,7 +49,36 @@ public class RepoPersonas : IRepositorioPersona
 
     public void Actualizar(int documento, Persona p)
     {
+        using (var context = new CentroEventoContext())
+        {
+            var persona = context.Personas.FirstOrDefault(p => p._dni == documento);
+            if (persona != null)
+            {
+                if (p._dni != "")
+                {
+                    persona._dni = p._dni;
+                }
 
+                if (p._nombre != "")
+                {
+                    persona._nombre = p._nombre;
+                }
+
+                if (p._apellido != "")
+                {
+                    persona._apellido = p._apellido;
+                }
+
+                if (p._mail != "")
+                {
+                    persona._mail = p._mail;
+                }
+                
+                if (p._telefono!="") {
+                    persona._telefono = p._telefono;
+                }
+            }
+        }
     }
 
     public Boolean ExisteId(int id)
@@ -116,8 +146,8 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p.Mail.Equals(mail));
-            if (persona != null) return persona.Id;
+            var persona = context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
+            if (persona != null) return persona._id;
             return -1;
         }
     }
@@ -125,8 +155,8 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p.Dni.Equals(documento));
-            if (persona != null) return persona.Id;
+            var persona = context.Personas.FirstOrDefault(p => p._dni.Equals(documento));
+            if (persona != null) return persona._id;
             return -1;
         }
     }
@@ -136,7 +166,7 @@ public class RepoPersonas : IRepositorioPersona
         using (var context = new CentroEventoContext())
         {
 
-            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p._id == id);
             return persona;
 
         }
@@ -148,7 +178,7 @@ public class RepoPersonas : IRepositorioPersona
         using (var context = new CentroEventoContext())
         {
 
-            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p._id == id);
             return true;
             // sin hacer //////////////////////////////////////////////////////////////////////////
             

@@ -6,20 +6,26 @@ namespace Aplicacion.validadores;
 
 public static class ValidadorReserva
 {
-    public static void validarDatos(int idPers, int idEv, DateTime date, IRepositorioReserva repoRes, IRepositorioEventoDeportivo repoEv, IRepositorioPersona repoPers) 
+    public static bool validarDatos(int idPers, int idEv, DateTime date, IRepositorioReserva repoRes, IRepositorioEventoDeportivo repoEv, IRepositorioPersona repoPers, ref string mens) 
     {
         if (!repoPers.ExisteId(idPers) || !repoEv.Contiene(idEv)) 
         {
-            throw new EntidadNotFoundException();
+            mens = new EntidadNotFoundException().Message;
+            return false;
+            //throw new EntidadNotFoundException();
         }
         if (repoRes.ExisteId(idPers, idEv))
         {
-            throw new DuplicadoException();
+            mens = new DuplicadoException().Message;
+            return false;
+            //throw new DuplicadoException();
         }
         if (repoRes.GetAsistentes(idEv) >= repoEv.ObtenerPorId(idEv)._cupoMaximo)
         {
-            throw new CupoExtendidoException();
+            mens = new CupoExtendidoException().Message;
+            return false;
         }
+        return true;
     }
 
 }

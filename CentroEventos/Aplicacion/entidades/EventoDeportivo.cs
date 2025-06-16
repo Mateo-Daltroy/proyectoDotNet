@@ -1,7 +1,4 @@
 using System;
-
-
-
 using Aplicacion.validadores;
 using Aplicacion.interfacesRepo;
 using System.Data.Common;
@@ -12,13 +9,13 @@ namespace Aplicacion.entidades
     public class EventoDeportivo
     {
         // Propiedades
-        public int _id { get; private set;}
-        public string _nombre { get; private set; }
-        public string _descripcion { get; private set; }
-        public DateTime _fechaHoraInicio { get; private set; }
-        public double _duracionHoras { get; private set; }
-        public int _cupoMaximo { get; private set; }
-        public int _responsableId { get; private set; }
+        public int _id { get; set;}
+        public string _nombre { get; set; }
+        public string _descripcion { get; set; }
+        public DateTime _fechaHoraInicio { get; set; }
+        public double _duracionHoras { get; set; }
+        public int _cupoMaximo { get; set; }
+        public int _responsableId { get; set; }
 
         // CONSTRUCTOR SIN ID
         public EventoDeportivo(

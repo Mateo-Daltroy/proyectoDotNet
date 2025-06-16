@@ -121,7 +121,6 @@ public class RepoReservas : IRepositorioReserva
         }
         */
     }
-
     public void Eliminar(Reserva res)
     {
         var context = new CentroEventoContext();

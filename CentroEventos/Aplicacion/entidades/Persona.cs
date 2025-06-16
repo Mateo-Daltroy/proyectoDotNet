@@ -17,7 +17,6 @@ public class Persona
     public string _telefono { get; private set; }
     
     private List<Permiso> _permisos;
-
     public Persona(string dni, string nombre, string apellido, string mail, string telefono)
     {
         _dni = dni;
@@ -39,9 +38,9 @@ public class Persona
         _permisos = new List<Permiso>();
     }        
 
-    public override string ToString()
-    {
-        return $"Dni:{_dni}, Nombre:{_nombre}, Apellido:{_apellido}, Mail:{_mail}, Telefono:{_telefono}";
+
+    public String ToString (){
+        return $"Dni: {this._dni}, Nombre: {this._nombre}, Apellido: {this._apellido}, Mail: {this._mail}, Telefono: {this._telefono}";
     }
 
 }

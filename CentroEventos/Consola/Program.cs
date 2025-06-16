@@ -10,13 +10,6 @@ using CentroEventos.Aplicacion.InterfacesRepo;
 using CentroEventos.Repositorios.implementacionesRepo;
 using Repositorios.ImplementacionesRepo;
 
-// Variables Globales
-string input;
-int Id = -1;
-
-//djfnñsjfn
-//nkdn
-
 //_Inicializar Bases de Datos_
 IRepositorioReserva repoTempRes = new RepoReservas();
 IRepositorioPersona repoTempPers = new RepoPersonas();

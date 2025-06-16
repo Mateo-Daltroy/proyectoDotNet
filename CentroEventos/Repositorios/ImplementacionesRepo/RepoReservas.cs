@@ -4,6 +4,8 @@ using System.IO;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
+using Microsoft.EntityFrameworkCore;
+using Repositorios.Context;
 
 namespace Repositorios.ImplementacionesRepo;
 
@@ -14,10 +16,30 @@ public class RepoReservas : IRepositorioReserva
     Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName,
     "Repositorios",
     "Reservas.txt"
-);
+    );
+
+    public void EliminarPorPersona(int id)
+    {
+        new CentroEventoContext()
+            .Reservas
+            .Where(res => res._personaId == id)
+            .ExecuteDelete();
+    }
+
+    public void EliminarPorEvento(int id)
+    {
+        new CentroEventoContext()
+            .Reservas
+            .Where(res => res._eventoDeportivoId == id)
+            .ExecuteDelete();
+    }
 
     public void Agregar(Reserva res)
     {
+        new CentroEventoContext()
+            .Reservas
+            .Add(res);
+        /*
         using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
         try
         {
@@ -31,15 +53,25 @@ public class RepoReservas : IRepositorioReserva
         {
             escritor.Close();
         }
+        */
     }
 
     public Reserva ObtenerPorId(int id)
     {
+        // La lista siempre deberia de ser de un solo elemento, pero aun 
+        // asi esta es la manera mas facil de retornar que se me ocurrio
+        return new CentroEventoContext()
+            .Reservas
+            .Where(match => match._id == id)
+            .ToList()
+            .First();
+        /*
         foreach (Reserva res in ObtenerTodos())
         {
             if (res._id == id) return res;
         }
         throw new EntidadNotFoundException($"Reserva con ID {id} no encontrada.");
+        */
     }
 
     public void Actualizar(Reserva res)

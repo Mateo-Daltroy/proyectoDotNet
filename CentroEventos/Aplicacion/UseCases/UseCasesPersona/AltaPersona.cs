@@ -1,15 +1,19 @@
 using Aplicacion.entidades;
+using Aplicacion.UseCases.UseCases;
+using Aplicacion.UseCases.UseCasesReserva;
 using Microsoft.EntityFrameworkCore;
 
 namespace Aplicacion.UseCases.UseCasesPersona;
 
-public class AltaPersona
+public class AltaPersona (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
-    public void AgregarPersona(DbContext db, Persona p)
+
+    public void Ejecutar(Persona p)
     {
-        using (var context = new db);
         try
         {
+
+            repositorio.AltaPersona(p);
 
         }
         catch (Exception e)
@@ -17,6 +21,8 @@ public class AltaPersona
             Console.WriteLine(e);
             return;
         }
-        
+
     }
+    
+    
 }

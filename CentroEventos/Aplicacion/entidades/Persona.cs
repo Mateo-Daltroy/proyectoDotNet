@@ -39,42 +39,6 @@ public class Persona
         _permisos = new List<Permiso>();
     }        
 
-    public string? Dni
-    {
-        get { return _dni; }
-
-    }
-
-    public string Nombre
-    {
-        get { return _nombre; }
-
-    }
-
-    public string Apellido
-    {
-        get { return _apellido; }
-
-    }
-
-    public string Mail
-    {
-        get { return _mail; }
-
-    }
-
-    public string Telefono
-    {
-        get { return _telefono; }
-
-    }
-
-    public int Id
-    {
-        get { return _id; }
-
-    }
-
     public override string ToString()
     {
         return $"Dni:{Dni}, Nombre:{Nombre}, Apellido:{Apellido}, Mail:{Mail}, Telefono:{Telefono}";

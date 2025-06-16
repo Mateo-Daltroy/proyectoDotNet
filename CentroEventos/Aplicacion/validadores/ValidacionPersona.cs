@@ -9,87 +9,63 @@ namespace Aplicacion.validadores;
 public static class ValidacionPersona
 {
 
-    /*public static void ValidarPersona (Persona persona, IRepositorioPersona repoPersona){
-        
-        if (persona.Nombre == null || persona.Nombre == "" || persona.Apellido == null ||
-        persona.Apellido == "" || persona.Dni == null || persona.Dni == "" || persona.Telefono == null ||
-        persona.Telefono == "" || persona.Mail == null || persona.Mail == "")
-        {
-
-            throw new ValidacionException();
-        }
-        if (repoPersona.ExisteMail(persona.Mail)){
-
-            throw new DuplicadoException("El mail ingresado ya fue registrado.");
-        }
-        if (repoPersona.ExisteDocumento(persona.Dni)){
-
-            throw new DuplicadoException("El documento ingresado ya fue registrado.");
-        }
-    
-    }*/
-
-    public static bool ValidarDni(string dni)
+    public static bool ValidarPersona(IRepositorioPersona repo, String dni, String nombre, String mail, String apellido, String telefono, ref string mensaje)
     {
+        if (repo.ExisteDocumento(dni))
+        {
+            mensaje = new DuplicadoException().Message();
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(dni))
         {
+            mensaje = "El dni no debe estar vacio.";
             return false;
         }
 
         if (dni.Contains("."))
         {
+            mensaje = "el dni no debe tener puntos.";
             return false;
         }
 
-        return true;
-    }
-
-    public static bool ValidarNombre(string nombre)
-    {
-        if (string.IsNullOrWhiteSpace(nombre))
+        if (repo.ExisteMail(mail))
         {
+            mensaje = new DuplicadoException().Message();
             return false;
         }
 
-        // Puedes agregar más validaciones si es necesario
-        return true;
-    }
-
-    public static bool ValidarApellido(string apellido)
-    {
-        if (string.IsNullOrWhiteSpace(apellido))
-        {
-            return false;
-        }
-
-        // Puedes agregar más validaciones si es necesario
-        return true;
-    }
-
-    public static bool ValidarMail(string mail)
-    {
         if (string.IsNullOrWhiteSpace(mail))
         {
+            mensaje = "el mail no debe esta vacio.";
             return false;
         }
 
-        // Validación simple de formato de mail
         if (!mail.Contains("@") || !mail.Contains("."))
         {
+            mensaje = "el formato del mail no es correcto.";
             return false;
         }
 
-        return true;
-    }
+        if (string.IsNullOrWhiteSpace(nombre))
+        {
+            mensaje = "el nombre no debe estar vacio.";
+            return false;
+        }
 
-    public static bool ValidarTelefono(string telefono)
-    {
+        if (string.IsNullOrWhiteSpace(apellido))
+        {
+            mensaje = "el apellido no debe estar vacio";
+            return false;
+        }
+
         if (string.IsNullOrWhiteSpace(telefono))
         {
+            mensaje = "el telefono no debe esta vacio";
             return false;
         }
-
-        // Puedes agregar más validaciones si es necesario
         return true;
+
     }
+
 }

@@ -31,5 +31,4 @@ public class AltaPersona (IRepositorioPersona repositorio): PersonaUseCase (repo
 
     }
     
-    
 }

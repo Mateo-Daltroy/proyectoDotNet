@@ -1,10 +1,14 @@
+using Aplicacion.interfacesRepo;
+using Aplicacion.UseCases.UseCases;
+
 namespace Aplicacion.UseCases.UseCasesPersona;
 
-public class ListarTodasLasPersonas
+public class ListarTodasLasPersonas (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
     public String ListadoCompleto()
     {
 
-        return _miRepo.listarTodos();
+        return repositorio.listarTodos();
+        
     }
 }

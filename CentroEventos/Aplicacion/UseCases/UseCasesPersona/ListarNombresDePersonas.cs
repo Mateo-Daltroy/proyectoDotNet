@@ -1,15 +1,13 @@
+using Aplicacion.interfacesRepo;
+using Aplicacion.UseCases.UseCases;
+
 namespace Aplicacion.UseCases.UseCasesPersona;
 
-public class ListarNombresDePersonas
+public class ListarNombresDePersonas (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
+
 {
-    public List<String> devuelveListaNombres(List<int> listaId)
+    public List<String> Ejecutar(List<int> listaId)
     {
-        List<String> listaNombres = new List<string>();
-  
-        foreach (int id in listaId)
-        {
-            listaNombres.Add(_miRepo.getNombreConId(id));
-        }
-        return listaNombres;
+        return repositorio.ListarNombresDePersonas(listaId);
     }
 }

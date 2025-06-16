@@ -10,7 +10,7 @@ namespace Aplicacion.entidades;
 public class Persona
 {
     public int _id { get; private set; }
-    public string? _dni { get; private set; }
+    public string _dni { get; private set; }
     public String _nombre { get; private set; }
     public string _apellido { get; private set; }
     public string _mail { get; private set; }
@@ -20,27 +20,6 @@ public class Persona
 
     public Persona(string dni, string nombre, string apellido, string mail, string telefono)
     {
-        if (!ValidacionPersona.ValidarDni(dni))
-        {
-            throw new ValidacionException("El formato del Dni no es correcto.");
-        }
-        if (!ValidacionPersona.ValidarNombre(nombre))
-        {
-            throw new ValidacionException("El formato del Nombre no es correcto.");
-        }
-        if (!ValidacionPersona.ValidarApellido(apellido))
-        {
-            throw new ValidacionException("El formato del Apellido no es correcto.");
-        }
-        if (!ValidacionPersona.ValidarMail(mail))
-        {
-            throw new ValidacionException("El formato del Mail no es correcto.");
-        }
-        if (!ValidacionPersona.ValidarTelefono(telefono))
-        {
-            throw new ValidacionException("El formato del Telefono no es correcto.");
-        }
-
         _dni = dni;
         _nombre = nombre;
         _apellido = apellido;

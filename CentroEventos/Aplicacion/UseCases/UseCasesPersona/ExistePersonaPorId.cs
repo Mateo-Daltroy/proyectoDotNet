@@ -1,3 +1,4 @@
+using Aplicacion.interfacesRepo;
 using Aplicacion.UseCases.UseCases;
 using Aplicacion.UseCases.UseCasesReserva;
 
@@ -5,9 +6,9 @@ namespace Aplicacion.UseCases.UseCasesPersona;
 
 public class ExistePersonaPorId (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
-    public Boolean ExisteId(int id)
+    public Boolean Ejecutar(int id)
     {
-        var persona = repositorio.ExistePersonaPorId(id);
-        return persona != null;
+        return repositorio.ExisteId(id);
+        
     }
 }

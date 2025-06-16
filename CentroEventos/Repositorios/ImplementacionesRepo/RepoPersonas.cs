@@ -15,7 +15,7 @@ namespace CentroEventos.Repositorios.implementacionesRepo;
 public class RepoPersonas : IRepositorioPersona
 {
 
-    public void AltaPersona(Persona p)
+    public void registrarPersona(Persona p)
     {
         using (var context = new CentroEventoContext())
         {
@@ -33,7 +33,7 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public void BajaPersona(int id)
+    public void Eliminar(int id)
     {
         using (var context = new CentroEventoContext())
         {
@@ -47,18 +47,114 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public Persona? ExistePersonaPorId(int id)
+    public void Actualizar(Persona p)
+    {
+
+    }
+
+    public Boolean ExisteId(int id)
     {
         using (var context = new CentroEventoContext())
         {
             var persona = context.personas.FirstOrDefault(p => p.Id == id);
-            return persona;
+            return persona != null;
         }
     }
 
-    public List<Persona> ListarTodasLasPersonas()
+    public Boolean ExisteMail(String mail)
     {
-        
+        using (var context = new CentroEventoContext())
+        {
+            var persona = context.personas.FirstOrDefault(p => p.Mail.Equals(mail));
+            return persona != null;
+        }
+    }
+
+    public Boolean ExisteDocumento(string documento)
+    {
+        using (var context = new CentroEventoContext())
+        {
+
+            var persona = context.personas.FirstOrDefault(p => p.Dni == documento);
+            return persona != null;
+        }
+    }
+
+    public String listarTodos()
+    {
+
+        using (var context = new CentroEventoContext())
+        {
+            List<Persona> lista = context.personas.ToList();
+            String todos = "";
+
+            foreach (Persona p in lista)
+            {
+                todos += p.ToString() + "\n";
+            }
+            return todos;
+        }
+
+    }
+
+    public List<String> ListarNombresDePersonas(List<int> listaId)
+    {
+        using (var context = new CentroEventoContext())
+        {
+            List<String> listaNombres = new List<String>();
+            foreach (int id in listaId)
+            {
+                var persona = context.personas.FirstOrDefault(p => p.Id == id);
+                if (persona != null) listaNombres.Add(persona.Nombre);
+
+            }
+            return listaNombres;
+        }
+
+    }
+
+    public int getIdConMail(String mail)
+    {
+        using (var context = new CentroEventoContext())
+        {
+            var persona = context.personas.FirstOrDefault(p => p.Mail.Equals(mail));
+            if (persona != null) return persona.Id;
+            return -1;
+        }
+    }
+    public int getIdConDocumento(String documento)
+    {
+        using (var context = new CentroEventoContext())
+        {
+            var persona = context.personas.FirstOrDefault(p => p.Dni.Equals(documento));
+            if (persona != null) return persona.Id;
+            return -1;
+        }
+    }
+
+    public String getNombreConId(int id)
+    {
+        using (var context = new CentroEventoContext())
+        {
+
+            var persona = context.personas.FirstOrDefault(p => p.Id == id);
+            if (persona != null) return persona.Nombre;
+            return "";
+
+        }
+    }
+
+    public Boolean PoseeElPermiso(int id, Permiso permiso)
+    {
+
+        using (var context = new CentroEventoContext())
+        {
+
+            var persona = context.personas.FirstOrDefault(p => p.Id == id);
+            
+            
+        }
+
     }
 
 }

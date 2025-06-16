@@ -1,3 +1,4 @@
+using Aplicacion.interfacesRepo;
 using Aplicacion.UseCases.UseCases;
 using Aplicacion.UseCases.UseCasesReserva;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -10,7 +11,7 @@ public class BajaPersona(IRepositorioPersona repositorio) : PersonaUseCase(repos
     {
         try
         {
-            repositorio.BajaPersona(id);
+            repositorio.Eliminar(id);
         }
         catch (Exception e)
         {

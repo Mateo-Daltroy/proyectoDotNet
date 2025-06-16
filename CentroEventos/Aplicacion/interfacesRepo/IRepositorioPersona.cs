@@ -3,12 +3,21 @@ using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using CentroEventos.Aplicacion.InterfacesRepo;
 
-namespace Aplicacion.UseCases.UseCasesReserva;
+namespace Aplicacion.interfacesRepo;
 
 public interface IRepositorioPersona
 {
-    public void AltaPersona(Persona p);
-    public void BajaPersona(int id);
-    public Persona ExistePersonaPorId(int id);
-    public List<Persona> ListarTodasLasPersonas();
+    public Boolean ExisteMail(String mail);
+    public Boolean ExisteId(int id);
+    public int getIdConMail(String mail);
+    public int getIdConDocumento(String documento);
+    public void registrarPersona(Persona p);
+    public Boolean ExisteDocumento(String documento);
+    public void Eliminar(int id);
+    public void Actualizar(Persona per);
+    public String getNombreConId(int id);
+    public String listarTodos();
+    public Boolean PoseeElPermiso(int id, Permiso permiso);
+    public List<String> ListarNombresDePersonas(List<int> listaId);
+
 }

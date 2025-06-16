@@ -2,7 +2,7 @@ using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.validadores;
 
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesReserva;
 
 public class AltaReserva
 {

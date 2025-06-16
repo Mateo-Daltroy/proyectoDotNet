@@ -1,6 +1,6 @@
 using Aplicacion.autorizacionProv;
 
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesPersona;
 
 public class PersonaPoseeElPermiso
 {

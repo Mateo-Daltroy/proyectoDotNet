@@ -1,4 +1,4 @@
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesPersona;
 
 public class ListarTodasLasPersonas
 {

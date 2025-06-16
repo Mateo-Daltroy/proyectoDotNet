@@ -1,6 +1,6 @@
 using Aplicacion.entidades;
 
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesReserva;
 
 public class ListarTodasLasReservas
 {

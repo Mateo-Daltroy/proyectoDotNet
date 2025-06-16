@@ -3,7 +3,7 @@
 using Aplicacion.autorizacionProv;
 using Aplicacion.excepciones;
 
-namespace Apliacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesEvento;
 
 public class BajaEvento
 {

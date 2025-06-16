@@ -1,7 +1,7 @@
 using Aplicacion.entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesPersona;
 
 public class AltaPersona
 {

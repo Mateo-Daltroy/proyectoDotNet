@@ -1,6 +1,6 @@
 using Aplicacion.entidades;
 
-namespace Apliacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesEvento;
 
 public class ListarTodosLosEventos
 {

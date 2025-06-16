@@ -1,7 +1,6 @@
 using Aplicacion.autorizacionProv;
 using Aplicacion.excepciones;
-
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesReserva;
 
 public class BajaReserva
 {

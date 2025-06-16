@@ -2,7 +2,7 @@ using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesEvento;
 
 public class ModificarEvento
 {

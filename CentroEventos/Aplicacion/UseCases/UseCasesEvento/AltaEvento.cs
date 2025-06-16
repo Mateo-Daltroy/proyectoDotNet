@@ -3,7 +3,7 @@ using Aplicacion.excepciones;
 using Aplicacion.validadores;
 
 
-namespace Aplicacion.casoUso;
+namespace Aplicacion.UseCases.UseCasesEvento;
 
 public class AltaEvento
 {

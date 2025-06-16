@@ -18,10 +18,6 @@ public interface IRepositorioPersona
     public String getNombreConId(int id);
     public String listarTodos();
     public Boolean PoseeElPermiso(int id, Permiso permiso);
-<<<<<<< HEAD
     public List<String> ListarNombresDePersonas(List<int> listaId);
-=======
-
->>>>>>> cf0af105ff67dc2bd3f52fc7a99cb4c666c4d8af
 
 }

@@ -7,7 +7,6 @@ using Aplicacion.interfacesRepo;
 using Aplicacion.interfacesServ;
 using Aplicacion.UseCases.UseCasesReserva;
 using CentroEventos.Aplicacion.InterfacesRepo;
-using CentroEventos.Repositorios.GestionIDs;
 using Repositorios.Context;
 
 namespace CentroEventos.Repositorios.implementacionesRepo;
@@ -19,10 +18,10 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.personas.FirstOrDefault(per => per.Dni == p.Dni || per.Mail == p.Mail);
+            var persona = context.Personas.FirstOrDefault(per => per.Dni == p.Dni || per.Mail == p.Mail);
             if (persona == null)
             {
-                context.personas.Add(p);
+                context.Personas.Add(p);
                 context.SaveChanges();
 
             }
@@ -37,10 +36,10 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
             if (persona != null)
             {
-                context.personas.Remove(persona);
+                context.Personas.Remove(persona);
                 context.SaveChanges();
             }
             else throw new EntidadNotFoundException("no se encontro una persona con ese id.");
@@ -56,7 +55,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
             return persona != null;
         }
     }
@@ -65,7 +64,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.personas.FirstOrDefault(p => p.Mail.Equals(mail));
+            var persona = context.Personas.FirstOrDefault(p => p.Mail.Equals(mail));
             return persona != null;
         }
     }
@@ -75,7 +74,7 @@ public class RepoPersonas : IRepositorioPersona
         using (var context = new CentroEventoContext())
         {
 
-            var persona = context.personas.FirstOrDefault(p => p.Dni == documento);
+            var persona = context.Personas.FirstOrDefault(p => p.Dni == documento);
             return persona != null;
         }
     }
@@ -85,7 +84,7 @@ public class RepoPersonas : IRepositorioPersona
 
         using (var context = new CentroEventoContext())
         {
-            List<Persona> lista = context.personas.ToList();
+            List<Persona> lista = context.Personas.ToList();
             String todos = "";
 
             foreach (Persona p in lista)
@@ -104,7 +103,7 @@ public class RepoPersonas : IRepositorioPersona
             List<String> listaNombres = new List<String>();
             foreach (int id in listaId)
             {
-                var persona = context.personas.FirstOrDefault(p => p.Id == id);
+                var persona = context.Personas.FirstOrDefault(p => p.Id == id);
                 if (persona != null) listaNombres.Add(persona.Nombre);
 
             }
@@ -117,7 +116,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.personas.FirstOrDefault(p => p.Mail.Equals(mail));
+            var persona = context.Personas.FirstOrDefault(p => p.Mail.Equals(mail));
             if (persona != null) return persona.Id;
             return -1;
         }
@@ -126,7 +125,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.personas.FirstOrDefault(p => p.Dni.Equals(documento));
+            var persona = context.Personas.FirstOrDefault(p => p.Dni.Equals(documento));
             if (persona != null) return persona.Id;
             return -1;
         }
@@ -137,7 +136,7 @@ public class RepoPersonas : IRepositorioPersona
         using (var context = new CentroEventoContext())
         {
 
-            var persona = context.personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
             if (persona != null) return persona.Nombre;
             return "";
 
@@ -150,8 +149,8 @@ public class RepoPersonas : IRepositorioPersona
         using (var context = new CentroEventoContext())
         {
 
-            var persona = context.personas.FirstOrDefault(p => p.Id == id);
-            
+            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
+            return true;
             
         }
 

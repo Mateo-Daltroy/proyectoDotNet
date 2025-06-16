@@ -1,182 +1,124 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
+using Repositorios.Context;
 
 namespace Repositorios.ImplementacionesRepo;
 
-public class RepoEventoDeportivo : IRepositorioEventoDeportivo
+public class RepoEventoDeportivoEF : IRepositorioEventoDeportivo
 {
-    private readonly string _pathRepo = Path.Combine(
-    Path.Combine(
-        Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? "",
-        "Repositorios"
-    ),
-    "Eventos.txt"
-);
+    private readonly CentroEventoContext _context;
 
-    public void Agregar(EventoDeportivo ev)
+    public RepoEventoDeportivoEF(CentroEventoContext context)
     {
-        using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public async Task AgregarAsync(EventoDeportivo ev)
+    {
         try
         {
-            escritor.WriteLine(EventoToString(ev));
+            await _context.EventosDeportivos.AddAsync(ev);
+            await _context.SaveChangesAsync();
         }
         catch (Exception e)
         {
-            throw new Exception ($"Error al agregar evento: {e.Message}");
-        }
-        finally
-        {
-            escritor.Close();
+            throw new Exception($"Error al agregar evento: {e.Message}");
         }
     }
 
-    public EventoDeportivo ObtenerPorId(int id)
+    public async Task<EventoDeportivo> ObtenerPorIdAsync(int id)
     {
-        foreach (EventoDeportivo ev in ObtenerTodos())
+        var evento = await _context.EventosDeportivos.FindAsync(id);
+        
+        if (evento == null)
         {
-            if (ev._id == id) return ev;
+            throw new EntidadNotFoundException($"Evento con ID {id} no encontrado.");
         }
-        throw new EntidadNotFoundException($"Evento con ID {id} no encontrado.");
+        
+        return evento;
     }
 
-    public void Actualizar(EventoDeportivo ev)
+    public async Task ActualizarAsync(EventoDeportivo ev)
     {
-        string tempFilePath = _pathRepo + ".tmp";
-        bool actualizado = false;
-            using StreamReader lector = new StreamReader(_pathRepo);
-            using StreamWriter escritor = new StreamWriter(tempFilePath);
         try
         {
-            string? linea;
-            while ((linea = lector.ReadLine()) != null)
+            var eventoExistente = await _context.EventosDeportivos.FindAsync(ev._id);
+            
+            if (eventoExistente == null)
             {
-                try
-                {
-                    EventoDeportivo evActual = StringToEvento(linea);
-                    escritor.WriteLine(evActual._id == ev._id ? EventoToString(ev) : EventoToString(evActual));
-                    actualizado |= evActual._id == ev._id;
-                }
-                catch (ValidacionException)
-                {
-                    throw new Exception ("Advertencia: línea salteada porque no respetaba el formato.");
-                }
-            }
-
-            if (!actualizado)
                 throw new EntidadNotFoundException($"Evento con ID {ev._id} no encontrado para actualizar.");
+            }
+
+            // Actualizar propiedades
+            eventoExistente._nombre = ev._nombre;
+            eventoExistente._descripcion = ev._descripcion;
+            eventoExistente._fechaHoraInicio = ev._fechaHoraInicio;
+            eventoExistente._duracionHoras = ev._duracionHoras;
+            eventoExistente._cupoMaximo = ev._cupoMaximo;
+            eventoExistente._responsableId = ev._responsableId;
+
+            _context.EventosDeportivos.Update(eventoExistente);
+            await _context.SaveChangesAsync();
+        }
+        catch (EntidadNotFoundException)
+        {
+            throw;
         }
         catch (Exception e)
         {
-            throw new Exception ($"Error al actualizar evento: {e.Message}");
-        }
-        finally
-        {
-            lector.Close();
-            escritor.Close();
-            File.Replace(tempFilePath, _pathRepo, null);
+            throw new Exception($"Error al actualizar evento: {e.Message}");
         }
     }
 
-    public void Eliminar(int id)
+    public async Task EliminarAsync(int id)
     {
-        string tempFilePath = _pathRepo + ".tmp";
-        bool eliminado = false;
-        using StreamReader lector = new StreamReader(_pathRepo);
-        using StreamWriter escritor = new StreamWriter(tempFilePath);
         try
         {
-            string? linea;
-
-            while ((linea = lector.ReadLine()) != null)
+            var evento = await _context.EventosDeportivos.FindAsync(id);
+            
+            if (evento == null)
             {
-                EventoDeportivo ev = StringToEvento(linea);
-                if (ev._id != id)
-                {
-                    escritor.WriteLine(EventoToString(ev));
-                }
-                else
-                {
-                    eliminado = true;
-                }
-            }
-
-            if (!eliminado)
                 throw new EntidadNotFoundException($"No se encontró el evento con ID {id} para eliminar.");
+            }
 
-            File.Replace(tempFilePath, _pathRepo, null);
+            _context.EventosDeportivos.Remove(evento);
+            await _context.SaveChangesAsync();
+        }
+        catch (EntidadNotFoundException)
+        {
+            throw;
         }
         catch (Exception e)
         {
-            throw new Exception ($"Error al eliminar evento: {e.Message}");
-        }
-        finally
-        {
-            lector.Close();
-            escritor.Close();
+            throw new Exception($"Error al eliminar evento: {e.Message}");
         }
     }
 
-    public IEnumerable<EventoDeportivo> ObtenerTodos()
-    {
-        List<EventoDeportivo> lista = new();
-        using StreamReader lector = new StreamReader(_pathRepo);
-        if (!File.Exists(_pathRepo))
-        {
-            lector.Close();
-            return lista;
-        }
-
-        string? linea;
-        while ((linea = lector.ReadLine()) != null)
-        {
-            try
-            {
-                lista.Add(StringToEvento(linea));
-            }
-            catch (ValidacionException)
-            {
-                throw new Exception ("Línea corrupta ignorada en archivo Eventos.txt.");
-            }
-        }
-        lector.Close();
-        return lista;
-    }
-
-    public bool Contiene(int id)
-    {
-        return ObtenerTodos().Any(ev => ev._id == id);
-    }
-
-
-    private static string EventoToString(EventoDeportivo ev)
-    {
-        return $"{ev._id},{ev._nombre},{ev._descripcion},{ev._fechaHoraInicio:O},{ev._duracionHoras},{ev._cupoMaximo},{ev._responsableId}";
-    }
-
-    private static EventoDeportivo StringToEvento(string linea)
+    public async Task<IEnumerable<EventoDeportivo>> ObtenerTodosAsync()
     {
         try
         {
-            string[] partes = linea.Split(',');
-            return new EventoDeportivo(
-                id: int.Parse(partes[0]),
-                nombre: partes[1],
-                descripcion: partes[2],
-                fechaHoraInicio: DateTime.Parse(partes[3]),
-                duracionHoras: double.Parse(partes[4]),
-                cupoMaximo: int.Parse(partes[5]),
-                responsableId: int.Parse(partes[6])
-            );
+            return await _context.EventosDeportivos.ToListAsync();
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            throw new ValidacionException("Error al parsear la línea del archivo de eventos.");
+            throw new Exception($"Error al obtener todos los eventos: {e.Message}");
         }
     }
 
-}
+    public async Task<bool> ContieneAsync(int id)
+    {
+        return await _context.EventosDeportivos.AnyAsync(ev => ev._id == id);
+    }
 
+    public void Dispose()
+    {
+        _context?.Dispose();
+    }
+}

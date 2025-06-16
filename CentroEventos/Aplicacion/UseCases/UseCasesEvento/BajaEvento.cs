@@ -2,17 +2,18 @@
 
 using Aplicacion.autorizacionProv;
 using Aplicacion.excepciones;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva):EventoDeportivoUseCases(repositorio)
+public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva, ServicioAuthProvisional servicioAuth):EventoDeportivoUseCases(repositorio)
 {
     //ELIMINAR TAMBIEN RESERVAS ASOCIADAS
     public void Baja(int id, int idUsuario)
     {
         try
         {
-            if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
+            if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
                 throw new FalloAutorizacionException();
 
             if (!repositorio.Contiene(id))

@@ -40,6 +40,8 @@ namespace Aplicacion.entidades
         protected EventoDeportivo() //Lo pide el Entity Framework Core
         {
             // Constructor protegido sin parametros para Entity Framework Core
+            _nombre = string.Empty;
+            _descripcion = string.Empty;
         }            
 
         public DateTime ObtenerFechaHoraFin()

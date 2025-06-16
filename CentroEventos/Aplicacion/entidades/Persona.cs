@@ -29,9 +29,15 @@ public class Persona
     }
 
     protected Persona()
-        {
-            // Constructor protegido sin parametros para Entity Framework Core
-        }        
+    {
+        // Constructor protegido sin parametros para Entity Framework Core
+        _dni = string.Empty;
+        _nombre = string.Empty;
+        _apellido = string.Empty;
+        _mail = string.Empty;
+        _telefono = string.Empty;
+        _permisos = new List<Permiso>();
+    }        
 
     public string? Dni
     {

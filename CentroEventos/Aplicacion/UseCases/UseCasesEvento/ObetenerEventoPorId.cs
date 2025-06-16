@@ -1,4 +1,5 @@
 using Aplicacion.entidades;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 

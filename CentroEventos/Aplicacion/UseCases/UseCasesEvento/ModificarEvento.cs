@@ -1,6 +1,8 @@
 using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
+using Aplicacion.interfacesRepo;
+using Aplicacion.validadores;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 

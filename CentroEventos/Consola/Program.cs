@@ -10,13 +10,6 @@ using CentroEventos.Aplicacion.InterfacesRepo;
 using CentroEventos.Repositorios.implementacionesRepo;
 using Repositorios.ImplementacionesRepo;
 
-// Variables Globales
-string input;
-int Id = -1;
-
-//djfnñsjfn
-//nkdn
-
 //_Inicializar Bases de Datos_
 IRepositorioReserva repoTempRes = new RepoReservas();
 IRepositorioPersona repoTempPers = new RepoPersonas();
@@ -29,16 +22,16 @@ using (var context = new CentroEventoContext())
 Console.WriteLine("-- Tabla Personas --");
 foreach (var p in context.Personas)
 {
-    Console.WriteLine($"{p.Id} {p.Nombre}");
+    Console.WriteLine($"{p._id} {p._nombre}");
 }
 Console.WriteLine("-- Tabla Eventos --");
 foreach (var e in context.EventosDeportivos)
 {
-    Console.WriteLine($"{e.Id} {e.Nombre}");
+    Console.WriteLine($"{e._id} {e._nombre}");
 }
 Console.WriteLine("-- Tabla Reservas --");
 foreach (var r in context.Reservas)
 {
-    Console.WriteLine($"{r.Id} {r.PersonaId} {r.EventoId} {r.Fecha}");
+    Console.WriteLine($"{r._id} {r._personaId} {r._eventoDeportivoId} {r._fechaAltaReserva}");
 }
 }

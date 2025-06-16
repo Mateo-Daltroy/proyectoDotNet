@@ -1,14 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Aplicacion.entidades;
 
 namespace Aplicacion.interfacesRepo;
-public interface IRepositorioEventoDeportivo
+
+public interface IRepositorioEventoDeportivo : IDisposable
 {
-    void Agregar(EventoDeportivo evento);
-    EventoDeportivo ObtenerPorId(int id); 
-    // saque el nulleable "?" porque me generaba una warning de null en validadorReserva
-    // probablemente si no lo encuentra deberia hacer un throw EntidadNotFoundException 
-    IEnumerable<EventoDeportivo> ObtenerTodos();
-    void Actualizar(EventoDeportivo evento);
-    void Eliminar(int id);
-    Boolean Contiene(int id); //retorna si existe un evento bajo el id, lo necesito para validar una reserva - mate
+    Task AgregarAsync(EventoDeportivo ev);
+    Task<EventoDeportivo> ObtenerPorIdAsync(int id);
+    Task ActualizarAsync(EventoDeportivo ev);
+    Task EliminarAsync(int id);
+    Task<IEnumerable<EventoDeportivo>> ObtenerTodosAsync();
+    Task<bool> ContieneAsync(int id);
 }

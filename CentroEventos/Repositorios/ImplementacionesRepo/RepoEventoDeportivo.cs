@@ -7,7 +7,7 @@ using Aplicacion.interfacesRepo;
 
 namespace Repositorios.ImplementacionesRepo;
 
-public class RepoEventoDeportivoTxt : IRepositorioEventoDeportivo
+public class RepoEventoDeportivo : IRepositorioEventoDeportivo
 {
     private readonly string _pathRepo = Path.Combine(
     Path.Combine(

@@ -2,12 +2,12 @@ using Aplicacion.entidades;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class ObetenerEventoPorId
+public class ObtenerEventoPorId (IRepositorioEventoDeportivo repositorio):EventoDeportivoUseCases(repositorio)
 {
-    public EventoDeportivo obtenerPorId(int id)
+    public EventoDeportivo Ejecutar(int id)
     {
 
-        return _repo.ObtenerPorId(id);
+        return repositorio.ObtenerPorId(id);
 
     }
 }

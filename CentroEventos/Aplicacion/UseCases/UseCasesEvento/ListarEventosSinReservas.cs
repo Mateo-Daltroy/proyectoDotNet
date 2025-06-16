@@ -2,14 +2,14 @@ using Aplicacion.entidades;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class ListarEventosPasados (IRepositorioEventoDeportivo repositorio):EventoDeportivoUseCases(repositorio)
+public class ListarEventosSinReservas (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva):EventoDeportivoUseCases(repositorio)
 {
     public IEnumerable<EventoDeportivo> Ejecutar()
     {
         List<EventoDeportivo> l = new List<EventoDeportivo>();
         foreach (EventoDeportivo e in repositorio.ObtenerTodos())
         {
-            if (e._fechaHoraInicio < DateTime.Now)
+            if (repositorioReserva.GetAsistentes(e._id) == 0)
             {
                 l.Add(e);
             }

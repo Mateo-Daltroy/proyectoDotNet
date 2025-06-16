@@ -12,33 +12,14 @@ namespace Aplicacion.entidades
     public class EventoDeportivo
     {
         // Propiedades
-        public int _id { get; }
-        public string _nombre { get; set; }
-        public string _descripcion { get; set; }
-        public DateTime _fechaHoraInicio { get; set; }
-        public double _duracionHoras { get; set; }
-        public int _cupoMaximo { get; set; }
-        public int _responsableId { get; set; }
+        public int _id { get; private set;}
+        public string _nombre { get; private set; }
+        public string _descripcion { get; private set; }
+        public DateTime _fechaHoraInicio { get; private set; }
+        public double _duracionHoras { get; private set; }
+        public int _cupoMaximo { get; private set; }
+        public int _responsableId { get; private set; }
 
-        // Constructor con validaciones
-        public EventoDeportivo(
-            int id,
-            string nombre,
-            string descripcion,
-            DateTime fechaHoraInicio,
-            double duracionHoras,
-            int cupoMaximo,
-            int responsableId)
-        {
-            // Validaciones se haran a la hora de hacer el ALTA
-            this._id = id;
-            this._nombre = nombre;
-            this._descripcion = descripcion;
-            this._fechaHoraInicio = fechaHoraInicio;
-            this._duracionHoras = duracionHoras;
-            this._cupoMaximo = cupoMaximo;
-            this._responsableId = responsableId; //MODIFICAR PARA USAR LA INTERFAZ
-        }
         // CONSTRUCTOR SIN ID
         public EventoDeportivo(
             string nombre,
@@ -56,6 +37,10 @@ namespace Aplicacion.entidades
             this._cupoMaximo = cupoMaximo;
             this._responsableId = responsableId; //MODIFICAR PARA USAR LA INTERFAZ
         }
+        protected EventoDeportivo() //Lo pide el Entity Framework Core
+        {
+            // Constructor protegido sin parametros para Entity Framework Core
+        }            
 
         public DateTime ObtenerFechaHoraFin()
         {

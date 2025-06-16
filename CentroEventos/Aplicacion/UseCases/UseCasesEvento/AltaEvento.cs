@@ -1,20 +1,21 @@
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
+using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class AltaEvento
+public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPersona repositorioPersona):EventoDeportivoUseCases(repositorio)
 {
-    public void Alta(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
+    public void Ejecutar(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
     {
         try
         {
-            if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
-                throw new FalloAutorizacionException();
+            /*if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
+                throw new FalloAutorizacionException();*/
 
-            validadorEventoDeportivo.Validar(evento, _repoPersona);
+            validadorEventoDeportivo.Validar(evento, repositorioPersona);
 
             int nuevoId = _gestor.ObtenerNuevoId(_pathId);
             EventoDeportivo eventoFinal = new(
@@ -26,8 +27,8 @@ public class AltaEvento
                 cupoMaximo: evento._cupoMaximo,
                 responsableId: evento._responsableId
             );
-            
-            _repo.Agregar(eventoFinal);
+
+            repositorio.Agregar(eventoFinal);
         }
         catch (Exception e)
         {

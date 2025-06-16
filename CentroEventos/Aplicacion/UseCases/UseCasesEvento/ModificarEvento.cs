@@ -4,25 +4,26 @@ using Aplicacion.excepciones;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class ModificarEvento
+public class ModificarEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPersona repositorioPersona):EventoDeportivoUseCases(repositorio)
+//CHEQUEAR SI REPOSITORIO PERSONA ES NECESARIO PARA OPERACIONES ASOCIADAS AL RESPONSABLE DEL EVENTO
 {
-    public void Modificacion(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
+    public void Ejecutar(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
     {
         try
         {
             if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoModificacion))
                 throw new FalloAutorizacionException();
 
-            if (!_repo.Contiene(evento._id))
+            if (!repositorio.Contiene(evento._id))
                 throw new EntidadNotFoundException();
 
-            EventoDeportivo existente = _repo.ObtenerPorId(evento._id);
+            EventoDeportivo existente = repositorio.ObtenerPorId(evento._id);
             if (existente._fechaHoraInicio < DateTime.Now)
                 throw new OperacionInvalidaException("No se puede modificar un evento ya iniciado o pasado.");
 
-            validadorEventoDeportivo.Validar(evento, _repoPersona);
+            validadorEventoDeportivo.Validar(evento, repositorioPersona); 
 
-            _repo.Actualizar(evento);
+            repositorio.Actualizar(evento);
         }
         catch (Exception e)
         {

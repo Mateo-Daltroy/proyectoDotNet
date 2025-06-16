@@ -7,9 +7,9 @@ public class CentroEventoContext : DbContext
 {
 
     #nullable disable
-    public DbSet<Persona> personas { get; set; }
-    public DbSet<EventoDeportivo> eventos { get; set; }
-    public DbSet<Reserva> reservas { get; set; }
+    public DbSet<Persona> Personas { get; set; }
+    public DbSet<EventoDeportivo> EventosDeportivos { get; set; }
+    public DbSet<Reserva> Reservas { get; set; }
     #nullable restore
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

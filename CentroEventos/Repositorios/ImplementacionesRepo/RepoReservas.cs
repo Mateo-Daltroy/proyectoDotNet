@@ -7,7 +7,7 @@ using Aplicacion.interfacesRepo;
 
 namespace Repositorios.ImplementacionesRepo;
 
-public class RepoReservasTxt : IRepositorioReserva
+public class RepoReservas : IRepositorioReserva
 {
  
     private readonly string _pathRepo = Path.Combine(

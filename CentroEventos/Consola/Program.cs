@@ -18,10 +18,9 @@ int Id = -1;
 //nkdn
 
 //_Inicializar Bases de Datos_
-IRepositorioReserva repoTempRes = new RepoReservasTxt();
-IRepositorioPersona repoTempPers = new RepoPersonasTxt();
-IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoTxt();
-IIdManager gestor = new IdManager();
+IRepositorioReserva repoTempRes = new RepoReservas();
+IRepositorioPersona repoTempPers = new RepoPersonas();
+IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivo();
 
 CentroEventosSQLite.Inicializar();
 
@@ -33,7 +32,7 @@ foreach (var p in context.Personas)
     Console.WriteLine($"{p.Id} {p.Nombre}");
 }
 Console.WriteLine("-- Tabla Eventos --");
-foreach (var e in context.Eventos)
+foreach (var e in context.EventosDeportivos)
 {
     Console.WriteLine($"{e.Id} {e.Nombre}");
 }

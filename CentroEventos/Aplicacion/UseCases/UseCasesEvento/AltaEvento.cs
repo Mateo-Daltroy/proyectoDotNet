@@ -1,3 +1,4 @@
+using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
@@ -6,17 +7,16 @@ using Aplicacion.validadores;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPersona repositorioPersona):EventoDeportivoUseCases(repositorio)
+public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPersona repositorioPersona, ServicioAuthProvisional servicioAuth):EventoDeportivoUseCases(repositorio)
 {
     public void Ejecutar(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
     {
         try
         {
-            /*if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
-                throw new FalloAutorizacionException();*/
+            if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
+                throw new FalloAutorizacionException();
 
             validadorEventoDeportivo.Validar(evento, repositorioPersona);
-
             int nuevoId = _gestor.ObtenerNuevoId(_pathId);
             EventoDeportivo eventoFinal = new(
                 id: nuevoId,

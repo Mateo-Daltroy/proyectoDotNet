@@ -4,7 +4,7 @@ namespace Aplicacion.UseCases.UseCasesEvento;
 
 public class ListarEventosSinReservas (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva):EventoDeportivoUseCases(repositorio)
 {
-    public IEnumerable<EventoDeportivo> ejecutar()
+    public IEnumerable<EventoDeportivo> Ejecutar()
     {
         List<EventoDeportivo> l = new List<EventoDeportivo>();
         foreach (EventoDeportivo e in repositorio.ObtenerTodos())

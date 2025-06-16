@@ -1,5 +1,6 @@
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
+using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 
 
@@ -11,8 +12,8 @@ public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPe
     {
         try
         {
-            if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
-                throw new FalloAutorizacionException();
+            /*if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
+                throw new FalloAutorizacionException();*/
 
             validadorEventoDeportivo.Validar(evento, repositorioPersona);
 

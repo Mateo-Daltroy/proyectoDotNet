@@ -1,4 +1,4 @@
-using Aplicacion.Interfaces;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases;
 

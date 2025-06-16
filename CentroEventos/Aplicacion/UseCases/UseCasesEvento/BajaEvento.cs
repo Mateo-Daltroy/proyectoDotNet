@@ -5,7 +5,7 @@ using Aplicacion.excepciones;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class Ejecutar (IRepositorioEventoDeportivo repositorio):EventoDeportivoUseCases(repositorio)
+public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva):EventoDeportivoUseCases(repositorio)
 {
     //ELIMINAR TAMBIEN RESERVAS ASOCIADAS
     public void Baja(int id, int idUsuario)
@@ -18,6 +18,7 @@ public class Ejecutar (IRepositorioEventoDeportivo repositorio):EventoDeportivoU
             if (!repositorio.Contiene(id))
                 throw new EntidadNotFoundException();
 
+            repositorioReserva.EliminarPorEvento(id);
             repositorio.Eliminar(id);
         }
         catch (Exception e)

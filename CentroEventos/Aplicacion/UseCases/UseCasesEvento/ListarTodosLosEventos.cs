@@ -4,7 +4,7 @@ namespace Aplicacion.UseCases.UseCasesEvento;
 
 public class ListarTodosLosEventos (IRepositorioEventoDeportivo repositorio):EventoDeportivoUseCases(repositorio)
 {
-    public IEnumerable<EventoDeportivo> Listado()
+    public IEnumerable<EventoDeportivo> Ejecutar()
     {
         return repositorio.ObtenerTodos();
     }

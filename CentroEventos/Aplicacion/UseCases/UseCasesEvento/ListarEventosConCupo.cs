@@ -2,15 +2,15 @@ using Aplicacion.entidades;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class ListarEventosConCupo
+public class ListarEventosConCupo (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva):EventoDeportivoUseCases(repositorio)
 {
-    public IEnumerable<EventoDeportivo> ListarEventosConCupoDisponible(IRepositorioReserva repoReserva)
+    public IEnumerable<EventoDeportivo> Ejecutar()
     {
         List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
 
-        foreach (EventoDeportivo evento in _repo.ObtenerTodos())
+        foreach (EventoDeportivo evento in repositorio.ObtenerTodos())
         {
-            int participantesActuales = repoReserva.GetAsistentes(evento._id);
+            int participantesActuales = repositorioReserva.GetAsistentes(evento._id);
             if (evento.TieneCupoDisponible(participantesActuales))
             {
                 eventosConCupo.Add(evento);

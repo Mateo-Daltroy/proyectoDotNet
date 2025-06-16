@@ -14,6 +14,7 @@ public interface IRepositorioReserva
     void Actualizar(int id);
     void Eliminar(int id);
     void Eliminar(Reserva res);
+    void EliminarPorEvento(int idEvento);
     bool ExisteId(int idPers, int idEv); //retorna si existe un evento bajo el id, lo necesito para validar una reserva - mate
     bool ExisteId(int idRes); 
     int GetAsistentes(int idEv); //retorna la cantidad de asistentes a un evento

@@ -5,8 +5,9 @@ using Aplicacion.excepciones;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class BajaEvento
+public class Ejecutar (IRepositorioEventoDeportivo repositorio):EventoDeportivoUseCases(repositorio)
 {
+    //ELIMINAR TAMBIEN RESERVAS ASOCIADAS
     public void Baja(int id, int idUsuario)
     {
         try
@@ -14,10 +15,10 @@ public class BajaEvento
             if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
                 throw new FalloAutorizacionException();
 
-            if (!_repo.Contiene(id))
+            if (!repositorio.Contiene(id))
                 throw new EntidadNotFoundException();
 
-            _repo.Eliminar(id);
+            repositorio.Eliminar(id);
         }
         catch (Exception e)
         {

@@ -46,7 +46,7 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public void Actualizar(Persona p)
+    public void Actualizar(int documento, Persona p)
     {
 
     }
@@ -131,14 +131,13 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public String getNombreConId(int id)
+    public Persona getPersonaConId(int id)
     {
         using (var context = new CentroEventoContext())
         {
 
             var persona = context.Personas.FirstOrDefault(p => p.Id == id);
-            if (persona != null) return persona.Nombre;
-            return "";
+            return persona;
 
         }
     }

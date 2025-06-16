@@ -1,11 +1,12 @@
 using Aplicacion.entidades;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases.UseCasesReserva;
 
-public class ListarTodasLasReservas
+public class ListarTodasLasReservas (IRepositorioReserva repositorio) : ReservaUseCase(repositorio)
 {
-    public IEnumerable<Reserva> ListarTodas()
+    public IEnumerable<Reserva> Ejecutar()
     {
-        return (_miRepo.ObtenerTodos());
+        return (repo.ObtenerTodos());
     }
 }

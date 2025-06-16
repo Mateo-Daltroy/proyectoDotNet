@@ -1,12 +1,13 @@
 using Aplicacion.entidades;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases.UseCasesReserva;
 
-public class ListarPersonasAsistidasAEvento
+public class ListarPersonasAsistidasAEvento (IRepositorioReserva repositorio) : ReservaUseCase(repositorio)
 {
-    public IEnumerable<int> asistioAEvento(int idEv)
+    public IEnumerable<int> Ejecutar(int idEv)
     {
-        List<Reserva> reservas = (List<Reserva>)_miRepo.ObtenerTodos();
+        List<Reserva> reservas = (List<Reserva>)repo.ObtenerTodos();
         List<int> cumplen = new();
         foreach (Reserva res in reservas)
         {

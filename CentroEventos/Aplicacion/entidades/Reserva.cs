@@ -7,11 +7,11 @@ using validadores;
 
 public class Reserva
 {
-    public int _id { get; private set; }
-    public int _personaId { get; private set; }
-    public int _eventoDeportivoId { get; private set; }
-    public DateTime _fechaAltaReserva { get; private set; }
-    public Asistencia _estadoAsistencia { get; private set; }
+    public int _id { get; set; }
+    public int _personaId { get; set; }
+    public int _eventoDeportivoId { get; set; }
+    public DateTime _fechaAltaReserva { get; set; }
+    public Asistencia _estadoAsistencia { get; set; }
 
     public Reserva (int unaPer, int elEv) 
     {

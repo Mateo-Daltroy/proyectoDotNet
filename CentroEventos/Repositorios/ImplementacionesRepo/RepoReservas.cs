@@ -11,13 +11,6 @@ namespace Repositorios.ImplementacionesRepo;
 
 public class RepoReservas : IRepositorioReserva
 {
- 
-    private readonly string _pathRepo = Path.Combine(
-    Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName,
-    "Repositorios",
-    "Reservas.txt"
-    );
-
     public void EliminarPorPersona(int id)
     {
         new CentroEventoContext()
@@ -36,9 +29,10 @@ public class RepoReservas : IRepositorioReserva
 
     public void Agregar(Reserva res)
     {
-        new CentroEventoContext()
-            .Reservas
-            .Add(res);
+        var contexto = new CentroEventoContext();
+        contexto.Reservas.Add(res);
+
+        contexto.SaveChanges();
         /*
         using StreamWriter escritor = new StreamWriter(_pathRepo, append: true);
         try
@@ -58,13 +52,14 @@ public class RepoReservas : IRepositorioReserva
 
     public Reserva ObtenerPorId(int id)
     {
-        // La lista siempre deberia de ser de un solo elemento, pero aun 
-        // asi esta es la manera mas facil de retornar que se me ocurrio
-        return new CentroEventoContext()
+        Reserva? reserva = new CentroEventoContext()
             .Reservas
-            .Where(match => match._id == id)
-            .ToList()
-            .First();
+            .Find(id);
+        if (reserva == null)
+        {
+            throw new EntidadNotFoundException();
+        }
+        return(reserva);
         /*
         foreach (Reserva res in ObtenerTodos())
         {
@@ -76,6 +71,19 @@ public class RepoReservas : IRepositorioReserva
 
     public void Actualizar(Reserva res)
     {
+        var context = new CentroEventoContext();
+        Reserva? busq = context.Reservas.Find(res._id);
+        if (busq == null)
+        {
+            throw new EntidadNotFoundException();
+        }
+        busq._estadoAsistencia = res._estadoAsistencia;
+        busq._eventoDeportivoId = res._eventoDeportivoId;
+        busq._fechaAltaReserva = res._fechaAltaReserva;
+        busq._personaId = res._personaId;
+
+        context.SaveChanges();
+        /*
         string tempFilePath = _pathRepo + ".tmp";
         bool actualizado = false;
         using StreamReader lector = new StreamReader(_pathRepo);
@@ -111,16 +119,15 @@ public class RepoReservas : IRepositorioReserva
             escritor.Close();
             File.Replace(tempFilePath, _pathRepo, null);
         }
-    }
-
-    public void Actualizar(int id)
-    {
-        Reserva reserva = this.ObtenerPorId(id);
-        Actualizar(reserva);
+        */
     }
 
     public void Eliminar(Reserva res)
     {
+        var context = new CentroEventoContext();
+        context.Reservas.Remove(res);
+        context.SaveChanges();
+        /*
         string tempFilePath = _pathRepo + ".tmp";
         bool found = false;
         using (StreamReader lector = new StreamReader(_pathRepo))
@@ -160,6 +167,7 @@ public class RepoReservas : IRepositorioReserva
             lector.Close();
             escritor.Close();
         }
+        */
     }
 
     public void Eliminar(int id)
@@ -170,6 +178,15 @@ public class RepoReservas : IRepositorioReserva
 
     public bool ExisteId(int idPers, int idEv)
     {
+        var context = new CentroEventoContext();
+
+        // Esta debe ser la implementacion menos eficiente posible pero bueno señores, es lo que hay
+        return context
+        .Reservas
+        .Where(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv))
+        .ToList()
+        .Count == 1;
+        /*
         StreamReader _lector = new StreamReader(_pathRepo);
         try
         {
@@ -195,6 +212,7 @@ public class RepoReservas : IRepositorioReserva
             _lector.Close();
         }
         return false;
+        */
     }
 
     public bool ExisteId(int idRes)
@@ -211,15 +229,25 @@ public class RepoReservas : IRepositorioReserva
 
     public int GetAsistentes(int idEv)
     {
+        var context = new CentroEventoContext();
+
+        return context
+        .Reservas
+        .Count(res => res._eventoDeportivoId == idEv);
+        /*
         int count = 0;
         foreach (Reserva res in ObtenerTodos())
         {
             if (res._eventoDeportivoId == idEv) count++;
         }
         return count;
+        */
     }
+
     public IEnumerable<Reserva> ObtenerTodos()
     {
+        return new CentroEventoContext().Reservas;
+        /*
         List<Reserva> reservas = new List<Reserva>();
         using StreamReader lector = new StreamReader(_pathRepo);
         try
@@ -247,29 +275,6 @@ public class RepoReservas : IRepositorioReserva
             lector.Close();
         }
         return reservas;
-    }
-
-    private static Reserva StringToRes(string unaLinea)
-    {
-        try
-        {
-            string[] partes = unaLinea.Split(',');
-            return new Reserva(
-                int.Parse(partes[0]),             // IdRes
-                int.Parse(partes[1]),             // IdPers
-                int.Parse(partes[2]),             // IdEvento
-                DateTime.Parse(partes[3]),        // Fecha
-                Enum.Parse<Asistencia>(partes[4]) // Asistencia
-            );
-        }
-        catch (Exception)
-        {
-            throw new ValidacionException();
-        }
-    }
-
-    private static string ResToString(Reserva unaRes)
-    {
-        return $"{unaRes._id},{unaRes._personaId},{unaRes._eventoDeportivoId},{unaRes._fechaAltaReserva:yyyy-MM-ddTHH:mm:ss},{unaRes._estadoAsistencia}";
+        */
     }
 }

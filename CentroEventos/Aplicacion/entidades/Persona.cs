@@ -41,19 +41,7 @@ public class Persona
 
     public override string ToString()
     {
-        return $"Dni:{Dni}, Nombre:{Nombre}, Apellido:{Apellido}, Mail:{Mail}, Telefono:{Telefono}";
+        return $"Dni:{_dni}, Nombre:{_nombre}, Apellido:{_apellido}, Mail:{_mail}, Telefono:{_telefono}";
     }
-
-
-    public String UnaLinea()
-    {
-        return ($"{Id},{Dni},{Nombre},{Apellido},{Mail},{Telefono}");
-    }
-
-    public String UnaLineaSinId()
-    {
-        return ($"{Dni},{Nombre},{Apellido},{Mail},{Telefono}");
-    }
-
 
 }

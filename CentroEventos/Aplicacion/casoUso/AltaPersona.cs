@@ -1,16 +1,16 @@
 using Aplicacion.entidades;
-using Aplicacion.validadores;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aplicacion.casoUso;
 
 public class AltaPersona
 {
-    public void AgregarPersona(Persona p)
+    public void AgregarPersona(DbContext db, Persona p)
     {
+        using (var context = new db);
         try
         {
-            ValidacionPersona.ValidarPersona(p, _miRepo);
-            _miRepo.registrarPersona(p, _repoId);
+
         }
         catch (Exception e)
         {

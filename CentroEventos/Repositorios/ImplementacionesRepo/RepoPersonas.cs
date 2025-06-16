@@ -103,8 +103,8 @@ public class RepoPersonas : IRepositorioPersona
             List<String> listaNombres = new List<String>();
             foreach (int id in listaId)
             {
-                var persona = context.Personas.FirstOrDefault(p => p.Id == id);
-                if (persona != null) listaNombres.Add(persona.Nombre);
+                var persona = context.Personas.FirstOrDefault(p => p._id == id);
+                if (persona != null) listaNombres.Add(persona._nombre);
 
             }
             return listaNombres;
@@ -150,6 +150,7 @@ public class RepoPersonas : IRepositorioPersona
 
             var persona = context.Personas.FirstOrDefault(p => p.Id == id);
             return true;
+            // sin hacer //////////////////////////////////////////////////////////////////////////
             
         }
 

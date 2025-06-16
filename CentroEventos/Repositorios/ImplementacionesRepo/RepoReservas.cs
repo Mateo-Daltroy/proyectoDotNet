@@ -76,6 +76,8 @@ public class RepoReservas : IRepositorioReserva
 
     public void Actualizar(Reserva res)
     {
+        
+        /*
         string tempFilePath = _pathRepo + ".tmp";
         bool actualizado = false;
         using StreamReader lector = new StreamReader(_pathRepo);
@@ -111,14 +113,8 @@ public class RepoReservas : IRepositorioReserva
             escritor.Close();
             File.Replace(tempFilePath, _pathRepo, null);
         }
+        */
     }
-
-    public void Actualizar(int id)
-    {
-        Reserva reserva = this.ObtenerPorId(id);
-        Actualizar(reserva);
-    }
-
     public void Eliminar(Reserva res)
     {
         string tempFilePath = _pathRepo + ".tmp";

@@ -11,7 +11,6 @@ public interface IRepositorioReserva
     // probablemente si no lo encuentra deberia hacer un throw EntidadNotFoundException 
     IEnumerable<Reserva> ObtenerTodos();
     void Actualizar(Reserva res);
-    void Actualizar(int id);
     void Eliminar(int id);
     void Eliminar(Reserva res);
     void EliminarPorEvento(int idEvento);

@@ -87,9 +87,9 @@ public class Persona
 
     public void modificarContraseña(String contraseña)
     {
-        using (MD5 md5 = MD5.Create())
+        using (SHA256 sha256 = SHA256.Create())
         {
-            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(contraseña));
+            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contraseña));
             StringBuilder sb = new StringBuilder();
             foreach (byte b in hashBytes)
                 sb.Append(b.ToString("x2"));

@@ -212,9 +212,27 @@ public class RepoPersonas : IRepositorioPersona
 
     }
 
-    public int ValidarUserYPass(String nombre, String apellido, String contraseña)
+    public int ValidarUserYPass(String mail, String contraseña)
     {
-        
-    }
+        using (var context = new CentroEventoContext())
+        {
 
+            var persona = context.Personas.FirstOrDefault(p => p._mail == mail);
+            if (persona != null)
+            {
+
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contraseña));
+                    StringBuilder sb = new StringBuilder();
+                    foreach (byte b in hashBytes)
+                        sb.Append(b.ToString("x2"));
+                    String passHash = sb.ToString();
+                    if (persona._contraseña == passHash) return true;
+
+                }
+                return true;
+            }
+        }
+    }
 }

@@ -3,9 +3,9 @@ namespace Aplicacion.UseCases.UseCasesPersona;
 public class ValidarUsuarioYContraseña(IRepositorioPersona repositorio) : PersonaUseCase(repositorio)
 {
 
-    public int Ejecutar(String nombre, Srting apellido, String contraseña)
+    public int Ejecutar(String mail, String contraseña)
     {
-        return repositorio.ValidarUserYPass(nombre, apellido, contraseña);
+        return repositorio.ValidarUserYPass(mail, contraseña);
         
     }
 

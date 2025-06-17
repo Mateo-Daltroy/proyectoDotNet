@@ -228,10 +228,10 @@ public class RepoPersonas : IRepositorioPersona
                     foreach (byte b in hashBytes)
                         sb.Append(b.ToString("x2"));
                     String passHash = sb.ToString();
-                    if (persona._contraseña == passHash) return true;
+                    if (persona._contraseña == passHash) return p._id;
 
                 }
-                return true;
+                return -1;
             }
         }
     }

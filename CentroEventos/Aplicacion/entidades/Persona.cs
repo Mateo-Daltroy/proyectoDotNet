@@ -15,7 +15,7 @@ public class Persona
     public string _apellido { get; private set; }
     public string _mail { get; private set; }
     public string _telefono { get; private set; }
-    
+
     private List<Permiso> _permisos;
     public Persona(string dni, string nombre, string apellido, string mail, string telefono)
     {
@@ -36,11 +36,37 @@ public class Persona
         _mail = string.Empty;
         _telefono = string.Empty;
         _permisos = new List<Permiso>();
-    }        
+    }
 
 
-    public String ToString (){
+    public override String ToString()
+    {
         return $"Dni: {this._dni}, Nombre: {this._nombre}, Apellido: {this._apellido}, Mail: {this._mail}, Telefono: {this._telefono}";
+    }
+
+    public void modificarDni(string dni)
+    {
+        this._dni = dni;
+    }
+
+    public void modificarNombre(string nombre)
+    {
+        this._nombre = nombre;
+    }
+
+    public void modificarApellido(string apellido)
+    {
+        this._apellido = apellido;
+    }
+
+    public void modificarMail(string mail)
+    {
+        this._mail = mail;
+    }
+
+    public void modificarTelefono(string telefono)
+    {
+        this._telefono = telefono;
     }
 
 }

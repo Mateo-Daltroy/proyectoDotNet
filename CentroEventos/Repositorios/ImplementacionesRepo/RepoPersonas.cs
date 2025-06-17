@@ -8,6 +8,7 @@ using Aplicacion.interfacesServ;
 using Aplicacion.UseCases.UseCasesReserva;
 using CentroEventos.Aplicacion.InterfacesRepo;
 using Repositorios.Context;
+using Repositorios.ImplementacionesRepo;
 
 namespace CentroEventos.Repositorios.implementacionesRepo;
 
@@ -39,7 +40,7 @@ public class RepoPersonas : IRepositorioPersona
             var persona = context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
-                new RepoReservas.EliminarPorPersona(id);
+                new RepoReservas().EliminarPorPersona(id);
                 context.Personas.Remove(persona);
                 context.SaveChanges();
             }
@@ -47,7 +48,7 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public void Actualizar(int documento, Persona p)
+    public void Actualizar(String documento, Persona p)
     {
         using (var context = new CentroEventoContext())
         {
@@ -56,28 +57,30 @@ public class RepoPersonas : IRepositorioPersona
             {
                 if (p._dni != "")
                 {
-                    persona._dni = p._dni;
+                    persona.modificarDni(p._dni);
                 }
 
                 if (p._nombre != "")
                 {
-                    persona._nombre = p._nombre;
+                    persona.modificarNombre(p._nombre);
                 }
 
                 if (p._apellido != "")
                 {
-                    persona._apellido = p._apellido;
+                    persona.modificarApellido(p._apellido);
                 }
 
                 if (p._mail != "")
                 {
-                    persona._mail = p._mail;
+                    persona.modificarMail(p._mail);
                 }
-                
-                if (p._telefono!="") {
-                    persona._telefono = p._telefono;
+
+                if (p._telefono != "")
+                {
+                    persona.modificarTelefono(p._telefono);
                 }
             }
+            context.SaveChanges();
         }
     }
 
@@ -85,7 +88,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p.Id == id);
+            var persona = context.Personas.FirstOrDefault(p => p._id == id);
             return persona != null;
         }
     }
@@ -94,7 +97,7 @@ public class RepoPersonas : IRepositorioPersona
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p.Mail.Equals(mail));
+            var persona = context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
             return persona != null;
         }
     }
@@ -104,7 +107,7 @@ public class RepoPersonas : IRepositorioPersona
         using (var context = new CentroEventoContext())
         {
 
-            var persona = context.Personas.FirstOrDefault(p => p.Dni == documento);
+            var persona = context.Personas.FirstOrDefault(p => p._dni == documento);
             return persona != null;
         }
     }
@@ -161,13 +164,14 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public Persona getPersonaConId(int id)
+    public String getPersonaConId(int id)
     {
         using (var context = new CentroEventoContext())
         {
 
             var persona = context.Personas.FirstOrDefault(p => p._id == id);
-            return persona;
+            if (persona != null) return persona._nombre + persona._apellido;
+            return "";
 
         }
     }
@@ -180,7 +184,7 @@ public class RepoPersonas : IRepositorioPersona
 
             var persona = context.Personas.FirstOrDefault(p => p._id == id);
             return true;
-            // sin hacer //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////// sin hacer //////////////////////////////////////////////////////////////////////////
             
         }
 

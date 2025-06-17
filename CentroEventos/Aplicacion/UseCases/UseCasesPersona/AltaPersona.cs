@@ -16,7 +16,7 @@ public class AltaPersona (IRepositorioPersona repositorio): PersonaUseCase (repo
         try
         {
             String mensaje = "";
-            if (!ValidacionPersona.ValidarPersona(repositorio, p.Dni, p.Nombre, p.Mail, p.Apellido, p.telefono, mensaje)) {
+            if (!ValidacionPersona.ValidarPersona(repositorio, p._dni, p._nombre, p._mail, p._apellido, p._telefono, ref  mensaje)) {
                 throw new ValidacionException(mensaje);
             }
 

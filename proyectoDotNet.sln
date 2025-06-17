@@ -6,8 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CentroEventos", "CentroEven
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aplicacion", "CentroEventos\Aplicacion\Aplicacion.csproj", "{EC4B7AF2-75F4-10FD-5801-82B459056535}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consola", "CentroEventos\Consola\Consola.csproj", "{24AC6706-8D04-2C66-E323-5464F7745690}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositorios", "CentroEventos\Repositorios\Repositorios.csproj", "{ACC0E5A7-A752-0A1E-8571-9E22A94BF21D}"
 EndProject
 Global
@@ -34,7 +32,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EC4B7AF2-75F4-10FD-5801-82B459056535} = {FE92E545-171F-C327-40E2-3D518C4E18AB}
-		{24AC6706-8D04-2C66-E323-5464F7745690} = {FE92E545-171F-C327-40E2-3D518C4E18AB}
+		
 		{ACC0E5A7-A752-0A1E-8571-9E22A94BF21D} = {FE92E545-171F-C327-40E2-3D518C4E18AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

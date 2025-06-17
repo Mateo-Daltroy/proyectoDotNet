@@ -2,10 +2,10 @@ using UI.Components;
 // See https://aka.ms/new-console-template for more information
 using Repositorios.Context;
 using Aplicacion.entidades;
-using Aplicacion.UseCases;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 using Repositorios.ImplementacionesRepo;
+using Aplicacion.UseCases.UseCasesPersona;
 
 //_Inicializar Bases de Datos_
 IRepositorioReserva repoTempRes = new RepoReservas();

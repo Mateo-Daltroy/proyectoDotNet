@@ -10,7 +10,7 @@ using CentroEventos.Aplicacion.InterfacesRepo;
 using Repositorios.Context;
 using Repositorios.ImplementacionesRepo;
 
-namespace CentroEventos.Repositorios.implementacionesRepo;
+namespace Repositorios.ImplementacionesRepo;
 
 public class RepoPersonas : IRepositorioPersona
 {

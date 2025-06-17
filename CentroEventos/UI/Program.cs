@@ -9,7 +9,7 @@ using Repositorios.ImplementacionesRepo;
 //_Inicializar Bases de Datos_
 IRepositorioReserva repoTempRes = new RepoReservas();
 IRepositorioPersona repoTempPers = new RepoPersonas();
-IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivo();
+//IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoEF();
 
 CentroEventosSQLite.Inicializar();
 

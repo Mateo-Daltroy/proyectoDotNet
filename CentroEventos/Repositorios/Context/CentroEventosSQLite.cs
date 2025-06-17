@@ -1,6 +1,6 @@
 using Repositorios.Context;
 
-namespace CentroEventos;
+namespace Repositorios.Context;
 
 public class CentroEventosSQLite
    // Esta clase es para inicializar la base de datos SQLite

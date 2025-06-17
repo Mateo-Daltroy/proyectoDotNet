@@ -8,7 +8,7 @@ public static class ValidadorReserva
 {
     public static bool validarDatos(int idPers, int idEv, DateTime date, IRepositorioReserva repoRes, IRepositorioEventoDeportivo repoEv, IRepositorioPersona repoPers, ref string mens) 
     {
-        if (!repoPers.ExisteId(idPers) || !repoEv.Contiene(idEv)) 
+        if (!repoPers.ExisteId(idPers) || !repoEv.ContieneAsync(idEv).Result) 
         {
             mens = new EntidadNotFoundException().Message;
             return false;
@@ -20,7 +20,7 @@ public static class ValidadorReserva
             return false;
             //throw new DuplicadoException();
         }
-        if (repoRes.GetAsistentes(idEv) >= repoEv.ObtenerPorId(idEv)._cupoMaximo)
+        if (repoRes.GetAsistentes(idEv) >= repoEv.ObtenerPorIdAsync(idEv).Result._cupoMaximo)
         {
             mens = new CupoExtendidoException().Message;
             return false;

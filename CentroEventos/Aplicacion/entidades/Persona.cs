@@ -7,17 +7,18 @@ using Aplicacion.validadores;
 using System;
 using System.Text;
 using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations;
 
 namespace Aplicacion.entidades;
 
 public class Persona
 {
-    public int _id { get; set; }
-    public string _dni { get; set; }
-    public String _nombre { get; set; }
-    public string _apellido { get; set; }
-    public string _mail { get; set; }
-    public string _telefono { get; set; }
+    [Key] public int _id { get; private set; }
+    public string _dni { get; private set; }
+    public String _nombre { get; private set; }
+    public string _apellido { get; private set; }
+    public string _mail { get; private set; }
+    public string _telefono { get; private set; }
     public string _contraseña { get; set; }
     public List<Permiso> _permisos { get; }
 

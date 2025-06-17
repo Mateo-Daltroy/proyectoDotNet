@@ -1,4 +1,5 @@
-﻿@page "/Registro de persona"
+﻿@using Aplicacion.entidades
+@page "/Registro de persona"
 
 <PageTitle>Registro de persona</PageTitle>
 
@@ -28,10 +29,6 @@ Contraseña:
     private String contraseña {get; set;}
 
     private void RegistrarPersona (){
-        
         AltaPersona.Ejecutar(new Persona(dni, nombre, apellido, mail, telefono, contraseña));
-
     }
-
-
 }

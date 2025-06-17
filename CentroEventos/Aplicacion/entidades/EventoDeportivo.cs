@@ -2,6 +2,7 @@ using System;
 using Aplicacion.validadores;
 using Aplicacion.interfacesRepo;
 using System.Data.Common;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Aplicacion.entidades
@@ -9,7 +10,7 @@ namespace Aplicacion.entidades
     public class EventoDeportivo
     {
         // Propiedades
-        public int _id { get; set;}
+        [Key] public int _id { get; set;}
         public string _nombre { get; set; }
         public string _descripcion { get; set; }
         public DateTime _fechaHoraInicio { get; set; }

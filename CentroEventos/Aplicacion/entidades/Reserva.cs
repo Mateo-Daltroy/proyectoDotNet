@@ -2,12 +2,13 @@ using System;
 
 namespace Aplicacion.entidades;
 
+using System.ComponentModel.DataAnnotations;
 using CentroEventos.Aplicacion.InterfacesRepo;
 using validadores;
 
 public class Reserva
 {
-    public int _id { get; set; }
+    [Key] public int _id { get; set; }
     public int _personaId { get; set; }
     public int _eventoDeportivoId { get; set; }
     public DateTime _fechaAltaReserva { get; set; }

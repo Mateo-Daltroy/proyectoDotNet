@@ -6,8 +6,8 @@ namespace Aplicacion.UseCases.UseCasesPersona;
 
 public class ModificarPersona (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
-    public void modificarPersona(Persona p)
+    public void Ejecutar(Persona p)
     {
-        repo.Actualizar(p._dni ,p);
+        repositorio.Actualizar(p);
     }
 }

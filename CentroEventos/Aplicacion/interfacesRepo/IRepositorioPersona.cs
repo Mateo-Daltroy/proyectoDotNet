@@ -14,7 +14,7 @@ public interface IRepositorioPersona
     public void registrarPersona(Persona p);
     public Boolean ExisteDocumento(String documento);
     public void Eliminar(int id);
-    public void Actualizar(String dni, Persona per);
+    public void Actualizar(Persona per);
     public String getPersonaConId(int id);
     public String listarTodos();
     public Boolean PoseeElPermiso(int id, Permiso permiso);

@@ -48,37 +48,18 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    public void Actualizar(String documento, Persona p)
+    public void Actualizar(Persona pe)
     {
         using (var context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p._dni == documento);
+            var persona = context.Personas.FirstOrDefault(p => p._dni == pe._dni);
             if (persona != null)
             {
-                if (p._dni != "")
-                {
-                    persona.modificarDni(p._dni);
-                }
-
-                if (p._nombre != "")
-                {
-                    persona.modificarNombre(p._nombre);
-                }
-
-                if (p._apellido != "")
-                {
-                    persona.modificarApellido(p._apellido);
-                }
-
-                if (p._mail != "")
-                {
-                    persona.modificarMail(p._mail);
-                }
-
-                if (p._telefono != "")
-                {
-                    persona.modificarTelefono(p._telefono);
-                }
+                    persona.modificarNombre(pe._nombre);
+                    persona.modificarApellido(pe._apellido);
+                    persona.modificarMail(pe._mail);
+                    persona.modificarTelefono(pe._telefono);
+                
             }
             context.SaveChanges();
         }

@@ -4,7 +4,7 @@ namespace Aplicacion.UseCases.UseCasesPersona;
 
 public class ListarTodasLasPersonas (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
-    public String ListadoCompleto()
+    public String EJecutar()
     {
 
         return repositorio.listarTodos();

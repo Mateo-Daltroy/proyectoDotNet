@@ -84,6 +84,34 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
+    public void agregarPermiso(int id, Permiso permiso)
+    {
+        using (var context = new CentroEventoContext())
+        {
+            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            if (persona != null)
+            {
+                persona.agregarPermiso(permiso);
+                context.SaveChanges();
+            }
+        }
+    }
+
+    public void eliminarPermiso(int id, Permiso permiso)
+    {
+
+        using (var context = new CentroEventoContext())
+        {
+            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            if (persona != null)
+            {
+                persona.eliminarPermiso(permiso);   
+                context.SaveChanges();
+            }
+        }
+        
+    }
+
     public Boolean ExisteId(int id)
     {
         using (var context = new CentroEventoContext())
@@ -183,8 +211,18 @@ public class RepoPersonas : IRepositorioPersona
         {
 
             var persona = context.Personas.FirstOrDefault(p => p._id == id);
-            return true;
-//////////////////////////////////////////////////////// sin hacer //////////////////////////////////////////////////////////////////////////
+            if (persona != null)
+            {
+                foreach (Permiso perm in persona._permisos)
+                {
+                    if (perm == permiso)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+
             
         }
 

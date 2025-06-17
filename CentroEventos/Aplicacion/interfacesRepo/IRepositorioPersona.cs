@@ -19,5 +19,6 @@ public interface IRepositorioPersona
     public String listarTodos();
     public Boolean PoseeElPermiso(int id, Permiso permiso);
     public List<String> ListarNombresDePersonas(List<int> listaId);
-
+    public void eliminarPermiso(int id, Permiso permiso);
+    public void agregarPermiso(int id, Permiso permiso);
 }

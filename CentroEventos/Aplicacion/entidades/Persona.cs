@@ -15,8 +15,8 @@ public class Persona
     public string _apellido { get; private set; }
     public string _mail { get; private set; }
     public string _telefono { get; private set; }
+   public List<Permiso> _permisos { get; }
 
-    private List<Permiso> _permisos;
     public Persona(string dni, string nombre, string apellido, string mail, string telefono)
     {
         _dni = dni;
@@ -42,6 +42,15 @@ public class Persona
     public override String ToString()
     {
         return $"Dni: {this._dni}, Nombre: {this._nombre}, Apellido: {this._apellido}, Mail: {this._mail}, Telefono: {this._telefono}";
+    }
+
+    public void agregarPermiso (Permiso permiso) {
+        this._permisos.Add(permiso);
+    }
+
+    public void eliminarPermiso(Permiso permiso)
+    {
+        this._permisos.Remove(permiso);
     }
 
     public void modificarDni(string dni)

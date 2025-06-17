@@ -8,7 +8,7 @@ public class ListarEventosPasados (IRepositorioEventoDeportivo repositorio):Even
     public IEnumerable<EventoDeportivo> Ejecutar()
     {
         List<EventoDeportivo> l = new List<EventoDeportivo>();
-        foreach (EventoDeportivo e in repositorio.ObtenerTodos())
+        foreach (EventoDeportivo e in repositorio.ObtenerTodosAsync().Result)
         {
             if (e._fechaHoraInicio < DateTime.Now)
             {

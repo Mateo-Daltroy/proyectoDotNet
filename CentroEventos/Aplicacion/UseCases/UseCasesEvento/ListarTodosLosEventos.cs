@@ -7,6 +7,6 @@ public class ListarTodosLosEventos (IRepositorioEventoDeportivo repositorio):Eve
 {
     public IEnumerable<EventoDeportivo> Ejecutar()
     {
-        return repositorio.ObtenerTodos();
+        return repositorio.ObtenerTodosAsync().Result;
     }
 }

@@ -1,7 +1,7 @@
 using Aplicacion.interfacesRepo;
 using Aplicacion.UseCases.UseCasesReserva;
 
-namespace Aplicacion.UseCases.UseCases;
+namespace Aplicacion.UseCases.UseCasesPersona;
 
 public abstract class PersonaUseCase(IRepositorioPersona repoPersona)
 {

@@ -8,7 +8,7 @@ public class ObtenerEventoPorId (IRepositorioEventoDeportivo repositorio):Evento
     public EventoDeportivo Ejecutar(int id)
     {
 
-        return repositorio.ObtenerPorId(id);
+        return repositorio.ObtenerPorIdAsync(id).Result;
 
     }
 }

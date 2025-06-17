@@ -16,11 +16,11 @@ public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioRese
             if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
                 throw new FalloAutorizacionException();
 
-            if (!repositorio.Contiene(id))
+            if (!repositorio.ContieneAsync(id).Result)
                 throw new EntidadNotFoundException();
 
             repositorioReserva.EliminarPorEvento(id);
-            repositorio.Eliminar(id);
+            repositorio.EliminarAsync(id);
         }
         catch (Exception e)
         {

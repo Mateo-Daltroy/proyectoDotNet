@@ -13,19 +13,21 @@ public class ModificarEvento (IRepositorioEventoDeportivo repositorio, IReposito
     {
         try
         {
+            /*
             if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoModificacion))
                 throw new FalloAutorizacionException();
+                */
 
-            if (!repositorio.Contiene(evento._id))
+            if (!repositorio.ContieneAsync(evento._id).Result)
                 throw new EntidadNotFoundException();
 
-            EventoDeportivo existente = repositorio.ObtenerPorId(evento._id);
+            EventoDeportivo existente = repositorio.ObtenerPorIdAsync(evento._id).Result;
             if (existente._fechaHoraInicio < DateTime.Now)
                 throw new OperacionInvalidaException("No se puede modificar un evento ya iniciado o pasado.");
 
             validadorEventoDeportivo.Validar(evento, repositorioPersona); 
 
-            repositorio.Actualizar(evento);
+            repositorio.ActualizarAsync(evento);
         }
         catch (Exception e)
         {

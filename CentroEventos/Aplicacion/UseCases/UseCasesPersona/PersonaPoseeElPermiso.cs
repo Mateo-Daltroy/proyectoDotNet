@@ -1,11 +1,12 @@
 using Aplicacion.autorizacionProv;
+using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases.UseCasesPersona;
 
-public class PersonaPoseeElPermiso
+public class PersonaPoseeElPermiso (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
     public Boolean PoseeElPermiso(int id, Permiso permiso)
     {
-        return _miRepo.PoseeElPermiso(id,permiso);
+        return repo.PoseeElPermiso(id,permiso);
     }
 }

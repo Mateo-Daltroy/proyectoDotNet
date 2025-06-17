@@ -1,9 +1,13 @@
+using Aplicacion.entidades;
+using Aplicacion.UseCases;
+using Aplicacion.interfacesRepo;
+
 namespace Aplicacion.UseCases.UseCasesPersona;
 
-public class ModificarPersona
+public class ModificarPersona (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
     public void modificarPersona(Persona p)
     {
-        _miRepo.Actualizar(p);
+        repo.Actualizar(p._dni ,p);
     }
 }

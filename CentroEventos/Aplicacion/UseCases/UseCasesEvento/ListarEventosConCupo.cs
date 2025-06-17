@@ -9,7 +9,7 @@ public class ListarEventosConCupo (IRepositorioEventoDeportivo repositorio, IRep
     {
         List<EventoDeportivo> eventosConCupo = new List<EventoDeportivo>();
 
-        foreach (EventoDeportivo evento in repositorio.ObtenerTodos())
+        foreach (EventoDeportivo evento in repositorio.ObtenerTodosAsync().Result)
         {
             int participantesActuales = repositorioReserva.GetAsistentes(evento._id);
             if (evento.TieneCupoDisponible(participantesActuales))

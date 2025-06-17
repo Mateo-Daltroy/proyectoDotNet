@@ -1,13 +1,15 @@
+using Aplicacion.interfacesRepo;
+
 namespace Aplicacion.UseCases.UseCasesPersona;
 
-public class ObetenerIdPersonaPorDocumento
+public class ObetenerIdPersonaPorDocumento (IRepositorioPersona repositorio): PersonaUseCase (repositorio)
 {
     public int getIdConDocumento(String documento)
     {
         int id = -1;
         try
         {
-            id = _miRepo.getIdConDocumento(documento);
+            id = repo.getIdConDocumento(documento);
         }
         catch (Exception e)
         {

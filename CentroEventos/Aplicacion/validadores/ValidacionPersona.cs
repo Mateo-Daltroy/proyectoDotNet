@@ -13,7 +13,7 @@ public static class ValidacionPersona
     {
         if (repo.ExisteDocumento(dni))
         {
-            mensaje = new DuplicadoException().Message();
+            mensaje = new DuplicadoException().Message;
             return false;
         }
 
@@ -31,7 +31,7 @@ public static class ValidacionPersona
 
         if (repo.ExisteMail(mail))
         {
-            mensaje = new DuplicadoException().Message();
+            mensaje = new DuplicadoException().Message;
             return false;
         }
 

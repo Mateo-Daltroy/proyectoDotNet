@@ -1,5 +1,4 @@
 using Aplicacion.interfacesRepo;
-using Aplicacion.UseCases.UseCases;
 
 namespace Aplicacion.UseCases.UseCasesPersona;
 

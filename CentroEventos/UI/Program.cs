@@ -5,7 +5,7 @@ using Aplicacion.entidades;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 using Repositorios.ImplementacionesRepo;
-
+/*
 //_Inicializar Bases de Datos_
 IRepositorioReserva repoTempRes = new RepoReservas();
 IRepositorioPersona repoTempPers = new RepoPersonas();
@@ -31,6 +31,7 @@ foreach (var r in context.Reservas)
     Console.WriteLine($"{r._id} {r._personaId} {r._eventoDeportivoId} {r._fechaAltaReserva}");
 }
 }
+*/
 
 var builder = WebApplication.CreateBuilder(args);
 

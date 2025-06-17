@@ -21,4 +21,5 @@ public interface IRepositorioPersona
     public List<String> ListarNombresDePersonas(List<int> listaId);
     public void eliminarPermiso(int id, Permiso permiso);
     public void agregarPermiso(int id, Permiso permiso);
+    public int ValidarUserYPass(String mail, String contraseña);
 }

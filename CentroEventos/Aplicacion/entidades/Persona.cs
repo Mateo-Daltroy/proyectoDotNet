@@ -18,7 +18,7 @@ public class Persona
     public string _apellido { get; private set; }
     public string _mail { get; private set; }
     public string _telefono { get; private set; }
-    public string _contraseña { get; private set; }
+    public string _contraseña { get; set; }
     public List<Permiso> _permisos { get; }
 
     public Persona(string dni, string nombre, string apellido, string mail, string telefono, string contraseña)

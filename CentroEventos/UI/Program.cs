@@ -10,7 +10,7 @@ using Aplicacion.UseCases.UseCasesPersona;
 //_Inicializar Bases de Datos_
 IRepositorioReserva repoTempRes = new RepoReservas();
 IRepositorioPersona repoTempPers = new RepoPersonas();
-//IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoEF();
+IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoEF(new CentroEventoContext());
 
 CentroEventosSQLite.Inicializar();
 

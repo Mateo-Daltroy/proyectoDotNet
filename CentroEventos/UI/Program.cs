@@ -1,13 +1,9 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Collections;
-using System.Diagnostics;
+using UI.Components;
+// See https://aka.ms/new-console-template for more information
 using Repositorios.Context;
 using Aplicacion.entidades;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
-using CentroEventos;
-using CentroEventos.Aplicacion.InterfacesRepo;
-using CentroEventos.Repositorios.implementacionesRepo;
 using Repositorios.ImplementacionesRepo;
 
 //_Inicializar Bases de Datos_
@@ -35,3 +31,25 @@ foreach (var r in context.Reservas)
     Console.WriteLine($"{r._id} {r._personaId} {r._eventoDeportivoId} {r._fechaAltaReserva}");
 }
 }
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+}
+
+app.UseStaticFiles();
+app.UseAntiforgery();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
+
+app.Run();

@@ -9,7 +9,7 @@ namespace Aplicacion.validadores;
 public static class ValidacionPersona
 {
 
-    public static bool ValidarPersona(IRepositorioPersona repo, String dni, String nombre, String mail, String apellido, String telefono, ref string mensaje)
+    public static bool ValidarPersona(IRepositorioPersona repo, String dni, String nombre, String mail, String apellido, String telefono, String contraseña,ref string mensaje)
     {
         if (repo.ExisteDocumento(dni))
         {
@@ -44,6 +44,12 @@ public static class ValidacionPersona
         if (!mail.Contains("@") || !mail.Contains("."))
         {
             mensaje = "el formato del mail no es correcto.";
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(contraseña))
+        {
+            mensaje = "el formato de la contraseña no es correcto.";
             return false;
         }
 

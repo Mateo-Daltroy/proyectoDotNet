@@ -1,0 +1,37 @@
+﻿@page "/Registro de persona"
+
+<PageTitle>Registro de persona</PageTitle>
+
+<h1>Ingrese los datos de la persona</h1>
+Nombre:
+<InputText @bind-Value="nombre" /><br/><br/>
+Apellido:
+<InputText @bind-Value="apellido" /><br/><br/>
+Dni:    
+<InputText @bind-Value="dni" /><br/><br/>
+Mail: 
+<InputText @bind-Value="mail" /><br/><br/>
+Telefono: 
+<InputText @bind-Value="telefono" /><br/><br/>
+Contraseña: 
+<InputText @bind-Value="contraseña" /><br/><br/>
+<button @onclick="RegistrarPersona">Registrar</button>
+
+@inject AltaPersona AltaPersona;
+
+@code {
+    private String nombre {get; set;}
+    private String apellido {get; set;}
+    private String dni {get; set;}
+    private String mail {get; set;}
+    private String telefono {get; set;}
+    private String contraseña {get; set;}
+
+    private void RegistrarPersona (){
+        
+        AltaPersona.Ejecutar(new Persona(dni, nombre, apellido, mail, telefono, contraseña));
+
+    }
+
+
+}

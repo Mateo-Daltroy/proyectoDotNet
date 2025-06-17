@@ -9,6 +9,9 @@ using Aplicacion.UseCases.UseCasesReserva;
 using CentroEventos.Aplicacion.InterfacesRepo;
 using Repositorios.Context;
 using Repositorios.ImplementacionesRepo;
+using System;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace Repositorios.ImplementacionesRepo;
 
@@ -55,11 +58,11 @@ public class RepoPersonas : IRepositorioPersona
             var persona = context.Personas.FirstOrDefault(p => p._dni == pe._dni);
             if (persona != null)
             {
-                    persona.modificarNombre(pe._nombre);
-                    persona.modificarApellido(pe._apellido);
-                    persona.modificarMail(pe._mail);
-                    persona.modificarTelefono(pe._telefono);
-                
+                persona.modificarNombre(pe._nombre);
+                persona.modificarApellido(pe._apellido);
+                persona.modificarMail(pe._mail);
+                persona.modificarTelefono(pe._telefono);
+
             }
             context.SaveChanges();
         }
@@ -86,11 +89,11 @@ public class RepoPersonas : IRepositorioPersona
             var persona = context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
-                persona.eliminarPermiso(permiso);   
+                persona.eliminarPermiso(permiso);
                 context.SaveChanges();
             }
         }
-        
+
     }
 
     public Boolean ExisteId(int id)
@@ -204,9 +207,14 @@ public class RepoPersonas : IRepositorioPersona
             }
             return false;
 
-            
+
         }
 
+    }
+
+    public int ValidarUserYPass(String nombre, String apellido, String contraseña)
+    {
+        
     }
 
 }

@@ -4,6 +4,9 @@ using Aplicacion.autorizacionProv;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
+using System;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace Aplicacion.entidades;
 
@@ -15,15 +18,17 @@ public class Persona
     public string _apellido { get; private set; }
     public string _mail { get; private set; }
     public string _telefono { get; private set; }
-   public List<Permiso> _permisos { get; }
+    public string _contraseña { get; private set; }
+    public List<Permiso> _permisos { get; }
 
-    public Persona(string dni, string nombre, string apellido, string mail, string telefono)
+    public Persona(string dni, string nombre, string apellido, string mail, string telefono, string contraseña)
     {
         _dni = dni;
         _nombre = nombre;
         _apellido = apellido;
         _mail = mail;
         _telefono = telefono;
+        _contraseña = contraseña;
         _permisos = new();
     }
 
@@ -35,6 +40,7 @@ public class Persona
         _apellido = string.Empty;
         _mail = string.Empty;
         _telefono = string.Empty;
+        _contraseña = string.Empty;
         _permisos = new List<Permiso>();
     }
 
@@ -44,7 +50,8 @@ public class Persona
         return $"Dni: {this._dni}, Nombre: {this._nombre}, Apellido: {this._apellido}, Mail: {this._mail}, Telefono: {this._telefono}";
     }
 
-    public void agregarPermiso (Permiso permiso) {
+    public void agregarPermiso(Permiso permiso)
+    {
         this._permisos.Add(permiso);
     }
 
@@ -76,6 +83,20 @@ public class Persona
     public void modificarTelefono(string telefono)
     {
         this._telefono = telefono;
+    }
+
+    public void modificarContraseña(String contraseña)
+    {
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(contraseña));
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hashBytes)
+                sb.Append(b.ToString("x2"));
+            this._contraseña = sb.ToString();
+            
+        }   
+
     }
 
 }

@@ -1,11 +1,10 @@
+@page "/"
 @using System.ComponentModel.DataAnnotations
 @using Aplicacion.UseCases
 
 @inject ValidarUsuarioYContraseña ValidarUsuarioYContraseña
 @inject IRepositorioPersona RepoPersonas
 @inject NavigationManager NavigationManager
-
-@page "/"
 
 <h3>Inicio de Sesión</h3>
 
@@ -25,16 +24,16 @@
         <ValidationMessage For="@(() => loginModel.password)" />
     </div>
 
-    <div class="mb-3">
-        <button class="btn btn-primary me-2" @onclick="OnLogin">Ingresar</button>
-        <button type="button" class="btn btn-secondary" @onclick="OnRegister">Registrarse</button>
-    </div>
-
     @if (!string.IsNullOrEmpty(loginError))
     {
         <div class="alert alert-danger">@loginError</div>
     }
 </EditForm>
+
+    <div class="mb-3">
+        <button class="btn btn-primary me-2" @onclick="OnLogin">Ingresar</button>
+        <NavLink class="nav-link" href="/RegistroDePersona">Registrarse</NavLink>
+    </div>
 
 @code {
     private LoginModel loginModel = new();

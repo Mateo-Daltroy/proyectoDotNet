@@ -7,7 +7,8 @@ public class ValidarUsuarioYContraseña(IRepositorioPersona repositorio) : Perso
 
     public int Ejecutar(String mail, String contraseña)
     {
-        return repo.ValidarUserYPass(mail, contraseña);
+        return repositorio.ValidarUserYPass(mail, contraseña);
+        
     }
 
 }

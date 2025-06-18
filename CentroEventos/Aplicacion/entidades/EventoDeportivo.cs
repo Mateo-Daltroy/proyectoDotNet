@@ -4,12 +4,11 @@ using Aplicacion.interfacesRepo;
 using System.Data.Common;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace Aplicacion.entidades
 {
     public class EventoDeportivo
     {
-        // Propiedades
+        // Propiedades originales
         [Key] public int _id { get; set;}
         public string _nombre { get; set; }
         public string _descripcion { get; set; }
@@ -18,7 +17,11 @@ namespace Aplicacion.entidades
         public int _cupoMaximo { get; set; }
         public int _responsableId { get; set; }
 
-        // CONSTRUCTOR SIN ID
+        // NUEVAS PROPIEDADES DE NAVEGACIÓN
+        public virtual Persona ?Responsable { get; set; } // El responsable del evento
+        public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>(); // Todas las reservas del evento
+
+        // CONSTRUCTOR SIN ID (original)
         public EventoDeportivo(
             string nombre,
             string descripcion,
@@ -27,21 +30,23 @@ namespace Aplicacion.entidades
             int cupoMaximo,
             int responsableId)
         {
-            // Validaciones se haran a la hora de hacer el ALTA
             this._nombre = nombre;
             this._descripcion = descripcion;
             this._fechaHoraInicio = fechaHoraInicio;
             this._duracionHoras = duracionHoras;
             this._cupoMaximo = cupoMaximo;
-            this._responsableId = responsableId; //MODIFICAR PARA USAR LA INTERFAZ
+            this._responsableId = responsableId;
+            this.Reservas = new List<Reserva>(); // Inicializar la colección
         }
-        protected EventoDeportivo() //Lo pide el Entity Framework Core
+
+        protected EventoDeportivo() // Lo pide Entity Framework Core
         {
-            // Constructor protegido sin parametros para Entity Framework Core
             _nombre = string.Empty;
             _descripcion = string.Empty;
+            Reservas = new List<Reserva>(); // Inicializar la colección
         }            
 
+        // Métodos originales
         public DateTime ObtenerFechaHoraFin()
         {
             return _fechaHoraInicio.AddHours(_duracionHoras);
@@ -50,6 +55,12 @@ namespace Aplicacion.entidades
         public bool TieneCupoDisponible(int participantesActuales)
         {
             return participantesActuales < _cupoMaximo;
+        }
+
+        // NUEVO MÉTODO usando propiedades de navegación
+        public bool TieneCupoDisponible()
+        {
+            return Reservas.Count < _cupoMaximo;
         }
 
         public override String ToString()

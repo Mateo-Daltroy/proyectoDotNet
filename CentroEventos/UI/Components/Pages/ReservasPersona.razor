@@ -1,0 +1,48 @@
+﻿@page "/mis-reservas/{personaId:int}"
+@using Aplicacion.entidades
+@inject IRepositorioReserva ReservaService
+
+<h3>Mis Reservas</h3>
+
+@if (reservas == null)
+{
+    <p>Cargando reservas...</p>
+}
+else if (!reservas.Any())
+{
+    <p>No tiene reservas registradas.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Evento</th>
+                <th>Fecha</th>
+                <th>Estado Asistencia</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var reserva in reservas)
+        {
+            <tr>
+                <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
+                <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                <td>@(reserva._estadoAsistencia.ToString())</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int personaId { get; set; }
+
+    private IEnumerable<Reserva>? reservas;
+
+    protected override void OnInitialized()
+    {
+        reservas = ReservaService.ObtenerPorPersona(personaId);
+    }
+}

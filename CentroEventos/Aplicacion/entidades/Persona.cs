@@ -13,6 +13,7 @@ namespace Aplicacion.entidades;
 
 public class Persona
 {
+    // Propiedades originales
     [Key] public int _id { get; private set; }
     public string _dni { get; private set; }
     public String _nombre { get; private set; }
@@ -20,8 +21,13 @@ public class Persona
     public string _mail { get; private set; }
     public string _telefono { get; private set; }
     public string _contraseña { get; set; }
-    public List<Permiso> _permisos { get; }
 
+
+    // NUEVAS PROPIEDADES DE NAVEGACIÓN
+    public virtual ICollection<Permiso> _permisos { get; set; } = new List<Permiso>();
+    public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>(); // Sus reservas
+
+    // Constructor original
     public Persona(string dni, string nombre, string apellido, string mail, string telefono, string contraseña)
     {
         _dni = dni;
@@ -30,7 +36,10 @@ public class Persona
         _mail = mail;
         _telefono = telefono;
         _contraseña = contraseña;
-        _permisos = new();
+
+        _permisos = new List<Permiso>(); // 
+        // Inicializar las nuevas colecciones
+        Reservas = new List<Reserva>();
     }
 
     protected Persona()
@@ -42,14 +51,22 @@ public class Persona
         _mail = string.Empty;
         _telefono = string.Empty;
         _contraseña = string.Empty;
-        _permisos = new List<Permiso>();
+
+        _permisos = new List<Permiso>(); // 
+        // Inicializar las nuevas colecciones
+        Reservas = new List<Reserva>();
     }
 
-
+    // Métodos originales
     public override String ToString()
     {
         return $"Dni: {this._dni}, Nombre: {this._nombre}, Apellido: {this._apellido}, Mail: {this._mail}, Telefono: {this._telefono}";
     }
+
+    public bool tienePermiso(string nombrePermiso)
+        {
+            return _permisos.Any(p => p._nombre == nombrePermiso);
+        }
 
     public void agregarPermiso(Permiso permiso)
     {
@@ -95,9 +112,6 @@ public class Persona
             foreach (byte b in hashBytes)
                 sb.Append(b.ToString("x2"));
             this._contraseña = sb.ToString();
-            
         }   
-
     }
-
 }

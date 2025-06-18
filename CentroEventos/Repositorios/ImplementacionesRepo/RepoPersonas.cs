@@ -17,16 +17,20 @@ namespace Repositorios.ImplementacionesRepo;
 
 public class RepoPersonas : IRepositorioPersona
 {
+    private readonly CentroEventoContext _context;
+
+    public RepoPersonas (CentroEventoContext repo)
+    {
+        this._context = repo;
+    }
 
     public void registrarPersona(Persona p)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(per => per._dni == p._dni || per._mail == p._mail);
+            var persona = _context.Personas.FirstOrDefault(per => per._dni == p._dni || per._mail == p._mail);
             if (persona == null)
             {
-                context.Personas.Add(p);
-                context.SaveChanges();
+                _context.Personas.Add(p);
+                _context.SaveChanges();
 
             }
             else
@@ -34,28 +38,25 @@ public class RepoPersonas : IRepositorioPersona
                 throw new DuplicadoException("ya existe una persona con ese dni o mail");
             }
         }
-    }
+    
 
     public void Eliminar(int id)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
-                new RepoReservas().EliminarPorPersona(id);
-                context.Personas.Remove(persona);
-                context.SaveChanges();
+                new RepoReservas(_context).EliminarPorPersona(id);
+                _context.Personas.Remove(persona);
+                _context.SaveChanges();
             }
             else throw new EntidadNotFoundException("no se encontro una persona con ese id.");
         }
-    }
+    
 
     public void Actualizar(Persona pe)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._dni == pe._dni);
+
+            var persona = _context.Personas.FirstOrDefault(p => p._dni == pe._dni);
             if (persona != null)
             {
                 persona.modificarNombre(pe._nombre);
@@ -64,72 +65,61 @@ public class RepoPersonas : IRepositorioPersona
                 persona.modificarTelefono(pe._telefono);
 
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
-    }
+    
 
     public void agregarPermiso(int id, Permiso permiso)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
                 persona.agregarPermiso(permiso);
-                context.SaveChanges();
+                _context.SaveChanges();
             }
         }
-    }
-
     public void eliminarPermiso(int id, Permiso permiso)
     {
 
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
                 persona.eliminarPermiso(permiso);
-                context.SaveChanges();
+                _context.SaveChanges();
             }
         }
 
-    }
+    
 
     public Boolean ExisteId(int id)
     {
-        using (var context = new CentroEventoContext())
+        using (var _context = new CentroEventoContext())
         {
-            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             return persona != null;
         }
     }
 
     public Boolean ExisteMail(String mail)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
+       
+            var persona = _context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
             return persona != null;
         }
-    }
+    
 
     public Boolean ExisteDocumento(string documento)
     {
-        using (var context = new CentroEventoContext())
-        {
 
-            var persona = context.Personas.FirstOrDefault(p => p._dni == documento);
+            var persona = _context.Personas.FirstOrDefault(p => p._dni == documento);
             return persona != null;
-        }
+        
     }
 
     public String listarTodos()
     {
 
-        using (var context = new CentroEventoContext())
-        {
-            List<Persona> lista = context.Personas.ToList();
+            List<Persona> lista = _context.Personas.ToList();
             String todos = "";
 
             foreach (Persona p in lista)
@@ -139,62 +129,55 @@ public class RepoPersonas : IRepositorioPersona
             return todos;
         }
 
-    }
+    
 
     public List<String> ListarNombresDePersonas(List<int> listaId)
     {
-        using (var context = new CentroEventoContext())
-        {
+
             List<String> listaNombres = new List<String>();
             foreach (int id in listaId)
             {
-                var persona = context.Personas.FirstOrDefault(p => p._id == id);
+                var persona = _context.Personas.FirstOrDefault(p => p._id == id);
                 if (persona != null) listaNombres.Add(persona._nombre);
 
             }
             return listaNombres;
         }
 
-    }
+    
 
     public int getIdConMail(String mail)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
+
+            var persona = _context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
             if (persona != null) return persona._id;
             return -1;
         }
-    }
+    
     public int getIdConDocumento(String documento)
     {
-        using (var context = new CentroEventoContext())
-        {
-            var persona = context.Personas.FirstOrDefault(p => p._dni.Equals(documento));
+
+            var persona = _context.Personas.FirstOrDefault(p => p._dni.Equals(documento));
             if (persona != null) return persona._id;
             return -1;
         }
-    }
+    
 
     public String getPersonaConId(int id)
     {
-        using (var context = new CentroEventoContext())
-        {
 
-            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null) return persona._nombre + persona._apellido;
             return "";
 
-        }
+    
     }
 
     public Boolean PoseeElPermiso(int id, Permiso permiso)
     {
 
-        using (var context = new CentroEventoContext())
-        {
 
-            var persona = context.Personas.FirstOrDefault(p => p._id == id);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             if (persona != null)
             {
                 foreach (Permiso perm in persona._permisos)
@@ -208,16 +191,15 @@ public class RepoPersonas : IRepositorioPersona
             return false;
 
 
-        }
+        
 
     }
 
     public int ValidarUserYPass(String mail, String contraseña)
     {
-        using (var context = new CentroEventoContext())
-        {
 
-            var persona = context.Personas.FirstOrDefault(p => p._mail == mail);
+
+            var persona = _context.Personas.FirstOrDefault(p => p._mail == mail);
             if (persona != null)
             {
 
@@ -235,4 +217,3 @@ public class RepoPersonas : IRepositorioPersona
             return -1;
         }
     }
-}

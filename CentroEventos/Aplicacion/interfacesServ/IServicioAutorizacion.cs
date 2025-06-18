@@ -1,5 +1,5 @@
 using System;
-using Aplicacion.autorizacionProv;
+using Aplicacion.entidades;
 
 namespace Aplicacion.interfacesServ;
 

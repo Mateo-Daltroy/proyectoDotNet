@@ -10,13 +10,30 @@ using Repositorios.Context;
 
 namespace Repositorios.ImplementacionesRepo;
 
-public class RepoEventoDeportivoEF : IRepositorioEventoDeportivo
+public class RepoEventoDeportivo : IRepositorioEventoDeportivo
 {
     private readonly CentroEventoContext _context;
 
-    public RepoEventoDeportivoEF(CentroEventoContext context)
+    public RepoEventoDeportivo(CentroEventoContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    // Obtener evento con todas sus reservas y personas
+    public async Task<EventoDeportivo?> ObtenerEventoCompleto(int eventoId)
+    {
+        try 
+        {
+            return await _context.EventosDeportivos
+                .Include(e => e.Reservas)
+                    .ThenInclude(r => r.Persona)
+                .Include(e => e.Responsable)
+                .FirstOrDefaultAsync(e => e._id == eventoId); // ✅ Async version
+        } 
+        catch (Exception ex)
+        {
+            throw new Exception($"Error al obtener evento: {ex.Message}", ex);
+        }
     }
 
     public async Task AgregarAsync(EventoDeportivo ev)

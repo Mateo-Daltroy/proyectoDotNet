@@ -13,8 +13,10 @@ public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioRese
     {
         try
         {
+            /*
             if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
                 throw new FalloAutorizacionException();
+                */
 
             if (!repositorio.ContieneAsync(id).Result)
                 throw new EntidadNotFoundException();

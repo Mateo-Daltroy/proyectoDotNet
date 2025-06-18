@@ -1,2 +1,69 @@
-@page "/Opciones de usuario"
-<PageTitle>aca van los botones ANANANANACHE</PageTitle>
+@page "/home"
+@inject NavigationManager Navigation
+
+<PageTitle>Opciones de Usuario</PageTitle>
+
+<h1>¡Bienvenido al sistema del Centro Deportivo!</h1>
+
+<div class="container">
+    <h2>Acciones disponibles:</h2>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Personas</h5>
+                    <p class="card-text">Crear, editar y eliminar personas</p>
+                    <button class="btn btn-primary" @onclick="IrAPersonas">
+                        Ver Personas
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Eventos Deportivos</h5>
+                    <p class="card-text">Administrar eventos deportivos</p>
+                    <button class="btn btn-success" @onclick="IrAEventos">
+                        Ver Eventos
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reservas</h5>
+                    <p class="card-text">Gestionar reservas de eventos</p>
+                    <button class="btn btn-info" @onclick="IrAReservas">
+                        Ver Reservas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Métodos que se ejecutan cuando haces clic en los botones
+     [Parameter]
+    public int personaId { get; set; }
+
+    private void IrAReservas()
+    {
+        Navigation.NavigateTo($"/mis-reservas/{personaId}");
+    }
+    private void IrAPersonas()
+    {
+        // Aquí puedes navegar a otra página o mostrar algo
+        Console.WriteLine("Botón Personas clickeado!");
+    }
+    
+    private void IrAEventos()
+    {
+        Console.WriteLine("Botón Eventos clickeado!");
+    }
+}

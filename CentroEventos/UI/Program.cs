@@ -6,12 +6,15 @@ using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
 using Repositorios.ImplementacionesRepo;
 using Aplicacion.UseCases.UseCasesPersona;
+using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 //_Inicializar Bases de Datos_
+/*
 IRepositorioReserva repoTempRes = new RepoReservas();
 IRepositorioPersona repoTempPers = new RepoPersonas();
 IRepositorioEventoDeportivo repoTempEv = new RepoEventoDeportivoEF(new CentroEventoContext());
-
+*/
 CentroEventosSQLite.Inicializar();
 
 using (var context = new CentroEventoContext())
@@ -33,7 +36,24 @@ foreach (var r in context.Reservas)
 }
 }
 
+// Codigo de la catedra, no tocar
+var contexto = new CentroEventoContext();
+
+contexto.Database.EnsureCreated();
+DbConnection connection = contexto.Database.GetDbConnection();
+connection.Open();
+using (var command = connection.CreateCommand())
+{
+command.CommandText = "PRAGMA journal_mode=DELETE;";
+command.ExecuteNonQuery();
+}
+// fin de codigo de la catedra
+
 var builder = WebApplication.CreateBuilder(args); //////////////////////
+builder.Services.AddScoped<IRepositorioPersona, RepoPersonas>();
+builder.Services.AddScoped<IRepositorioReserva, RepoReservas>();
+builder.Services.AddScoped<CentroEventoContext>();
+builder.Services.AddScoped<IRepositorioEventoDeportivo, RepoEventoDeportivo>();
 builder.Services.AddScoped<AltaPersona>();
 
 // Add services to the container.

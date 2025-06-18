@@ -11,9 +11,24 @@ namespace Repositorios.ImplementacionesRepo;
 
 public class RepoReservas : IRepositorioReserva
 {
+    private readonly CentroEventoContext _context;
+
+    public RepoReservas(CentroEventoContext repo)
+    {
+        this._context = repo;
+    }
+
+    public IEnumerable<Reserva> ObtenerPorPersona(int idPersona)
+    {
+        return _context
+            .Reservas
+            .Where(res => res._personaId == idPersona)
+            .ToList();
+    }
+
     public void EliminarPorPersona(int id)
     {
-        new CentroEventoContext()
+        _context
             .Reservas
             .Where(res => res._personaId == id)
             .ExecuteDelete();
@@ -21,7 +36,7 @@ public class RepoReservas : IRepositorioReserva
 
     public void EliminarPorEvento(int id)
     {
-        new CentroEventoContext()
+        _context
             .Reservas
             .Where(res => res._eventoDeportivoId == id)
             .ExecuteDelete();
@@ -29,15 +44,14 @@ public class RepoReservas : IRepositorioReserva
 
     public void Agregar(Reserva res)
     {
-        var contexto = new CentroEventoContext();
-        contexto.Reservas.Add(res);
+        _context.Reservas.Add(res);
 
-        contexto.SaveChanges();
+        _context.SaveChanges();
     }
 
     public Reserva ObtenerPorId(int id)
     {
-        Reserva? reserva = new CentroEventoContext()
+        Reserva? reserva = _context
             .Reservas
             .Find(id);
         if (reserva == null)
@@ -49,8 +63,7 @@ public class RepoReservas : IRepositorioReserva
 
     public void Actualizar(Reserva res)
     {
-        var context = new CentroEventoContext();
-        Reserva? busq = context.Reservas.Find(res._id);
+        Reserva? busq = _context.Reservas.Find(res._id);
         if (busq == null)
         {
             throw new EntidadNotFoundException();
@@ -60,14 +73,13 @@ public class RepoReservas : IRepositorioReserva
         busq._fechaAltaReserva = res._fechaAltaReserva;
         busq._personaId = res._personaId;
 
-        context.SaveChanges();
+        _context.SaveChanges();
     }
 
     public void Eliminar(Reserva res)
     {
-        var context = new CentroEventoContext();
-        context.Reservas.Remove(res);
-        context.SaveChanges();
+        _context.Reservas.Remove(res);
+        _context.SaveChanges();
     }
 
     public void Eliminar(int id)
@@ -78,10 +90,9 @@ public class RepoReservas : IRepositorioReserva
 
     public bool ExisteId(int idPers, int idEv)
     {
-        var context = new CentroEventoContext();
 
         // Esta debe ser la implementacion menos eficiente posible pero bueno señores, es lo que hay
-        return context
+        return _context
         .Reservas
         .Where(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv))
         .ToList()
@@ -102,15 +113,13 @@ public class RepoReservas : IRepositorioReserva
 
     public int GetAsistentes(int idEv)
     {
-        var context = new CentroEventoContext();
-
-        return context
+        return _context
         .Reservas
         .Count(res => res._eventoDeportivoId == idEv);
     }
 
     public IEnumerable<Reserva> ObtenerTodos()
     {
-        return new CentroEventoContext().Reservas;
+        return _context.Reservas;
     }
 }

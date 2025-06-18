@@ -18,4 +18,5 @@ public interface IRepositorioReserva
     bool ExisteId(int idPers, int idEv); //retorna si existe un evento bajo el id, lo necesito para validar una reserva - mate
     bool ExisteId(int idRes); 
     int GetAsistentes(int idEv); //retorna la cantidad de asistentes a un evento
+    IEnumerable<Reserva> ObtenerPorPersona(int idPersona);
 }

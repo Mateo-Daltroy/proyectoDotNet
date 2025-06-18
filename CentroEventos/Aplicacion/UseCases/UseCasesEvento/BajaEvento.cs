@@ -1,15 +1,14 @@
-
-
-using Aplicacion.autorizacionProv;
+using System.Threading.Tasks;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva, ServicioAuthProvisional servicioAuth):EventoDeportivoUseCases(repositorio)
+public class BajaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva, ServicioAuthProvisional servicioAuth)
+:EventoDeportivoUseCases(repositorio)
 {
     //ELIMINAR TAMBIEN RESERVAS ASOCIADAS
-    public void Baja(int id, int idUsuario)
+    public async Task Ejecutar(int id, int idUsuario)
     {
         try
         {
@@ -17,16 +16,16 @@ public class Ejecutar (IRepositorioEventoDeportivo repositorio, IRepositorioRese
             if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
                 throw new FalloAutorizacionException();
                 */
-
-            if (!repositorio.ContieneAsync(id).Result)
+            if (!await repositorio.ContieneAsync(id))
                 throw new EntidadNotFoundException();
 
             repositorioReserva.EliminarPorEvento(id);
-            repositorio.EliminarAsync(id);
+            await repositorio.EliminarAsync(id);
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
+            throw;
         }
     }
 }

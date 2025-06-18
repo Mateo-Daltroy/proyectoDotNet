@@ -8,6 +8,8 @@ using Repositorios.ImplementacionesRepo;
 using Aplicacion.UseCases.UseCasesPersona;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using Aplicacion.UseCases.UseCasesEvento;
+using Aplicacion.UseCases.UseCasesReserva;
 
 //_Inicializar Bases de Datos_
 /*
@@ -49,13 +51,49 @@ command.ExecuteNonQuery();
 }
 // fin de codigo de la catedra
 
+// --> Construccion del builder
 var builder = WebApplication.CreateBuilder(args); //////////////////////
 builder.Services.AddScoped<CentroEventoContext>();
+
+// Repos
 builder.Services.AddScoped<IRepositorioPersona, RepoPersonas>();
 builder.Services.AddScoped<IRepositorioReserva, RepoReservas>();
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepoEventoDeportivo>();
+
+// Usuario
+builder.Services.AddScoped<Persona>();
+
+// Casos Uso Persona
 builder.Services.AddScoped<AltaPersona>();
+builder.Services.AddScoped<ModificarPersona>();
+builder.Services.AddScoped<BajaPersona>();
+builder.Services.AddScoped<ExistePersonaPorId>();
+builder.Services.AddScoped<ListarNombresDePersonas>();
+builder.Services.AddScoped<ListarTodasLasPersonas>();
+builder.Services.AddScoped<ModificarPersona>();
+builder.Services.AddScoped<ObetenerIdPersonaPorDocumento>();
+builder.Services.AddScoped<PersonaPoseeElPermiso>();
 builder.Services.AddScoped<ValidarUsuarioYContraseña>();
+builder.Services.AddScoped<ObtenerPersonaPorId>();
+
+// Casos Uso Evento Deportivo
+builder.Services.AddScoped<AltaEvento>();
+builder.Services.AddScoped<ModificarEvento>();
+builder.Services.AddScoped<BajaEvento>();
+builder.Services.AddScoped<ListarEventosConCupo>();
+builder.Services.AddScoped<ListarEventosPasados>();
+builder.Services.AddScoped<ListarEventosSinReservas>();
+builder.Services.AddScoped<ObtenerEventoPorId>();
+
+// Casos Uso Reserva
+builder.Services.AddScoped<AltaReserva>();
+builder.Services.AddScoped<ModificarReserva>();
+builder.Services.AddScoped<BajaReserva>();
+builder.Services.AddScoped<ListarPersonasAsistidasAEvento>();
+builder.Services.AddScoped<ListarTodasLasReservas>();
+builder.Services.AddScoped<ObtenerReservaPorId>();
+
+// --> Fin del constructor del builder
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

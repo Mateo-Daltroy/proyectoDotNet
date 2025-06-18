@@ -1,5 +1,4 @@
 using System;
-using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using CentroEventos.Aplicacion.InterfacesRepo;
 
@@ -15,9 +14,9 @@ public interface IRepositorioPersona
     public Boolean ExisteDocumento(String documento);
     public void Eliminar(int id);
     public void Actualizar(Persona per);
-    public String getPersonaConId(int id);
-    public String listarTodos();
-    public Boolean PoseeElPermiso(int id, Permiso permiso);
+    public Persona getPersonaConId(int id);
+    public List<Persona> listarTodos();
+    public Boolean PoseeElPermiso(int id, String permiso);
     public List<String> ListarNombresDePersonas(List<int> listaId);
     public void eliminarPermiso(int id, Permiso permiso);
     public void agregarPermiso(int id, Permiso permiso);

@@ -1,0 +1,56 @@
+@page "/GestionUsuarios"
+
+@using Aplicacion.entidades
+@using Aplicacion.UseCases
+
+@inject IRepositorioPersona ServicioPersona
+
+<h1> Gestion de Usuarios </h1>
+
+@if (personas == null || personas.Count == 0)
+{
+    <div>No hay personas registradas.</div>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var persona in personas)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@persona._nombre @persona._apellido -- @persona._mail</span>
+                <span>
+                    <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(persona)">Editar</button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersona(persona)">Eliminar</button>
+                </span>
+            </li>
+        }
+    </ul>
+}
+
+
+
+
+@code{
+    public int IdPersona;
+
+    public List<Persona>?  personas;
+
+
+    protected void EditarPersona (Persona p){
+
+    }
+
+    protected void EliminarPersona (Persona p){
+        new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
+    }
+
+    protected override void OnInitialized (){
+        
+        this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
+        
+
+    }
+
+
+
+}

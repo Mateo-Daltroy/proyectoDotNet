@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;

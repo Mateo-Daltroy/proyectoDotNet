@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics.Contracts;
-using Aplicacion.autorizacionProv;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
@@ -12,6 +11,7 @@ using Repositorios.ImplementacionesRepo;
 using System;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositorios.ImplementacionesRepo;
 
@@ -26,7 +26,6 @@ public class RepoPersonas : IRepositorioPersona
 
     public void registrarPersona(Persona p)
     {
-            Console.WriteLine("porque lo nuestro quedo en el pasado");
             var persona = _context.Personas.FirstOrDefault(per => per._dni == p._dni || per._mail == p._mail);
             if (persona == null)
             {
@@ -72,23 +71,39 @@ public class RepoPersonas : IRepositorioPersona
 
     public void agregarPermiso(int id, Permiso permiso)
     {
-            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-            if (persona != null)
+            var persona = _context.Personas
+            .Include(p => p._permisos)
+            .FirstOrDefault(p => p._id == id);
+            
+        if (persona != null)
+        {
+            if (!persona._permisos.Any(p => p._id == permiso._id))
             {
-                persona.agregarPermiso(permiso);
+                persona._permisos.Add(permiso);
                 _context.SaveChanges();
             }
         }
+    }
+
+
     public void eliminarPermiso(int id, Permiso permiso)
     {
-
-            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-            if (persona != null)
+            var persona = _context.Personas
+            .Include(p => p._permisos)
+            .FirstOrDefault(p => p._id == id);
+            
+        if (persona != null)
+        {
+            var permisoAEliminar = persona._permisos
+                .FirstOrDefault(p => p._id == permiso._id);
+                
+            if (permisoAEliminar != null)
             {
-                persona.eliminarPermiso(permiso);
+                persona._permisos.Remove(permisoAEliminar);
                 _context.SaveChanges();
             }
         }
+    }
 
     
 
@@ -117,17 +132,11 @@ public class RepoPersonas : IRepositorioPersona
         
     }
 
-    public String listarTodos()
+    public List<Persona> listarTodos()
     {
 
-            List<Persona> lista = _context.Personas.ToList();
-            String todos = "";
-
-            foreach (Persona p in lista)
-            {
-                todos += p.ToString() + "\n";
-            }
-            return todos;
+            return _context.Personas.ToList();
+            
         }
 
     
@@ -161,40 +170,34 @@ public class RepoPersonas : IRepositorioPersona
             var persona = _context.Personas.FirstOrDefault(p => p._dni.Equals(documento));
             if (persona != null) return persona._id;
             return -1;
+    }
+    
+
+    public Persona getPersonaConId(int id)
+   {
+        var persona = _context.Personas
+            .Include(p => p._permisos)
+            .FirstOrDefault(p => p._id == id);
+            
+        if (persona == null) 
+            throw new EntidadNotFoundException();
+        return persona;
+    }
+
+
+    public Boolean PoseeElPermiso(int id, String permiso)
+    {
+            var persona = _context.Personas
+            .Include(p => p._permisos) 
+            .FirstOrDefault(p => p._id == id);
+            
+        if (persona != null)
+        {
+            return persona._permisos.Any(perm => perm._nombre == permiso);
         }
-    
-
-    public String getPersonaConId(int id)
-    {
-
-            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-            if (persona != null) return persona._nombre + persona._apellido;
-            return "";
-
-    
+        return false;
     }
 
-    public Boolean PoseeElPermiso(int id, Permiso permiso)
-    {
-
-
-            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-            if (persona != null)
-            {
-                foreach (Permiso perm in persona._permisos)
-                {
-                    if (perm == permiso)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-
-
-        
-
-    }
 
     public int ValidarUserYPass(String mail, String contraseña)
     {

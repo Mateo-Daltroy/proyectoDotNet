@@ -1,8 +1,10 @@
 ﻿@page "/mis-reservas/{personaId:int}"
 @using Aplicacion.entidades
-@inject IRepositorioReserva ReservaService
+@inject ListarTodasLasReservas ListarTodasLasReservas
 
-<h3>Mis Reservas</h3>
+<h3>Reservas</h3>
+
+<button class="btn btn-primary" @onclick="toggleMios">Ver Mis/Todas las Reservas</button>
 
 @if (reservas == null)
 {
@@ -14,35 +16,72 @@ else if (!reservas.Any())
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Evento</th>
-                <th>Fecha</th>
-                <th>Estado Asistencia</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var reserva in reservas)
-        {
-            <tr>
-                <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
-                <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
-                <td>@(reserva._estadoAsistencia.ToString())</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    @if (!soloMios)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Fecha</th>
+                    <th>Estado Asistencia</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var reserva in reservas)
+            {
+                <tr>
+                    <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
+                    <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                    <td>@(reserva._estadoAsistencia.ToString())</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else if (reservasMias != null) 
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Fecha</th>
+                    <th>Estado Asistencia</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var reserva in reservasMias)
+            {
+                <tr>
+                    <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
+                    <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                    <td>@(reserva._estadoAsistencia.ToString())</td>
+                    <td>
+                        <button class="btn btn-primary">Editar</button>
+                        <button class="btn btn-danger">Eliminar</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table> 
+    }
 }
 
 @code {
     [Parameter]
     public int personaId { get; set; }
 
+    private bool soloMios = false;
+    private IEnumerable<Reserva>? reservasMias;
     private IEnumerable<Reserva>? reservas;
+    
+    private void toggleMios() {
+        soloMios = !soloMios;
+    }
 
     protected override void OnInitialized()
     {
-        reservas = ReservaService.ObtenerPorPersona(personaId);
+        reservas = ListarTodasLasReservas.Ejecutar();
+        reservasMias = reservas.Where(res => res._personaId == personaId).ToList();
     }
 }

@@ -15,7 +15,6 @@ public class AltaPersona(IRepositorioPersona repositorio) : PersonaUseCase(repos
 
     public void Ejecutar(Persona p)
     {
-        Console.WriteLine("y no se que hacer");
         try
         {
             String mensaje = "";

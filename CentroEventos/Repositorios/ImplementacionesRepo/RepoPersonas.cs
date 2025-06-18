@@ -26,6 +26,7 @@ public class RepoPersonas : IRepositorioPersona
 
     public void registrarPersona(Persona p)
     {
+            Console.WriteLine("porque lo nuestro quedo en el pasado");
             var persona = _context.Personas.FirstOrDefault(per => per._dni == p._dni || per._mail == p._mail);
             if (persona == null)
             {

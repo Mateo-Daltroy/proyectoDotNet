@@ -50,9 +50,9 @@ command.ExecuteNonQuery();
 // fin de codigo de la catedra
 
 var builder = WebApplication.CreateBuilder(args); //////////////////////
+builder.Services.AddScoped<CentroEventoContext>();
 builder.Services.AddScoped<IRepositorioPersona, RepoPersonas>();
 builder.Services.AddScoped<IRepositorioReserva, RepoReservas>();
-builder.Services.AddScoped<CentroEventoContext>();
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepoEventoDeportivo>();
 builder.Services.AddScoped<AltaPersona>();
 builder.Services.AddScoped<ValidarUsuarioYContraseña>();

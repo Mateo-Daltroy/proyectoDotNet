@@ -1,37 +1,101 @@
 ﻿@page "/RegistroDePersona"
-@using Aplicacion.entidades
-@using Aplicacion.UseCases
+@rendermode InteractiveServer
 
-@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+@inject AltaPersona AltaPersona
+@inject NavigationManager Navigation
 
-<PageTitle>Registro de persona</PageTitle>
+<h3>Registro de Persona</h3>
 
-<h1>Ingrese los datos de la persona</h1>
-Nombre:
-<InputText @bind-Value="nombre" /><br/><br/>
-Apellido:
-<InputText @bind-Value="apellido" /><br/><br/>
-Dni:    
-<InputText @bind-Value="dni" /><br/><br/>
-Mail: 
-<InputText @bind-Value="mail" /><br/><br/>
-Telefono: 
-<InputText @bind-Value="telefono" /><br/><br/>
-Contraseña: 
-<InputText @bind-Value="contraseña" /><br/><br/>
-<button @onclick="RegistrarPersona">Registrar</button>
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success">@SuccessMessage</div>
+}
 
-@inject AltaPersona AltaPersona;
+<EditForm Model="registroModel" OnValidSubmit="RegistrarPersona" FormName="registroPersona">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>DNI:</label>
+        <InputText class="form-control" @bind-Value="registroModel.Dni" />
+        <ValidationMessage For="@(() => registroModel.Dni)" />
+    </div>
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <InputText class="form-control" @bind-Value="registroModel.Nombre" />
+        <ValidationMessage For="@(() => registroModel.Nombre)" />
+    </div>
+    <div class="mb-3">
+        <label>Apellido:</label>
+        <InputText class="form-control" @bind-Value="registroModel.Apellido" />
+        <ValidationMessage For="@(() => registroModel.Apellido)" />
+    </div>
+    <div class="mb-3">
+        <label>Email:</label>
+        <InputText class="form-control" @bind-Value="registroModel.Mail" />
+        <ValidationMessage For="@(() => registroModel.Mail)" />
+    </div>
+    <div class="mb-3">
+        <label>Teléfono:</label>
+        <InputText class="form-control" @bind-Value="registroModel.Telefono" />
+        <ValidationMessage For="@(() => registroModel.Telefono)" />
+    </div>
+    <div class="mb-3">
+        <label>Contraseña:</label>
+        <InputText type="password" class="form-control" @bind-Value="registroModel.Contraseña" />
+        <ValidationMessage For="@(() => registroModel.Contraseña)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</EditForm>
 
 @code {
-    private String nombre {get; set;}
-    private String apellido {get; set;}
-    private String dni {get; set;}
-    private String mail {get; set;}
-    private String telefono {get; set;}
-    private String contraseña {get; set;}
+    private RegistroModel registroModel = new();
+    private string ErrorMessage;
+    private string SuccessMessage;
 
-    private void RegistrarPersona (){
-       // new AltaPersona.Ejecutar(new Persona(dni, nombre, apellido, mail, telefono, contraseña));
+    private void RegistrarPersona()
+    {
+        Console.WriteLine("Registrar persona es llamado");// xd XD
+        ErrorMessage = SuccessMessage = string.Empty;
+        try
+        {
+            AltaPersona.Ejecutar( new Aplicacion.entidades.Persona(
+                registroModel.Dni,
+                registroModel.Nombre,
+                registroModel.Apellido,
+                registroModel.Mail,
+                registroModel.Telefono,
+                registroModel.Contraseña)
+            );
+            SuccessMessage = "¡Persona registrada correctamente!";
+            registroModel = new RegistroModel();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error al registrar la persona: {ex.Message}";
+        }
+    }
+
+    public class RegistroModel
+    {
+        [Required(ErrorMessage = "El DNI es obligatorio.")]
+        public string Dni { get; set; }
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        public string Nombre { get; set; }
+        [Required(ErrorMessage = "El apellido es obligatorio.")]
+        public string Apellido { get; set; }
+        [Required(ErrorMessage = "El email es obligatorio.")]
+        [EmailAddress(ErrorMessage = "Email no válido.")]
+        public string Mail { get; set; }
+        [Required(ErrorMessage = "El teléfono es obligatorio.")]
+        public string Telefono { get; set; }
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres.")]
+        public string Contraseña { get; set; }
     }
 }

@@ -55,6 +55,7 @@ builder.Services.AddScoped<IRepositorioReserva, RepoReservas>();
 builder.Services.AddScoped<CentroEventoContext>();
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepoEventoDeportivo>();
 builder.Services.AddScoped<AltaPersona>();
+builder.Services.AddScoped<ValidarUsuarioYContraseña>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

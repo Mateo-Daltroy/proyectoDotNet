@@ -1,3 +1,78 @@
+@using System.ComponentModel.DataAnnotations
+@using Aplicacion.UseCases
+
+@inject ValidarUsuarioYContraseña ValidarUsuarioYContraseña
+@inject IRepositorioPersona RepoPersonas
+@inject NavigationManager NavigationManager
+
 @page "/"
 
-<h1>Si levanto esto no fue gracias a mati</h1>
+<h3>Inicio de Sesión</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="OnLogin" FormName="loginform">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="mail" class="form-label">Correo electrónico</label>
+        <InputText @bind-Value="loginModel.mail" id="mail" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.mail)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <InputText @bind-Value="loginModel.password" id="password" type="password" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.password)" />
+    </div>
+
+    <div class="mb-3">
+        <button class="btn btn-primary me-2" @onclick="OnLogin">Ingresar</button>
+        <button type="button" class="btn btn-secondary" @onclick="OnRegister">Registrarse</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(loginError))
+    {
+        <div class="alert alert-danger">@loginError</div>
+    }
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new();
+    private String loginError;
+
+    private void OnLogin()
+    {
+        if (string.IsNullOrWhiteSpace(loginModel.mail) || string.IsNullOrWhiteSpace(loginModel.password))
+        {
+            loginError = "Debe completar ambos campos.";
+            return;
+        }
+
+        int id = ValidarUsuarioYContraseña.Ejecutar(loginModel.mail, loginModel.password);
+        if (id != -1)
+        {
+            NavigationManager.NavigateTo("/home");
+        }
+        else
+        {
+            loginError = "Usuario o contraseña incorrectos.";
+        }
+
+
+    }
+
+    private void OnRegister()
+    {
+        NavigationManager.NavigateTo("/RegistroDePersona");
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "El correo es obligatorio.")]
+        [EmailAddress(ErrorMessage = "Debe ingresar un correo válido.")]
+        public string mail { get; set; }
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        public string password { get; set; }
+    }
+
+}

@@ -1,11 +1,9 @@
-@page "/"
+@*@page "/"
 @rendermode InteractiveServer
 
 @using System.ComponentModel.DataAnnotations
 @using Aplicacion.entidades
-@*
-@inject Persona Usuario
-*@
+
 @inject ObtenerPersonaPorId ObtenerPersonaPorId
 @inject ValidarUsuarioYContraseña ValidarUsuarioYContraseña
 @inject IRepositorioPersona RepoPersonas
@@ -77,4 +75,181 @@
         public string password { get; set; }
     }
 
+}
+*@
+
+@page "/"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@inject Aplicacion.interfacesServ.IServicioAutenticacion ServicioAuth
+@inject NavigationManager NavigationManager
+
+<PageTitle>Iniciar Sesión - Centro Deportivo</PageTitle>
+
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100">
+        <div class="col-12 col-md-6 col-lg-4 mx-auto">
+            <div class="card shadow">
+                <div class="card-header text-center bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Centro Deportivo
+                    </h3>
+                    <p class="mb-0 mt-2">Iniciar Sesión</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <EditForm Model="@loginModel" OnValidSubmit="OnLogin" FormName="loginform">
+                        <DataAnnotationsValidator />
+                        
+                        @if (!string.IsNullOrEmpty(loginError))
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                @loginError
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label for="mail" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>
+                                Correo electrónico
+                            </label>
+                            <InputText @bind-Value="loginModel.mail" 
+                                      id="mail" 
+                                      class="form-control" 
+                                      placeholder="ejemplo@correo.com"
+                                      disabled="@iniciandoSesion" />
+                            <ValidationMessage For="@(() => loginModel.mail)" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-1"></i>
+                                Contraseña
+                            </label>
+                            <InputText @bind-Value="loginModel.password" 
+                                      id="password" 
+                                      type="password" 
+                                      class="form-control" 
+                                      placeholder="Ingrese su contraseña"
+                                      disabled="@iniciandoSesion" />
+                            <ValidationMessage For="@(() => loginModel.password)" class="text-danger" />
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" 
+                                    class="btn btn-primary btn-lg" 
+                                    disabled="@iniciandoSesion">
+                                @if (iniciandoSesion)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    <span>Iniciando sesión...</span>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    <span>Ingresar</span>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+                
+                <div class="card-footer text-center bg-light">
+                    <p class="mb-2">¿No tienes cuenta?</p>
+                    <NavLink class="btn btn-outline-success" href="/RegistroDePersona">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Registrarse
+                    </NavLink>
+                </div>
+            </div>
+            
+            <!-- Información de prueba (eliminar en producción) -->
+            <div class="card mt-3 border-info">
+                <div class="card-header bg-info text-white">
+                    <small><i class="fas fa-info-circle me-1"></i> Usuario de prueba</small>
+                </div>
+                <div class="card-body py-2">
+                    <small class="text-muted">
+                        <strong>Email:</strong> juan@email.com<br>
+                        <strong>Contraseña:</strong> password123
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private string loginError = string.Empty;
+    private bool iniciandoSesion = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Si ya está autenticado, redirigir al home
+        if (ServicioAuth.EstaAutenticado)
+        {
+            NavigationManager.NavigateTo("/home");
+        }
+    }
+
+    private async Task OnLogin()
+    {
+        Console.WriteLine("Método OnLogin() llamado en Index.razor");
+        
+        // Limpiar errores previos
+        loginError = string.Empty;
+        iniciandoSesion = true;
+
+        try
+        {
+            // Validar campos básicos
+            if (string.IsNullOrWhiteSpace(loginModel.mail) || string.IsNullOrWhiteSpace(loginModel.password))
+            {
+                loginError = "Debe completar ambos campos.";
+                return;
+            }
+
+            // ✅ USAR el ServicioAutenticacion
+            var persona = await ServicioAuth.AutenticarAsync(loginModel.mail, loginModel.password);
+            
+            if (persona != null)
+            {
+                // ✅ INICIAR sesión a nivel servicio
+                await ServicioAuth.IniciarSesionAsync(persona);
+                
+                Console.WriteLine($"Usuario autenticado: {persona._nombre} {persona._apellido}");
+                Console.WriteLine($"Permisos: {string.Join(", ", persona._permisos.Select(p => p._nombre))}");
+                
+                // ✅ REDIRIGIR al home
+                NavigationManager.NavigateTo("/home");
+            }
+            else
+            {
+                loginError = "Usuario o contraseña incorrectos.";
+            }
+        }
+        catch (Exception ex)
+        {
+            loginError = $"Error al iniciar sesión: {ex.Message}";
+            Console.WriteLine($"Error en login: {ex}");
+        }
+        finally
+        {
+            iniciandoSesion = false;
+            StateHasChanged(); // Asegurar que la UI se actualice
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "El correo es obligatorio.")]
+        [EmailAddress(ErrorMessage = "Debe ingresar un correo válido.")]
+        public string mail { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        public string password { get; set; } = string.Empty;
+    }
 }

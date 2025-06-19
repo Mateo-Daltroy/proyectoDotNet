@@ -5,6 +5,8 @@
 @using Aplicacion.UseCases
 @using UI.Components.Pages
 
+@inject Aplicacion.interfacesServ.IServicioAutenticacion servicioAuth
+@inject NavigationManager Navigation
 @inject IRepositorioPersona ServicioPersona
 
 <h1> Gestion de Usuarios </h1>
@@ -36,7 +38,7 @@ else
                 else
                 {
                     <!-- Modo vista -->
-                    <span>@persona._nombre @persona._apellido -- @persona._mail</span>
+                    <span>@persona._nombre @persona._apellido -- @persona._dni -- @persona._mail -- @persona._telefono</span>
                     <span>
                         <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(persona)">Editar</button>
                         <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPermisos(persona)">Editar Permisos</button>
@@ -59,7 +61,8 @@ else
     private DialogoConfirmacion? dialogoConfirmacion;
     private string? mensajeDialogo;
     private Persona? personaAOperar;
-    private string? accionPendiente; // "eliminar" o "editar"
+    private string? accionPendiente; 
+    private Persona? UsuarioActual;
 
 
     private void EliminarPersonaDC(Persona persona)
@@ -110,8 +113,13 @@ else
 
     protected void EliminarPersona(Persona p)
     {
+        
         new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
         this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
+        if (UsuarioActual._id == p._id){
+            servicioAuth.CerrarSesionAsync();
+            Navigation.NavigateTo("/home");
+        }
         StateHasChanged();
     }
 
@@ -126,7 +134,7 @@ else
             personaAEditarOriginal._dni = editandoPersona._dni;
 
             new ModificarPersona(ServicioPersona).Ejecutar(personaAEditarOriginal);
-
+            
             editandoPersona = null;
             personaAEditarOriginal = null;
             StateHasChanged();
@@ -146,10 +154,11 @@ else
     }
 
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
 
         this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
+        this.UsuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
         StateHasChanged();
     }
 

@@ -1,0 +1,62 @@
+﻿<div class="modal @(Visible ? "show d-block" : "d-none")" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Estado de Asistencia</h5>
+                <button type="button" class="close" @onclick="Cancelar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="estadoAsistencia">Estado de Asistencia:</label>
+                    <select id="estadoAsistencia" class="form-control" @bind="EstadoSeleccionado">
+                        @foreach (var estado in Enum.GetValues(typeof(Asistencia)))
+                        {
+                            <option value="@estado">@estado</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+                <button type="button" class="btn btn-primary" @onclick="Guardar">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+</div>
+
+@code {
+    private bool Visible { get; set; } = false;
+    private Asistencia EstadoSeleccionado { get; set; }
+    
+    [Parameter]
+    public Reserva? ReservaActual { get; set; }
+
+    [Parameter]
+    public EventCallback<Reserva> OnGuardar { get; set; }
+
+    public void Mostrar(Reserva reserva)
+    {
+        ReservaActual = reserva;
+        EstadoSeleccionado = reserva._estadoAsistencia;
+        Visible = true;
+        StateHasChanged();
+    }
+
+    private void Guardar()
+    {
+        if (ReservaActual != null)
+        {
+            ReservaActual._estadoAsistencia = EstadoSeleccionado;
+            OnGuardar.InvokeAsync(ReservaActual);
+        }
+        Visible = false;
+    }
+
+    private void Cancelar()
+    {
+        Visible = false;
+    }
+}

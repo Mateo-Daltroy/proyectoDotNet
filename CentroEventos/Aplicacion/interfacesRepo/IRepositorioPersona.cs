@@ -16,9 +16,10 @@ public interface IRepositorioPersona
     public void Actualizar(Persona per);
     public Persona getPersonaConId(int id);
     public List<Persona> listarTodos();
-    public Boolean PoseeElPermiso(int id, String permiso);
     public List<String> ListarNombresDePersonas(List<int> listaId);
+    public Boolean PoseeElPermiso(int id, String permiso);
     public void eliminarPermiso(int id, Permiso permiso);
     public void agregarPermiso(int id, Permiso permiso);
+    public List<Permiso> obtenerPermisosDisponiblesParaPersona(int personaId);
     public int ValidarUserYPass(String mail, String contraseña);
 }

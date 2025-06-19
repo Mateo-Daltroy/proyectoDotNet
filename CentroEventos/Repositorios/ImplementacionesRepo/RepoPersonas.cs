@@ -23,6 +23,25 @@ public class RepoPersonas : IRepositorioPersona
         this._context = repo;
     }
 
+    public Persona getPersonaConId(int id)
+   {
+        var persona = _context.Personas
+            .Include(p => p._permisos)
+            .FirstOrDefault(p => p._id == id);
+            
+        if (persona == null) 
+            throw new EntidadNotFoundException();
+        return persona;
+    }
+
+    public List<Persona> listarTodos()
+    {
+        return _context.Personas
+        .Include(p => p._permisos) //agrego esto para obtener los permisos, si queres lo mostras en la misma vista o en otra
+        .ToList();
+        
+    }
+
     public void registrarPersona(Persona p)
     {
         //LA CONTRASEÑA SE HASHEA EN EL CASO DE USO
@@ -78,19 +97,70 @@ public class RepoPersonas : IRepositorioPersona
 
     public void Actualizar(Persona pe)
     {
+        var persona = _context.Personas.FirstOrDefault(p => p._id == pe._id);
+        if (persona != null)
+        {
+            persona.modificarNombre(pe._nombre);
+            persona.modificarApellido(pe._apellido);
+            persona.modificarMail(pe._mail);
+            persona.modificarTelefono(pe._telefono);
 
-            var persona = _context.Personas.FirstOrDefault(p => p._id == pe._id);
-            if (persona != null)
-            {
-                persona.modificarNombre(pe._nombre);
-                persona.modificarApellido(pe._apellido);
-                persona.modificarMail(pe._mail);
-                persona.modificarTelefono(pe._telefono);
+        }
+        _context.SaveChanges();
+     }
+    
+   
 
-            }
-            _context.SaveChanges();
+    public Boolean ExisteId(int id)
+    { 
+        var persona = _context.Personas.FirstOrDefault(p => p._id == id);
+        return persona != null;
+    }
+
+    public Boolean ExisteMail(String mail)
+    {
+       
+            var persona = _context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
+            return persona != null;
         }
     
+
+    public Boolean ExisteDocumento(string documento)
+    {
+
+            var persona = _context.Personas.FirstOrDefault(p => p._dni == documento);
+            return persona != null;
+        
+    }
+
+
+    public List<String> ListarNombresDePersonas(List<int> listaId)
+    {
+
+            List<String> listaNombres = new List<String>();
+            foreach (int id in listaId)
+            {
+                var persona = _context.Personas.FirstOrDefault(p => p._id == id);
+                if (persona != null) listaNombres.Add(persona._nombre);
+
+            }
+            return listaNombres;
+        }
+
+    
+     public Boolean PoseeElPermiso(int id, String permiso) //recibe nombre del permiso
+    {
+            var persona = _context.Personas
+            .Include(p => p._permisos) 
+            .FirstOrDefault(p => p._id == id);
+            
+        if (persona != null)
+        {
+            return persona._permisos.Any(perm => perm._nombre == permiso);
+        }
+        return false;
+    }
+
 
     public void agregarPermiso(int id, Permiso permiso)
     {
@@ -128,55 +198,19 @@ public class RepoPersonas : IRepositorioPersona
         }
     }
 
-    
-
-    public Boolean ExisteId(int id)
-    { 
-        var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-        return persona != null;
-    }
-
-    public Boolean ExisteMail(String mail)
-    {
-       
-            var persona = _context.Personas.FirstOrDefault(p => p._mail.Equals(mail));
-            return persona != null;
-        }
-    
-
-    public Boolean ExisteDocumento(string documento)
-    {
-
-            var persona = _context.Personas.FirstOrDefault(p => p._dni == documento);
-            return persona != null;
-        
-    }
-
-    public List<Persona> listarTodos()
-    {
-
-            return _context.Personas
-            .Include(p => p._permisos) //agrego esto para obtener los permisos, si queres lo mostras en la misma vista o en otra
-            .ToList();
+    public List<Permiso> obtenerPermisosDisponiblesParaPersona(int personaId)
+        {
+            //(ya trae los permisos con Include)
+            var persona = getPersonaConId(personaId);
             
+            var todosLosPermisos = _context.Permisos.OrderBy(p => p._nombre).ToList();
+            
+            var permisosDisponibles = todosLosPermisos
+                .Where(permiso => !persona._permisos.Any(p => p._id == permiso._id))
+                .ToList();
+                
+            return permisosDisponibles;
         }
-
-    
-
-    public List<String> ListarNombresDePersonas(List<int> listaId)
-    {
-
-            List<String> listaNombres = new List<String>();
-            foreach (int id in listaId)
-            {
-                var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-                if (persona != null) listaNombres.Add(persona._nombre);
-
-            }
-            return listaNombres;
-        }
-
-    
 
     public int getIdConMail(String mail)
     {
@@ -193,32 +227,7 @@ public class RepoPersonas : IRepositorioPersona
             if (persona != null) return persona._id;
             return -1;
     }
-    
 
-    public Persona getPersonaConId(int id)
-   {
-        var persona = _context.Personas
-            .Include(p => p._permisos)
-            .FirstOrDefault(p => p._id == id);
-            
-        if (persona == null) 
-            throw new EntidadNotFoundException();
-        return persona;
-    }
-
-
-    public Boolean PoseeElPermiso(int id, String permiso)
-    {
-            var persona = _context.Personas
-            .Include(p => p._permisos) 
-            .FirstOrDefault(p => p._id == id);
-            
-        if (persona != null)
-        {
-            return persona._permisos.Any(perm => perm._nombre == permiso);
-        }
-        return false;
-    }
 
 
     public int ValidarUserYPass(String mail, String contraseña)

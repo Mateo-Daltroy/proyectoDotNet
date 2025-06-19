@@ -10,10 +10,12 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
 {
     private readonly IRepositorioPersona _repositorioPersona;
     private Persona? _usuarioActual;
+    public static int cont {get; set;}= 0;
 
     public ServicioAutenticacionImpl (IRepositorioPersona repositorioPersona)
     {
         _repositorioPersona = repositorioPersona;
+        cont++;
     }
 
     public bool EstaAutenticado => _usuarioActual != null;
@@ -81,67 +83,53 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
         _usuarioActual = null;
         return Task.CompletedTask;
     }
-}
-// Que rol cumple esto de aca abajo? no estaba comentado
-/*
-public class ServicioAutentitacionImpl : IServicioAutenticacion
-{
-    private readonly CentroEventoContext _context;
-    private Persona? _usuarioActual;
 
-    public ServicioAutenticacion(CentroEventoContext context)
+     // METODOS DE PERMISOS
+    public async Task<List<Permiso>> ObtenerPermisosUsuarioActualAsync()
     {
-        _context = context;
-    }
-
-    public bool EstaAutenticado => _usuarioActual != null;
-    public Persona? UsuarioActual => _usuarioActual;
-
-    public async Task<Persona?> AutenticarAsync(string email, string contraseña)
-    {
-        // Hash de la contraseña ingresada
-        string contraseñaHash = HashearContraseña(contraseña);
-
-        var persona = await _context.Personas
-            .Include(p => p._permisos)
-            .FirstOrDefaultAsync(p => p._mail == email && p._contraseña == contraseñaHash);
-
-        return persona;
-    }
-
-    public async Task<bool> TienePermisoAsync(int personaId, string nombrePermiso)
-    {
-        var persona = await _context.Personas
-            .Include(p => p._permisos)
-            .FirstOrDefaultAsync(p => p._id == personaId);
-
-        return persona?.tienePermiso(nombrePermiso) ?? false;
-    }
-
-    public async Task<Persona?> ObtenerUsuarioActualAsync()
-    {
-        if (_usuarioActual != null)
+        if (_usuarioActual == null) return new List<Permiso>();
+        
+        try
         {
-            // Recargar desde la BD para obtener permisos actualizados
-            _usuarioActual = await _context.Personas
-                .Include(p => p._permisos)
-                .FirstOrDefaultAsync(p => p._id == _usuarioActual._id);
+            var persona = _repositorioPersona.getPersonaConId(_usuarioActual._id);
+            return persona._permisos.OrderBy(p => p._nombre).ToList();
         }
-        return _usuarioActual;
+        catch (Exception)
+        {
+            return new List<Permiso>();
+        }
     }
 
-    public Task IniciarSesionAsync(Persona persona)
+    public async Task<List<Permiso>> ObtenerPermisosDisponiblesUsuarioActualAsync()
     {
-        _usuarioActual = persona;
-        return Task.CompletedTask;
+        if (_usuarioActual == null) return new List<Permiso>();
+        
+        try
+        {
+            return _repositorioPersona.obtenerPermisosDisponiblesParaPersona(_usuarioActual._id);
+        }
+        catch (Exception)
+        {
+            return new List<Permiso>();
+        }
     }
 
-    public Task CerrarSesionAsync()
+    public async Task<bool> UsuarioActualTienePermisoAsync(string nombrePermiso)
     {
-        _usuarioActual = null;
-        return Task.CompletedTask;
+        if (_usuarioActual == null) return false;
+        
+        try
+        {
+            return _repositorioPersona.PoseeElPermiso(_usuarioActual._id, nombrePermiso);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
+}
+/*
     private string HashearContraseña(string contraseña)
     {
         using (SHA256 sha256 = SHA256.Create())

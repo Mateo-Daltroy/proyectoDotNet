@@ -52,12 +52,9 @@
 
 @code {
 
-     [Parameter]
-    public int personaId { get; set; }
-
     private void IrAReservas()
     {
-        Navigation.NavigateTo($"/mis-reservas/{personaId}");
+        Navigation.NavigateTo($"/mis-reservas/");
     }
     private void IrAPersonas()
     {
@@ -66,6 +63,6 @@
     
     private void IrAEventos()
     {
-        Console.WriteLine("Botón Eventos clickeado!");
+        Navigation.NavigateTo("/GestionEventos");
     }
 }

@@ -1,4 +1,4 @@
-@page "/GestionDePermisos"
+@page "/GestionDePermisos{id:int}"
 
 @rendermode InteractiveServer
 
@@ -10,3 +10,89 @@
 @inject NavigationManager Navigation
 @inject IRepositorioPersona ServicioPersona
 
+<h2>Gestión de Permisos</h2>
+
+<div class="row">
+    <!-- Permisos que tiene la persona -->
+    <div class="col-5">
+        <h4>Permisos de la persona</h4>
+        <ul class="list-group">
+            @foreach (var permiso in permisosPersona)
+            {
+                <li class="list-group-item"
+                    @onclick="() => SeleccionarPermisoPersona(permiso)"
+                    style="cursor:pointer;@(permisoSeleccionadoPersona?._id == permiso._id ? "background:#cce5ff" : "")">
+                    @permiso._nombre
+                </li>
+            }
+        </ul>
+        <button class="btn btn-danger mt-3" @onclick="QuitarPermiso" disabled="@(permisoSeleccionadoPersona == null)">
+            Quitar Permiso
+        </button>
+    </div>
+
+    <div class="col-2 d-flex align-items-center justify-content-center">
+        <!-- Separador visual -->
+    </div>
+
+    <div class="col-5">
+        <h4>Permisos disponibles</h4>
+        <ul class="list-group">
+            @foreach (var permiso in permisosDisponibles)
+            {
+                <li class="list-group-item"
+                    @onclick="() => SeleccionarPermisoDisponible(permiso)"
+                    style="cursor:pointer;@(permisoSeleccionadoDisponible?._id == permiso._id ? "background:#d4edda" : "")">
+                    @permiso._nombre
+                </li>
+            }
+        </ul>
+        <button class="btn btn-success mt-3" @onclick="DarPermiso" disabled="@(permisoSeleccionadoDisponible == null)">
+            Dar Permiso
+        </button>
+    </div>
+</div>
+
+
+@code{
+    [Parameter]
+    public int id {get; set;}
+    private Persona? UsuarioActual;
+    private List<Permiso> permisosPersona = new();
+    private List<Permiso> permisosDisponibles = new();
+    private Permiso? permisoSeleccionadoPersona;
+    private Permiso? permisoSeleccionadoDisponible;
+    private Persona p ;
+
+    protected void DarPermiso (){
+        ServicioPersona.agregarPermiso(id,permisoSeleccionadoDisponible);
+        StateHasChanged();
+    }
+
+    protected void QuitarPermiso (){
+        ServicioPersona.eliminarPermiso(id,permisoSeleccionadoPersona);
+        StateHasChanged();
+
+    }
+
+    private void SeleccionarPermisoPersona(Permiso permiso)
+    {
+        permisoSeleccionadoPersona = permiso;
+    }
+
+    private void SeleccionarPermisoDisponible(Permiso permiso)
+    {
+        permisoSeleccionadoDisponible = permiso;
+    }
+
+    protected override async Task  OnInitializedAsync()
+    {   
+        this.UsuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
+        p = ServicioPersona.getPersonaConId(id);
+        this.permisosPersona = p._permisos.ToList();
+        this.permisosDisponibles = ServicioPersona.obtenerPermisosDisponiblesParaPersona(id);
+
+        StateHasChanged();
+    }
+
+}

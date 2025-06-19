@@ -10,47 +10,101 @@
 @inject IRepositorioPersona ServicioPersona
 
 <h1> Gestion de Usuarios </h1>
-
-@if (personas == null || personas.Count == 0)
+@if (UsuarioActual != null)
 {
-    <div>No hay personas registradas.</div>
+
+    @if (personas == null || personas.Count == 0)
+    {
+        <div>No hay personas registradas.</div>
+    }
+    else
+    {
+        <button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">Guardar</button>
+        @if (!soloMiInfo)
+        {
+            <ul class="list-group">
+                @foreach (var persona in personas)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @if (editandoPersona != null && editandoPersona._id == persona._id)
+                        {
+                            <div>
+                                nombre: <input class="form-control mb-2" @bind="editandoPersona._nombre" />
+                                Apellido: <input class="form-control mb-2" @bind="editandoPersona._apellido" />
+                                dni: <input class="form-control mb-2" @bind="editandoPersona._dni" />
+                                Telefono: <input class="form-control mb-2" @bind="editandoPersona._telefono" />
+                                Mail: <input class="form-control mb-2" @bind="editandoPersona._mail" />
+                                Contraseña: <input class="form-control mb-2" @bind="editandoPersona._contraseña" />
+                            </div>
+                            <span>
+                                <button class="btn btn-success btn-sm me-2" @onclick="EditarPersonaDC">Guardar</button>
+                                <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">Cancelar</button>
+                            </span>
+                        }
+                        else
+                        {
+                            <!-- Modo vista -->
+                            <span>@persona._nombre @persona._apellido -- @persona._dni -- @persona._mail -- @persona._telefono</span>
+                            <span>
+                                @if (permisoModificacionUsuario)
+                                {
+                                    <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(persona)">Editar</button>
+                                    <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPermisos(persona)">Editar
+                                        Permisos</button>
+                                }
+                                @if (permisoEliminarUsuario)
+                                {
+                                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersonaDC(persona)">Eliminar</button>
+                                }
+                            </span>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            @if (editandoPersona != null && editandoPersona._id == UsuarioActual._id)
+            {
+                <div>
+                    nombre: <input class="form-control mb-2" @bind="editandoPersona._nombre" />
+                    Apellido: <input class="form-control mb-2" @bind="editandoPersona._apellido" />
+                    dni: <input class="form-control mb-2" @bind="editandoPersona._dni" />
+                    Telefono: <input class="form-control mb-2" @bind="editandoPersona._telefono" />
+                    Mail: <input class="form-control mb-2" @bind="editandoPersona._mail" />
+                    Contraseña: <input class="form-control mb-2" @bind="editandoPersona._contraseña" />
+                </div>
+                <span>
+                    <button class="btn btn-success btn-sm me-2" @onclick="EditarPersonaDC">Guardar</button>
+                    <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">Cancelar</button>
+                </span>
+            }
+            else
+            {
+                <!-- Modo vista -->
+                <span>@UsuarioActual._nombre @UsuarioActual._apellido -- @UsuarioActual._dni -- @UsuarioActual._mail --
+                    @UsuarioActual._telefono</span>
+                <span>
+                    @if (permisoModificacionUsuario)
+                    {
+                        <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(UsuarioActual)">Editar</button>
+                        <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPermisos(UsuarioActual)">Editar Permisos</button>
+                    }
+                    @if (permisoEliminarUsuario)
+                    {
+                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersonaDC(UsuarioActual)">Eliminar</button>
+                    }
+                </span>
+            }
+        }
+
+        <DialogoConfirmacion @ref="dialogoConfirmacion" Mensaje="@mensajeDialogo" OnConfirmado="AccionConfirmada" />
+
+    }
 }
 else
 {
-    <ul class="list-group">
-        @foreach (var persona in personas)
-        {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                @if (editandoPersona != null && editandoPersona._id == persona._id)
-                {
-                    <div>
-                        nombre: <input class="form-control mb-2" @bind="editandoPersona._nombre" />
-                        Apellido: <input class="form-control mb-2" @bind="editandoPersona._apellido" />
-                        <input class="form-control mb-2" @bind="editandoPersona._dni" />
-                        <input class="form-control mb-2" @bind="editandoPersona._telefono" />
-                        <input class="form-control mb-2" @bind="editandoPersona._mail" />
-                    </div>
-                    <span>
-                        <button class="btn btn-success btn-sm me-2" @onclick="EditarPersonaDC">Guardar</button>
-                        <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">Cancelar</button>
-                    </span>
-                }
-                else
-                {
-                    <!-- Modo vista -->
-                    <span>@persona._nombre @persona._apellido -- @persona._dni -- @persona._mail -- @persona._telefono</span>
-                    <span>
-                        <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(persona)">Editar</button>
-                        <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPermisos(persona)">Editar Permisos</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersonaDC(persona)">Eliminar</button>
-                    </span>
-                }
-            </li>
-        }
-    </ul>
-
-    <DialogoConfirmacion @ref="dialogoConfirmacion" Mensaje="@mensajeDialogo" OnConfirmado="AccionConfirmada" />
-
+    <button class="btn btn-sm btn-danger" @onclick="goToIndex">Iniciar Sesion</button>
 }
 
 @code {
@@ -61,12 +115,37 @@ else
     private DialogoConfirmacion? dialogoConfirmacion;
     private string? mensajeDialogo;
     private Persona? personaAOperar;
-    private string? accionPendiente; 
+    private string? accionPendiente;
     private Persona? UsuarioActual;
+    private bool permisoModificacionUsuario;
+    private bool permisoEliminarUsuario;
+    private bool soloMiInfo;
 
+
+
+    public void goToIndex()
+    {
+        Navigation.NavigateTo("/Index");
+    }
+
+    public void SoloMiInfoToggle()
+    {
+        if (soloMiInfo)
+        {
+            soloMiInfo = false;
+            StateHasChanged();
+            return;
+        }
+        soloMiInfo = true;
+        StateHasChanged();
+    }
 
     private void EliminarPersonaDC(Persona persona)
     {
+        if (dialogoConfirmacion == null) {
+            Console.WriteLine ("hubo un error con DialogoConfirmacion");
+            return;
+        }
         personaAOperar = persona;
         mensajeDialogo = $"¿Seguro que quieres eliminar a {persona._nombre}?";
         accionPendiente = "eliminar";
@@ -75,6 +154,10 @@ else
 
     private void EditarPersonaDC()
     {
+        if (dialogoConfirmacion == null) {
+            Console.WriteLine ("hubo un error con DialogoConfirmacion");
+            return;
+        }
         mensajeDialogo = $"¿Seguro que quieres editar a {personaAEditarOriginal._nombre}?";
         accionPendiente = "editar";
         dialogoConfirmacion.Mostrar();
@@ -104,8 +187,8 @@ else
     protected void EditarPersona(Persona p)
     {
 
-        editandoPersona = new Persona(p._dni, p._nombre, p._apellido, p._mail, p._telefono, p._contraseña);
-        editandoPersona._id=p._id;
+        editandoPersona = new Persona(p._dni, p._nombre, p._apellido, p._mail, p._telefono, "");
+        editandoPersona._id = p._id;
         personaAEditarOriginal = p;
         StateHasChanged();
 
@@ -113,10 +196,10 @@ else
 
     protected void EliminarPersona(Persona p)
     {
-        
         new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
         this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
-        if (UsuarioActual._id == p._id){
+        if (UsuarioActual._id == p._id)
+        {
             servicioAuth.CerrarSesionAsync();
             Navigation.NavigateTo("/home");
         }
@@ -132,9 +215,10 @@ else
             personaAEditarOriginal._mail = editandoPersona._mail;
             personaAEditarOriginal._telefono = editandoPersona._telefono;
             personaAEditarOriginal._dni = editandoPersona._dni;
+            personaAEditarOriginal._contraseña = editandoPersona._contraseña;
 
             new ModificarPersona(ServicioPersona).Ejecutar(personaAEditarOriginal);
-            
+
             editandoPersona = null;
             personaAEditarOriginal = null;
             StateHasChanged();
@@ -149,8 +233,9 @@ else
     }
 
 
-    protected void EditarPermisos(Persona p){
-        
+    protected void EditarPermisos(Persona p)
+    {
+        Navigation.NavigateTo($"/GestionDePermisos/{p._id}");
     }
 
 
@@ -158,7 +243,14 @@ else
     {
 
         this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
-        this.UsuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
+        this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
+        if (UsuarioActual == null){
+            Console.WriteLine("soy trolo");
+        }
+        permisoModificacionUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioModificacion").Result;
+        permisoEliminarUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioBaja").Result;
+        this.soloMiInfo = false;
+
         StateHasChanged();
     }
 

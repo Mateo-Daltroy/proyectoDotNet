@@ -8,7 +8,7 @@ namespace Aplicacion.UseCases.UseCasesReserva;
 
 public class AltaReserva (IRepositorioReserva repositorio, IRepositorioPersona _repoPers, IRepositorioEventoDeportivo _repoEv) : ReservaUseCase(repositorio)
 {
-    public void ReservaAlta(int idPers, int idEv/*, int idUser*/)
+    public void Ejecutar(int idPers, int idEv/*, int idUser*/)
     {
         try
         {

@@ -166,7 +166,7 @@
             </div>
             
             <!-- Información de prueba (eliminar en producción) -->
-            <div class="card mt-3 border-info">
+            <!-- <div class="card mt-3 border-info">
                 <div class="card-header bg-info text-white">
                     <small><i class="fas fa-info-circle me-1"></i> Usuario de prueba</small>
                 </div>
@@ -176,7 +176,7 @@
                         <strong>Contraseña:</strong> password123
                     </small>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -212,18 +212,15 @@
                 return;
             }
 
-            // ✅ USAR el ServicioAutenticacion
             var persona = await ServicioAuth.AutenticarAsync(loginModel.mail, loginModel.password);
             
             if (persona != null)
             {
-                // ✅ INICIAR sesión a nivel servicio
                 await ServicioAuth.IniciarSesionAsync(persona);
                 
                 Console.WriteLine($"Usuario autenticado: {persona._nombre} {persona._apellido}");
                 Console.WriteLine($"Permisos: {string.Join(", ", persona._permisos.Select(p => p._nombre))}");
                 
-                // ✅ REDIRIGIR al home
                 NavigationManager.NavigateTo("/home");
             }
             else

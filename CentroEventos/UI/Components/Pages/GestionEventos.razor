@@ -1,0 +1,291 @@
+@page "/GestionEventos"
+@rendermode InteractiveServer
+
+@using Aplicacion.entidades
+@using Aplicacion.UseCases
+@using UI.Components.Pages
+
+@using System.Data.Common;
+@using System.ComponentModel.DataAnnotations;
+
+@inject Aplicacion.interfacesServ.IServicioAutenticacion servicioAuth
+@inject NavigationManager Navigation
+@inject IRepositorioEventoDeportivo ServicioEvento
+@inject IRepositorioPersona ServicioPersona
+
+<h1>Gestión de Eventos Deportivos</h1>
+
+@if (eventos == null || eventos.Count == 0)
+{
+    <div class="alert alert-info">No hay eventos deportivos registrados.</div>
+}
+else
+{
+    <div class="mb-3">
+        <button class="btn btn-success" @onclick="CrearNuevoEvento">
+            <i class="fas fa-plus"></i> Crear Nuevo Evento
+        </button>
+    </div>
+
+    <div class="row">
+        @foreach (var evento in eventos)
+        {
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card">
+                    @if (editandoEvento != null && editandoEvento._id == evento._id)
+                    {
+                        <!-- Modo edición -->
+                        <div class="card-header bg-warning">
+                            <h5 class="card-title mb-0">Editando Evento</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label class="form-label">Nombre:</label>
+                                <input class="form-control" @bind="editandoEvento._nombre" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Descripción:</label>
+                                <textarea class="form-control" rows="2" @bind="editandoEvento._descripcion"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Fecha y Hora:</label>
+                                <input type="datetime-local" class="form-control" 
+                                       @bind="fechaHoraEdicion" 
+                                       @bind:format="yyyy-MM-ddTHH:mm" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Duración (horas):</label>
+                                <input type="number" step="0.5" class="form-control" @bind="editandoEvento._duracionHoras" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Cupo Máximo:</label>
+                                <input type="number" class="form-control" @bind="editandoEvento._cupoMaximo" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Responsable:</label>
+                                <select class="form-control" @bind="editandoEvento._responsableId">
+                                    <option value="0">Seleccionar responsable...</option>
+                                    @foreach (var persona in personas)
+                                    {
+                                        <option value="@persona._id">@persona._nombre @persona._apellido</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-success btn-sm me-2" @onclick="EditarEventoDC">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                            <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Modo vista -->
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">@evento._nombre</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong>Descripción:</strong> @evento._descripcion
+                            </p>
+                            <p class="card-text">
+                                <strong>Fecha:</strong> @evento._fechaHoraInicio.ToString("dd/MM/yyyy HH:mm")
+                            </p>
+                            <p class="card-text">
+                                <strong>Duración:</strong> @evento._duracionHoras horas
+                            </p>
+                            <p class="card-text">
+                                <strong>Cupo:</strong> @GetCupoDisponible(evento) / @evento._cupoMaximo
+                            </p>
+                            <p class="card-text">
+                                <strong>Responsable:</strong> @GetResponsableNombre(evento._responsableId)
+                            </p>
+                            <p class="card-text">
+                                <strong>Finaliza:</strong> @evento.ObtenerFechaHoraFin().ToString("dd/MM/yyyy HH:mm")
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-primary me-1" @onclick="() => EditarEvento(evento)">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-sm btn-info me-1" @onclick="() => Reservar(evento)">
+                                <i class="fas fa-users"></i> Reservar
+                            </button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => EliminarEventoDC(evento)">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <DialogoConfirmacion @ref="dialogoConfirmacion" Mensaje="@mensajeDialogo" OnConfirmado="AccionConfirmada" />
+}
+
+@code {
+    private List<EventoDeportivo>? eventos;
+    private List<Persona>? personas;
+    private EventoDeportivo? editandoEvento;
+    private EventoDeportivo? eventoAEditarOriginal;
+    private DateTime fechaHoraEdicion;
+    
+    private DialogoConfirmacion? dialogoConfirmacion;
+    private string? mensajeDialogo;
+    private EventoDeportivo? eventoAOperar;
+    private string? accionPendiente;
+    private Persona? UsuarioActual;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDatos();
+    }
+
+    private async Task CargarDatos()
+    {
+        try
+        {
+            // Cargar eventos y personas
+            var eventosEnumerable = await ServicioEvento.ObtenerTodosAsync();
+            eventos = eventosEnumerable.ToList();
+            
+            personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
+            UsuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
+            
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cargando datos: {ex.Message}");
+        }
+    }
+
+    private void CrearNuevoEvento()
+    {
+        Navigation.NavigateTo("/CrearEvento");
+    }
+
+    private void EditarEvento(EventoDeportivo evento)
+    {
+        editandoEvento = new EventoDeportivo(
+            evento._nombre,
+            evento._descripcion,
+            evento._fechaHoraInicio,
+            evento._duracionHoras,
+            evento._cupoMaximo,
+            evento._responsableId
+        );
+        editandoEvento._id = evento._id;
+        fechaHoraEdicion = evento._fechaHoraInicio;
+        eventoAEditarOriginal = evento;
+        StateHasChanged();
+    }
+
+    private void EditarEventoDC()
+    {
+        mensajeDialogo = $"¿Seguro que quieres guardar los cambios del evento '{eventoAEditarOriginal?._nombre}'?";
+        accionPendiente = "editar";
+        dialogoConfirmacion?.Mostrar();
+    }
+
+    private void EliminarEventoDC(EventoDeportivo evento)
+    {
+        eventoAOperar = evento;
+        mensajeDialogo = $"¿Seguro que quieres eliminar el evento '{evento._nombre}'? Esta acción no se puede deshacer.";
+        accionPendiente = "eliminar";
+        dialogoConfirmacion?.Mostrar();
+    }
+
+    private async void AccionConfirmada()
+    {
+        try
+        {
+            if (accionPendiente == "eliminar" && eventoAOperar != null)
+            {
+                await EliminarEvento(eventoAOperar);
+            }
+            else if (accionPendiente == "editar")
+            {
+                await GuardarEdicion();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en acción confirmada: {ex.Message}");
+        }
+        finally
+        {
+            // Limpiar variables
+            accionPendiente = null;
+            mensajeDialogo = null;
+            eventoAOperar = null;
+            StateHasChanged();
+        }
+    }
+
+    private async Task EliminarEvento(EventoDeportivo evento)
+    {
+        try
+        {
+            await ServicioEvento.EliminarAsync(evento._id);
+            await CargarDatos(); // Recargar lista
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error eliminando evento: {ex.Message}");
+        }
+    }
+
+    private async Task GuardarEdicion()
+    {
+        if (editandoEvento != null && eventoAEditarOriginal != null)
+        {
+            try
+            {
+                // Actualizar fecha desde el input datetime-local
+                editandoEvento._fechaHoraInicio = fechaHoraEdicion;
+                
+                await ServicioEvento.ActualizarAsync(editandoEvento);
+                await CargarDatos(); // Recargar lista
+                
+                // Limpiar edición
+                editandoEvento = null;
+                eventoAEditarOriginal = null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error guardando edición: {ex.Message}");
+            }
+        }
+    }
+
+    private void CancelarEdicion()
+    {
+        editandoEvento = null;
+        eventoAEditarOriginal = null;
+        StateHasChanged();
+    }
+
+    private void Reservar(EventoDeportivo evento)
+    {
+        Navigation.NavigateTo($"/RealizarReservas/{evento._id}");
+    }
+
+    // Métodos auxiliares
+    private string GetResponsableNombre(int responsableId)
+    {
+        var responsable = personas?.FirstOrDefault(p => p._id == responsableId);
+        return responsable != null ? $"{responsable._nombre} {responsable._apellido}" : "Sin responsable";
+    }
+
+    private int GetCupoDisponible(EventoDeportivo evento)
+    {
+        // Aquí podrías cargar las reservas del evento si las necesitas
+        // Por ahora retornamos el cupo máximo menos un valor estimado
+        return evento._cupoMaximo; // Temporal - deberías cargar las reservas reales
+    }
+}

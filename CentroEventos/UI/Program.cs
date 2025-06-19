@@ -56,7 +56,7 @@ command.ExecuteNonQuery();
 // --> Construccion del builder
 var builder = WebApplication.CreateBuilder(args); //////////////////////
 builder.Services.AddScoped<CentroEventoContext>();
-
+//builder.Services.AddScoped<Persona>();
 // Repos
 builder.Services.AddScoped<IRepositorioPersona, RepoPersonas>();
 builder.Services.AddScoped<IRepositorioReserva, RepoReservas>();

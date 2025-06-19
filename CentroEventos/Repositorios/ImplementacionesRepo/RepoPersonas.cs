@@ -5,7 +5,6 @@ using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 using Aplicacion.interfacesServ;
 using Aplicacion.UseCases.UseCasesReserva;
-using CentroEventos.Aplicacion.InterfacesRepo;
 using Repositorios.Context;
 using Repositorios.ImplementacionesRepo;
 using System;
@@ -39,19 +38,42 @@ public class RepoPersonas : IRepositorioPersona
                 throw new DuplicadoException("ya existe una persona con ese dni o mail");
             }
         }
-    
+
 
     public void Eliminar(int id)
     {
-            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-            if (persona != null)
+        Console.WriteLine($"id recibido {id}");
+        var persona = _context.Personas.Find(id);
+        if (persona != null)
+        {
+            new RepoReservas(_context).EliminarPorPersona(id);
+            _context.Personas.Remove(persona);
+            ///////////////////////////////////////////////////////////////////
+            try
             {
-                new RepoReservas(_context).EliminarPorPersona(id);
-                _context.Personas.Remove(persona);
                 _context.SaveChanges();
             }
-            else throw new EntidadNotFoundException("no se encontro una persona con ese id.");
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex.Message);
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine("INNER: " + ex.InnerException.Message);
+                    // Si hay más niveles de inner exception:
+                    if (ex.InnerException.InnerException != null)
+                    {
+                        Console.WriteLine("INNER 2: " + ex.InnerException.InnerException.Message);
+                    }
+                }
+                throw;
+            }
+            ///////////////////////////////////////////////////////////////////
         }
+        else
+        {
+            throw new EntidadNotFoundException("no se encontro una persona con ese id. ");
+        }
+    }
     
 
     public void Actualizar(Persona pe)
@@ -109,13 +131,7 @@ public class RepoPersonas : IRepositorioPersona
     
 
     public Boolean ExisteId(int id)
-    {.  /*
-        using (var _context = new CentroEventoContext())
-        {
-            var persona = _context.Personas.FirstOrDefault(p => p._id == id);
-            return persona != null;
-        }*/        
-        //SOY FRAANJ TE CAMBIE PARA NO CREAR UN NUEVO CONTEXTO CADA VEZ Q SE LLAMA A ESTE METODO
+    { 
         var persona = _context.Personas.FirstOrDefault(p => p._id == id);
         return persona != null;
     }

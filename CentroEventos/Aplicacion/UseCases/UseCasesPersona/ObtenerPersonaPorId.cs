@@ -8,7 +8,7 @@ public class ObtenerPersonaPorId(IRepositorioPersona repositorio) : PersonaUseCa
 {
     public Persona Ejecutar(int id)
     {
-        return repo.getPersonaConId(id);
+        return repositorio.getPersonaConId(id);
     }
 
 }

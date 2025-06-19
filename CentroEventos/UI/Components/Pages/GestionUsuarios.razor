@@ -21,18 +21,9 @@ else
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 @if (editandoPersona != null && editandoPersona._id == persona._id)
                 {
-                    <!-- Modo edicion -->
-                    @*
-                    <span>
-                        <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._nombre" />
-                        <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._apellido" />
-                        <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._dni" />
-                        <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._telefono" />
-                        <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._mail" />
-                    </span>*@
                     <div>
-                        <input class="form-control mb-2" @bind="editandoPersona._nombre" />
-                        <input class="form-control mb-2" @bind="editandoPersona._apellido" />
+                        nombre: <input class="form-control mb-2" @bind="editandoPersona._nombre" />
+                        Apellido: <input class="form-control mb-2" @bind="editandoPersona._apellido" />
                         <input class="form-control mb-2" @bind="editandoPersona._dni" />
                         <input class="form-control mb-2" @bind="editandoPersona._telefono" />
                         <input class="form-control mb-2" @bind="editandoPersona._mail" />
@@ -90,6 +81,7 @@ else
     {
         if (accionPendiente == "eliminar")
         {
+            Console.WriteLine("entro a eliminar");
             EliminarPersona(personaAOperar);
 
         }
@@ -110,6 +102,7 @@ else
     {
 
         editandoPersona = new Persona(p._dni, p._nombre, p._apellido, p._mail, p._telefono, p._contraseña);
+        editandoPersona._id=p._id;
         personaAEditarOriginal = p;
         StateHasChanged();
 
@@ -118,6 +111,7 @@ else
     protected void EliminarPersona(Persona p)
     {
         new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
+        this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
         StateHasChanged();
     }
 

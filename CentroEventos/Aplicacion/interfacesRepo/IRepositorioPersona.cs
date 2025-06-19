@@ -1,6 +1,6 @@
 using System;
 using Aplicacion.entidades;
-using CentroEventos.Aplicacion.InterfacesRepo;
+
 
 namespace Aplicacion.interfacesRepo;
 

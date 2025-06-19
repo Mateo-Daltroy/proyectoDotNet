@@ -1,6 +1,6 @@
 using Aplicacion.entidades;
 using Microsoft.EntityFrameworkCore;
-using Aplicacion.autorizacionProv;
+using Aplicacion.interfacesServ;
 
 namespace Repositorios.Context;
 

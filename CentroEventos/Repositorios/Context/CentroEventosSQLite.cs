@@ -14,12 +14,12 @@ public static class CentroEventosSQLite
    public static void Inicializar()
     { 
         //COMENTAR EN CASO DE NO QUERER BORRAR LA DB
-        string dbPath = "CentroEventos.sqlite";
-        if (File.Exists(dbPath)) 
-        {
-            File.Delete(dbPath);
-            Console.WriteLine("Base de datos eliminada y recreándose...");
-        }
+        // string dbPath = "CentroEventos.sqlite";
+        // if (File.Exists(dbPath)) 
+        // {
+        //     File.Delete(dbPath);
+        //     Console.WriteLine("Base de datos eliminada y recreándose...");
+        // }
 
         using var context = new CentroEventoContext();
         if (context.Database.EnsureCreated())
@@ -27,8 +27,8 @@ public static class CentroEventosSQLite
             Console.WriteLine("Se creó base de datos");
         }
 
-        CrearPermisosIniciales(context);
-        SeedData(context);
+        //CrearPermisosIniciales(context);
+        //SeedData(context);
 
     }
 

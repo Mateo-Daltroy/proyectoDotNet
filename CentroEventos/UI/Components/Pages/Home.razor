@@ -1,5 +1,7 @@
 @page "/home"
 @rendermode InteractiveServer
+
+@using UI.Components.Pages
 @inject NavigationManager Navigation
 
 <PageTitle>Opciones de Usuario</PageTitle>
@@ -49,7 +51,7 @@
 </div>
 
 @code {
-    // Métodos que se ejecutan cuando haces clic en los botones
+
      [Parameter]
     public int personaId { get; set; }
 
@@ -59,8 +61,7 @@
     }
     private void IrAPersonas()
     {
-        // Aquí puedes navegar a otra página o mostrar algo
-        Console.WriteLine("Botón Personas clickeado!");
+        Navigation.NavigateTo("/GestionUsuarios");
     }
     
     private void IrAEventos()

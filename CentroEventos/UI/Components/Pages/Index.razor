@@ -2,8 +2,10 @@
 @rendermode InteractiveServer
 
 @using System.ComponentModel.DataAnnotations
-
+@using Aplicacion.entidades
+@*
 @inject Persona Usuario
+*@
 @inject ObtenerPersonaPorId ObtenerPersonaPorId
 @inject ValidarUsuarioYContraseña ValidarUsuarioYContraseña
 @inject IRepositorioPersona RepoPersonas
@@ -41,12 +43,13 @@
             <NavLink class="nav-link" href="/RegistroDePersona">Registrarse</NavLink>
         </div>
 @code {
+
+    private Persona Usuario ;
     private LoginModel loginModel = new();
     private String loginError;
 
     private void OnLogin()
     {
-        Console.WriteLine("Metodo Onloguin() llamado en la vista Index.razor (MATEO HACE PRINTS MAS CLAROS CARA DE VERGA");
         if (string.IsNullOrWhiteSpace(loginModel.mail) || string.IsNullOrWhiteSpace(loginModel.password))
         {
             loginError = "Debe completar ambos campos.";

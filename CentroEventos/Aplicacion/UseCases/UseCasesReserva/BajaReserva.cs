@@ -1,4 +1,4 @@
-using Aplicacion.autorizacionProv;
+using Aplicacion.interfacesServ;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 namespace Aplicacion.UseCases.UseCasesReserva;

@@ -3,7 +3,7 @@ using System;
 namespace Aplicacion.entidades;
 
 using System.ComponentModel.DataAnnotations;
-using CentroEventos.Aplicacion.InterfacesRepo;
+//using Aplicacion.InterfacesRepo;
 using validadores;
 
 public class Reserva

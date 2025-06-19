@@ -1,4 +1,4 @@
-using Aplicacion.autorizacionProv;
+using Aplicacion.interfacesServ;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;

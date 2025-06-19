@@ -21,15 +21,18 @@ public static class CentroEventosSQLite
             Console.WriteLine("Base de datos eliminada y recreándose...");
         }
 
-
         using var context = new CentroEventoContext();
         if (context.Database.EnsureCreated())
         {
             Console.WriteLine("Se creó base de datos");
         }
+
+        CrearPermisosIniciales(context);
+        SeedData(context);
+
     }
 
-    private static void CrearPermisosIniciales(CentroEventoContext context)
+    public static void CrearPermisosIniciales(CentroEventoContext context)
     {
         var permisos = new List<Permiso>
         {
@@ -49,7 +52,7 @@ public static class CentroEventosSQLite
         Console.WriteLine($"Creados {permisos.Count} permisos iniciales");
     }
     
-    private static void SeedData(CentroEventoContext context)
+    public static void SeedData(CentroEventoContext context)
     {
         // Crear persona con permisos
         var persona1 = new Persona("12345678", "Juan", "Pérez", "juan@email.com", "123456789", "password123");

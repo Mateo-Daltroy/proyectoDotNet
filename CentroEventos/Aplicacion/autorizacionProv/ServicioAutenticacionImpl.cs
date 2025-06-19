@@ -1,14 +1,87 @@
-using System;
 using Aplicacion.entidades;
-using Repositorios.Context;
+using Aplicacion.interfacesRepo;
 using Aplicacion.interfacesServ;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
+namespace Aplicacion.AutorizacionProv;
 
-namespace Aplicacion.autorizacionProv;
+public class ServicioAutenticacionImpl : IServicioAutenticacion
+{
+    private readonly IRepositorioPersona _repositorioPersona;
+    private Persona? _usuarioActual;
 
+    public ServicioAutenticacionImpl (IRepositorioPersona repositorioPersona)
+    {
+        _repositorioPersona = repositorioPersona;
+    }
+
+    public bool EstaAutenticado => _usuarioActual != null;
+    public Persona? UsuarioActual => _usuarioActual;
+
+    public async Task<Persona?> AutenticarAsync(string email, string contraseña)
+    {
+        try
+        {
+            int personaId = _repositorioPersona.ValidarUserYPass(email, contraseña);
+            
+            if (personaId > 0)
+            {
+                var persona = _repositorioPersona.getPersonaConId(personaId);
+                return persona;
+            }
+            
+            return null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public async Task<bool> TienePermisoAsync(int personaId, string nombrePermiso)
+    {
+        try
+        {
+            // USAR el método de tu entidad Persona directamente
+            var persona = _repositorioPersona.getPersonaConId(personaId);
+            return persona?.tienePermiso(nombrePermiso) ?? false;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<Persona?> ObtenerUsuarioActualAsync()
+    {
+        if (_usuarioActual != null)
+        {
+            try
+            {
+                // RECARGAR para obtener permisos actualizados
+                _usuarioActual = _repositorioPersona.getPersonaConId(_usuarioActual._id);
+            }
+            catch (Exception)
+            {
+                // Mantener instancia actual si hay error
+            }
+        }
+        return _usuarioActual;
+    }
+
+    public Task IniciarSesionAsync(Persona persona)
+    {
+        _usuarioActual = persona;
+        return Task.CompletedTask;
+    }
+
+    public Task CerrarSesionAsync()
+    {
+        _usuarioActual = null;
+        return Task.CompletedTask;
+    }
+}
 public class ServicioAutentitacionImpl : IServicioAutenticacion
 {
     private readonly CentroEventoContext _context;

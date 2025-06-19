@@ -26,6 +26,7 @@ public class RepoPersonas : IRepositorioPersona
 
     public void registrarPersona(Persona p)
     {
+        //LA CONTRASEÑA SE HASHEA EN EL CASO DE USO
             var persona = _context.Personas.FirstOrDefault(per => per._dni == p._dni || per._mail == p._mail);
             if (persona == null)
             {
@@ -56,7 +57,7 @@ public class RepoPersonas : IRepositorioPersona
     public void Actualizar(Persona pe)
     {
 
-            var persona = _context.Personas.FirstOrDefault(p => p._dni == pe._dni);
+            var persona = _context.Personas.FirstOrDefault(p => p._id == pe._id);
             if (persona != null)
             {
                 persona.modificarNombre(pe._nombre);
@@ -108,12 +109,15 @@ public class RepoPersonas : IRepositorioPersona
     
 
     public Boolean ExisteId(int id)
-    {
+    {.  /*
         using (var _context = new CentroEventoContext())
         {
             var persona = _context.Personas.FirstOrDefault(p => p._id == id);
             return persona != null;
-        }
+        }*/        
+        //SOY FRAANJ TE CAMBIE PARA NO CREAR UN NUEVO CONTEXTO CADA VEZ Q SE LLAMA A ESTE METODO
+        var persona = _context.Personas.FirstOrDefault(p => p._id == id);
+        return persona != null;
     }
 
     public Boolean ExisteMail(String mail)
@@ -135,7 +139,9 @@ public class RepoPersonas : IRepositorioPersona
     public List<Persona> listarTodos()
     {
 
-            return _context.Personas.ToList();
+            return _context.Personas
+            .Include(p => p._permisos) //agrego esto para obtener los permisos, si queres lo mostras en la misma vista o en otra
+            .ToList();
             
         }
 

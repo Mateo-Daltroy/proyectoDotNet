@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using Aplicacion.autorizacionProv;
+using Aplicacion.AutorizacionProv;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
 using Aplicacion.validadores;
@@ -14,12 +14,12 @@ namespace Aplicacion.entidades;
 public class Persona
 {
     // Propiedades originales
-    [Key] public int _id { get; private set; }
-    public string _dni { get; private set; }
-    public String _nombre { get; private set; }
-    public string _apellido { get; private set; }
-    public string _mail { get; private set; }
-    public string _telefono { get; private set; }
+    [Key] public int _id { get; set; }
+    public string _dni { get;  set; }
+    public String _nombre { get;  set; }
+    public string _apellido { get;  set; }
+    public string _mail { get;  set; }
+    public string _telefono { get;  set; }
     public string _contraseña { get; set; }
 
 

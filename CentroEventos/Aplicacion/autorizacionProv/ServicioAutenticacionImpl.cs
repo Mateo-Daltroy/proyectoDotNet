@@ -82,6 +82,8 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
         return Task.CompletedTask;
     }
 }
+// Que rol cumple esto de aca abajo? no estaba comentado
+/*
 public class ServicioAutentitacionImpl : IServicioAutenticacion
 {
     private readonly CentroEventoContext _context;
@@ -152,4 +154,5 @@ public class ServicioAutentitacionImpl : IServicioAutenticacion
         }
     }
 }
+*/
 

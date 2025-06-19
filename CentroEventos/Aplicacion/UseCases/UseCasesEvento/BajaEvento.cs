@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
+using Aplicacion.interfacesServ;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class BajaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva, ServicioAuthProvisional servicioAuth)
+public class BajaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioReserva repositorioReserva, IServicioAutenticacion servicioAuth)
 :EventoDeportivoUseCases(repositorio)
 {
     //ELIMINAR TAMBIEN RESERVAS ASOCIADAS

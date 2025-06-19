@@ -3,6 +3,7 @@
 
 @using Aplicacion.entidades
 @using Aplicacion.UseCases
+@using UI.Components.Pages
 
 @inject IRepositorioPersona ServicioPersona
 
@@ -21,15 +22,23 @@ else
                 @if (editandoPersona != null && editandoPersona._id == persona._id)
                 {
                     <!-- Modo edicion -->
+                    @*
                     <span>
                         <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._nombre" />
                         <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._apellido" />
                         <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._dni" />
                         <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._telefono" />
                         <input class="form-control d-inline-block w-auto me-2" @bind="editandoPersona._mail" />
-                    </span>
+                    </span>*@
+                    <div>
+                        <input class="form-control mb-2" @bind="editandoPersona._nombre" />
+                        <input class="form-control mb-2" @bind="editandoPersona._apellido" />
+                        <input class="form-control mb-2" @bind="editandoPersona._dni" />
+                        <input class="form-control mb-2" @bind="editandoPersona._telefono" />
+                        <input class="form-control mb-2" @bind="editandoPersona._mail" />
+                    </div>
                     <span>
-                        <button class="btn btn-success btn-sm me-2" @onclick="GuardarEdicion">Guardar</button>
+                        <button class="btn btn-success btn-sm me-2" @onclick="EditarPersonaDC">Guardar</button>
                         <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">Cancelar</button>
                     </span>
                 }
@@ -39,29 +48,77 @@ else
                     <span>@persona._nombre @persona._apellido -- @persona._mail</span>
                     <span>
                         <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(persona)">Editar</button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersona(persona)">Eliminar</button>
+                        <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPermisos(persona)">Editar Permisos</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersonaDC(persona)">Eliminar</button>
                     </span>
                 }
             </li>
         }
     </ul>
+
+    <DialogoConfirmacion @ref="dialogoConfirmacion" Mensaje="@mensajeDialogo" OnConfirmado="AccionConfirmada" />
+
 }
 
-@code{
+@code {
     public int IdPersona;
-    public List<Persona>?  personas;
+    public List<Persona>? personas;
     private Persona? editandoPersona;
     private Persona? personaAEditarOriginal;
+    private DialogoConfirmacion? dialogoConfirmacion;
+    private string? mensajeDialogo;
+    private Persona? personaAOperar;
+    private string? accionPendiente; // "eliminar" o "editar"
+
+
+    private void EliminarPersonaDC(Persona persona)
+    {
+        personaAOperar = persona;
+        mensajeDialogo = $"¿Seguro que quieres eliminar a {persona._nombre}?";
+        accionPendiente = "eliminar";
+        dialogoConfirmacion.Mostrar();
+    }
+
+    private void EditarPersonaDC()
+    {
+        mensajeDialogo = $"¿Seguro que quieres editar a {personaAEditarOriginal._nombre}?";
+        accionPendiente = "editar";
+        dialogoConfirmacion.Mostrar();
+    }
+
+    private void AccionConfirmada()
+    {
+        if (accionPendiente == "eliminar")
+        {
+            EliminarPersona(personaAOperar);
+
+        }
+        else if (accionPendiente == "editar")
+        {
+            GuardarEdicion();
+
+        }
+        accionPendiente = null;
+        mensajeDialogo = null;
+        personaAOperar = null;
+        StateHasChanged();
+    }
+
+
 
     protected void EditarPersona(Persona p)
     {
 
         editandoPersona = new Persona(p._dni, p._nombre, p._apellido, p._mail, p._telefono, p._contraseña);
         personaAEditarOriginal = p;
+        StateHasChanged();
+
     }
 
-    protected void EliminarPersona (Persona p){
+    protected void EliminarPersona(Persona p)
+    {
         new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
+        StateHasChanged();
     }
 
     protected void GuardarEdicion()
@@ -73,11 +130,12 @@ else
             personaAEditarOriginal._mail = editandoPersona._mail;
             personaAEditarOriginal._telefono = editandoPersona._telefono;
             personaAEditarOriginal._dni = editandoPersona._dni;
-            
+
             new ModificarPersona(ServicioPersona).Ejecutar(personaAEditarOriginal);
 
             editandoPersona = null;
             personaAEditarOriginal = null;
+            StateHasChanged();
         }
     }
 
@@ -85,12 +143,20 @@ else
     {
         editandoPersona = null;
         personaAEditarOriginal = null;
+        StateHasChanged();
     }
 
-    protected override void OnInitialized (){
+
+    protected void EditarPermisos(Persona p){
         
+    }
+
+
+    protected override void OnInitialized()
+    {
+
         this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
-        
+        StateHasChanged();
     }
 
 }

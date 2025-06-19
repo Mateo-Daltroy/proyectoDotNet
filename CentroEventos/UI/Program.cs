@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using Aplicacion.UseCases.UseCasesEvento;
 using Aplicacion.UseCases.UseCasesReserva;
+using Aplicacion.interfacesServ;
+using Aplicacion.AutorizacionProv;
 
 //_Inicializar Bases de Datos_
 /*
@@ -60,8 +62,8 @@ builder.Services.AddScoped<IRepositorioPersona, RepoPersonas>();
 builder.Services.AddScoped<IRepositorioReserva, RepoReservas>();
 builder.Services.AddScoped<IRepositorioEventoDeportivo, RepoEventoDeportivo>();
 
-// Usuario
-builder.Services.AddScoped<Persona>();
+// Usuario y Auth
+builder.Services.AddScoped<IServicioAutenticacion, ServicioAutenticacionImpl>();
 
 // Casos Uso Persona
 builder.Services.AddScoped<AltaPersona>();

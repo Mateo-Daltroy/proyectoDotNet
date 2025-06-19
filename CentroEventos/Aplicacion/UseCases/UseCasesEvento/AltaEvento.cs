@@ -2,11 +2,12 @@ using System.Threading.Tasks;
 using Aplicacion.entidades;
 using Aplicacion.excepciones;
 using Aplicacion.interfacesRepo;
+using Aplicacion.interfacesServ;
 using Aplicacion.validadores;
 
 namespace Aplicacion.UseCases.UseCasesEvento;
 
-public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPersona repositorioPersona, ServicioAuthProvisional servicioAuth):EventoDeportivoUseCases(repositorio)
+public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPersona repositorioPersona, IServicioAutenticacion servicioAuth):EventoDeportivoUseCases(repositorio)
 {
     public async Task Ejecutar(EventoDeportivo evento, int idUsuario, ValidadorEventoDeportivo validadorEventoDeportivo)
     {

@@ -9,13 +9,11 @@ namespace Aplicacion.AutorizacionProv;
 public class ServicioAutenticacionImpl : IServicioAutenticacion
 {
     private readonly IRepositorioPersona _repositorioPersona;
-    private Persona? _usuarioActual;
-    public static int cont {get; set;}= 0;
+    private static Persona? _usuarioActual;
 
     public ServicioAutenticacionImpl (IRepositorioPersona repositorioPersona)
     {
         _repositorioPersona = repositorioPersona;
-        cont++;
     }
 
     public bool EstaAutenticado => _usuarioActual != null;
@@ -29,7 +27,11 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
             
             if (personaId > 0)
             {
+                
                 var persona = _repositorioPersona.getPersonaConId(personaId);
+
+                
+
                 return persona;
             }
             

@@ -18,8 +18,9 @@
         <div>No hay personas registradas.</div>
     }
     else
-    {
-        <button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">Guardar</button>
+    {   @if (soloMiInfo){
+        <button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">mostrar todos los datos</button>
+    }else{<button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">mostrar solo mis datos</button>}
         @if (!soloMiInfo)
         {
             <ul class="list-group">
@@ -246,6 +247,8 @@ else
         this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
         if (UsuarioActual == null){
             Console.WriteLine("soy trolo");
+        } else {
+            Console.WriteLine(UsuarioActual.ToString());
         }
         permisoModificacionUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioModificacion").Result;
         permisoEliminarUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioBaja").Result;

@@ -1,0 +1,150 @@
+﻿@page "/RealizarReservas/{EventoId:int}"
+
+@using Aplicacion.entidades
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager Navigation
+@inject AltaReserva AltaReserva
+@inject ObetenerIdPersonaPorDocumento ObtenerIdPorDocumento
+@inject ObtenerEventoPorId ObtenerEventoPorId
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Realizar Reserva</h3>
+        </div>
+        
+        <div class="card-body">
+            @if (evento != null)
+            {
+                <div class="alert alert-info mb-4">
+                    <h5>Detalles del Evento</h5>
+                    <p><strong>Nombre:</strong> @evento._nombre</p>
+                    <p><strong>Fecha:</strong> @evento._fechaHoraInicio.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Cupo:</strong> @evento._cupoMaximo</p>
+                </div>
+                
+                <EditForm Model="@formModel" OnSubmit="RealizarReserva" FormName="reservaForm">
+                    <div class="mb-3">
+                        <label for="dni" class="form-label">DNI de la Persona:</label>
+                        <input type="text" id="dni" class="form-control" @bind="formModel.Dni" required />
+                        <div class="form-text">Ingrese el DNI de la persona que desea registrar</div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary" @onclick="Volver">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-calendar-plus"></i> Crear Reserva
+                        </button>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            }
+            
+            @if (!string.IsNullOrEmpty(mensajeError))
+            {
+                <div class="alert alert-danger mt-4">
+                    <i class="bi bi-exclamation-triangle"></i> @mensajeError
+                </div>
+            }
+            
+            @if (!string.IsNullOrEmpty(mensajeExito))
+            {
+                <div class="alert alert-success mt-4">
+                    <i class="bi bi-check-circle"></i> @mensajeExito
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int EventoId { get; set; }
+    
+    private EventoDeportivo? evento;
+    private ReservaFormModel formModel = new();
+    private string? mensajeError;
+    private string? mensajeExito;
+    
+    // Modelo simplificado sin atributos de validación
+    private class ReservaFormModel
+    {
+        public string Dni { get; set; } = string.Empty;
+    }
+    
+    protected override void OnInitialized()
+    {
+        // Cargar el evento (no-async)
+        try 
+        {
+            evento = ObtenerEventoPorId.Ejecutar(EventoId);
+            if (evento == null)
+            {
+                mensajeError = "No se encontró el evento solicitado.";
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar el evento: {ex.Message}";
+        }
+    }
+    
+    private void RealizarReserva()
+    {
+        mensajeError = null;
+        mensajeExito = null;
+        
+        // Validación manual del DNI
+        if (string.IsNullOrWhiteSpace(formModel.Dni))
+        {
+            mensajeError = "El DNI es obligatorio";
+            return;
+        }
+        
+        try
+        {
+            // 1. Obtener ID de la persona por DNI
+            int personaId = ObtenerIdPorDocumento.Ejecutar(formModel.Dni);
+            
+            if (personaId <= 0)
+            {
+                mensajeError = $"No se encontró ninguna persona con el DNI: {formModel.Dni}";
+                return;
+            }
+            
+            // 2. Crear la reserva
+            AltaReserva.Ejecutar(personaId, EventoId);
+            
+            // 3. Mostrar mensaje de éxito
+            mensajeExito = "Reserva creada exitosamente";
+            formModel = new ReservaFormModel(); // Limpiar el formulario
+            
+            // 4. Configurar redirección
+            // Usamos InvokeAsync para garantizar que la redirección 
+            // ocurra después de que el render se complete
+            InvokeAsync(async () => {
+                await Task.Delay(1500);
+                Navigation.NavigateTo("/GestionEventoDeportivo");
+            });
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al crear la reserva: {ex.Message}";
+        }
+    }
+    
+    private void Volver()
+    {
+        Navigation.NavigateTo("/GestionEventoDeportivo");
+    }
+}

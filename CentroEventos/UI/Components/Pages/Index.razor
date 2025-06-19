@@ -197,15 +197,14 @@
 
     private async Task OnLogin()
     {
-        Console.WriteLine("Método OnLogin() llamado en Index.razor");
         
-        // Limpiar errores previos
+
         loginError = string.Empty;
         iniciandoSesion = true;
 
         try
         {
-            // Validar campos básicos
+
             if (string.IsNullOrWhiteSpace(loginModel.mail) || string.IsNullOrWhiteSpace(loginModel.password))
             {
                 loginError = "Debe completar ambos campos.";

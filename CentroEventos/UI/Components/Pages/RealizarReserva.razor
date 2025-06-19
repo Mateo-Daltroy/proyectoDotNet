@@ -1,16 +1,14 @@
+@*
 @page "/RealizarReserva/{EventoId:int}"
 @rendermode InteractiveServer
 
 @using Aplicacion.entidades
-@using Aplicacion.UseCases
-@using System.ComponentModel.DataAnnotations
-@using Microsoft.AspNetCore.Components.Web
+@using Aplicacion.UseCases.UseCasesReserva
 
 @inject NavigationManager Navigation
 @inject AltaReserva AltaReserva
 @inject IRepositorioEventoDeportivo ServicioEvento
 @inject IRepositorioPersona ServicioPersona
-@inject IRepositorioReserva ServicioReserva
 
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -31,59 +29,41 @@
                             <p class="mb-1"><strong>Descripción:</strong> @evento._descripcion</p>
                             <p class="mb-1"><strong>Fecha:</strong> @evento._fechaHoraInicio.ToString("dd/MM/yyyy HH:mm")</p>
                             <p class="mb-1"><strong>Duración:</strong> @evento._duracionHoras horas</p>
-                            <p class="mb-0"><strong>Cupo disponible:</strong> @GetCupoDisponible() / @evento._cupoMaximo</p>
+                            <p class="mb-0"><strong>Cupo máximo:</strong> @evento._cupoMaximo personas</p>
                         </div>
 
-                        <!-- Formulario de reserva -->
-                        <EditForm Model="@nuevaReserva" OnValidSubmit="@CrearReserva" FormName="reservaForm">
-                            <DataAnnotationsValidator />
-                            <ValidationSummary class="text-danger" />
-
-                            <div class="mb-3">
-                                <label for="dni" class="form-label">DNI de la Persona:</label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="dni"
-                                       @bind="dniPersona" 
-                                       placeholder="Ingrese el DNI"
-                                       required />
-                                <div class="form-text">
-                                    Ingrese el DNI de la persona que realizará la reserva.
-                                </div>
+                        <!-- Formulario simple -->
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI de la Persona:</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="dni"
+                                   @bind="dniPersona" 
+                                   placeholder="Ingrese el DNI" />
+                            <div class="form-text">
+                                Ingrese el DNI de la persona que realizará la reserva.
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="fechaAlta" class="form-label">Fecha de Alta:</label>
-                                <input type="datetime-local" 
-                                       class="form-control" 
-                                       id="fechaAlta"
-                                       @bind="fechaAltaReserva"
-                                       @bind:format="yyyy-MM-ddTHH:mm"
-                                       readonly />
-                                <div class="form-text">
-                                    Fecha y hora actual (generada automáticamente).
-                                </div>
-                            </div>
+                        <div class="alert alert-secondary">
+                            <small>
+                                <strong>Información automática:</strong><br>
+                                • Fecha de reserva: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")<br>
+                                • Estado inicial: Pendiente
+                            </small>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="asistencia" class="form-label">Estado de Asistencia:</label>
-                                <select class="form-control" id="asistencia" @bind="estadoAsistencia" disabled>
-                                    <option value="Pendiente">Pendiente</option>
-                                </select>
-                                <div class="form-text">
-                                    El estado inicial siempre es "Pendiente".
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary" @onclick="Volver">
-                                    <i class="fas fa-arrow-left"></i> Volver
-                                </button>
-                                <button type="submit" class="btn btn-success" disabled="@(!PuedeReservar())">
-                                    <i class="fas fa-save"></i> Crear Reserva
-                                </button>
-                            </div>
-                        </EditForm>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" @onclick="Volver">
+                                <i class="fas fa-arrow-left"></i> Volver
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-success" 
+                                    @onclick="CrearReserva"
+                                    disabled="@(!PuedeReservar())">
+                                <i class="fas fa-save"></i> Crear Reserva
+                            </button>
+                        </div>
 
                         @if (!string.IsNullOrEmpty(mensajeError))
                         {
@@ -122,12 +102,7 @@
     public int EventoId { get; set; }
 
     private EventoDeportivo? evento;
-    private Reserva nuevaReserva = new();
-    
-    // Campos del formulario
     private string dniPersona = string.Empty;
-    private DateTime fechaAltaReserva = DateTime.Now;
-    private Asistencia estadoAsistencia = Asistencia.Pendiente;
     
     // Mensajes
     private string mensajeError = string.Empty;
@@ -136,10 +111,6 @@
     protected override async Task OnInitializedAsync()
     {
         await CargarEvento();
-        
-        // Inicializar fecha actual
-        fechaAltaReserva = DateTime.Now;
-        estadoAsistencia = Asistencia.Pendiente;
     }
 
     private async Task CargarEvento()
@@ -155,15 +126,16 @@
         }
     }
 
+    // ✅ MÉTODO PRINCIPAL: Solo usar el caso de uso
     private async Task CrearReserva()
     {
         try
         {
-            // Limpiar mensajes anteriores
+            // Limpiar mensajes
             mensajeError = string.Empty;
             mensajeExito = string.Empty;
 
-            // Validar DNI
+            // Validar DNI en la UI
             if (string.IsNullOrWhiteSpace(dniPersona))
             {
                 mensajeError = "Debe ingresar un DNI válido.";
@@ -178,33 +150,22 @@
                 return;
             }
 
-            // Verificar si ya tiene reserva para este evento
-            if (await YaTieneReserva(personaId))
-            {
-                mensajeError = "Esta persona ya tiene una reserva para este evento.";
-                return;
-            }
-
-            // Crear la reserva
-            var reserva = new Reserva(
-                personaId,
-                EventoId
-            );
-
-            // Guardar usando caso de uso
+            // ✅ SOLO ESTO: Delegar todo al caso de uso
             AltaReserva.Ejecutar(personaId, EventoId);
 
             mensajeExito = "¡Reserva creada exitosamente!";
             
             // Limpiar formulario
             dniPersona = string.Empty;
-            fechaAltaReserva = DateTime.Now;
-            
             StateHasChanged();
 
-            // Opcional: Redireccionar después de un delay
-            await Task.Delay(2000);
+            // Redireccionar
+            await Task.Delay(1500);
             Volver();
+        }
+        catch (ValidacionException vex)
+        {
+            mensajeError = $"Error de validación: {vex.Message}";
         }
         catch (Exception ex)
         {
@@ -213,35 +174,9 @@
         }
     }
 
-    private async Task<bool> YaTieneReserva(int personaId)
-    {
-        try
-        {
-            // Aquí deberías implementar la lógica para verificar si ya tiene reserva
-            // Por ejemplo, usando un método en el repositorio de reservas
-            // return await ServicioReserva.ExisteReservaAsync(personaId, EventoId);
-            return false; // Temporal
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
-
     private bool PuedeReservar()
     {
-        return !string.IsNullOrWhiteSpace(dniPersona) && 
-               evento != null && 
-               GetCupoDisponible() > 0;
-    }
-
-    private int GetCupoDisponible()
-    {
-        if (evento == null) return 0;
-        
-        // Aquí deberías calcular el cupo real basado en las reservas existentes
-        // Por ahora retornamos el cupo máximo
-        return evento._cupoMaximo; // Temporal
+        return !string.IsNullOrWhiteSpace(dniPersona) && evento != null;
     }
 
     private void Volver()
@@ -249,3 +184,4 @@
         Navigation.NavigateTo("/GestionEventoDeportivo");
     }
 }
+*@

@@ -246,12 +246,15 @@ else
         this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
         this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
         if (UsuarioActual == null){
-            Console.WriteLine("soy trolo");
+            Console.WriteLine("soy null");
         } else {
             Console.WriteLine(UsuarioActual.ToString());
         }
-        permisoModificacionUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioModificacion").Result;
-        permisoEliminarUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioBaja").Result;
+        //permisoModificacionUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioModificacion").Result;
+        //permisoEliminarUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioBaja").Result;
+
+        permisoModificacionUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioModificacion");
+        permisoEliminarUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioBaja");
         this.soloMiInfo = false;
 
         StateHasChanged();

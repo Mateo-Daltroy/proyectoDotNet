@@ -34,7 +34,7 @@ public class AltaPersona(IRepositorioPersona repositorio) : PersonaUseCase(repos
 
     }
 
-    public String hashearPassword(Persona p)
+    public static String hashearPassword(Persona p)
     {
         using (SHA256 sha256 = SHA256.Create())
         {

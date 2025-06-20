@@ -7,7 +7,7 @@ public interface IServicioAutenticacion
 {
     public static int cont = 0;
     Task<Persona?> AutenticarAsync(string email, string contraseña);
-    Task<bool> TienePermisoAsync(int personaId, string nombrePermiso);
+    bool TienePermisoAsync(string nombrePermiso);
     Task<Persona?> ObtenerUsuarioActualAsync();
     Task IniciarSesionAsync(Persona persona);
     Task CerrarSesionAsync();

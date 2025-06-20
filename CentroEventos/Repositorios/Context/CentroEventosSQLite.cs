@@ -1,4 +1,5 @@
 using Aplicacion.entidades;
+using Aplicacion.UseCases.UseCasesPersona;
 using Repositorios.Context;
 
 namespace Repositorios.Context;
@@ -14,12 +15,12 @@ public static class CentroEventosSQLite
    public static void Inicializar()
     { 
         //COMENTAR EN CASO DE NO QUERER BORRAR LA DB
-        // string dbPath = "CentroEventos.sqlite";
-        // if (File.Exists(dbPath)) 
-        // {
-        //     File.Delete(dbPath);
-        //     Console.WriteLine("Base de datos eliminada y recreándose...");
-        // }
+         string dbPath = "CentroEventos.sqlite";
+         if (File.Exists(dbPath)) 
+         {
+             File.Delete(dbPath);
+             Console.WriteLine("Base de datos eliminada y recreándose...");
+         }
 
         using var context = new CentroEventoContext();
         if (context.Database.EnsureCreated())
@@ -27,8 +28,8 @@ public static class CentroEventosSQLite
             Console.WriteLine("Se creó base de datos");
         }
 
-        //CrearPermisosIniciales(context);
-        //SeedData(context);
+        CrearPermisosIniciales(context);
+        SeedData(context);
 
     }
 
@@ -54,16 +55,23 @@ public static class CentroEventosSQLite
     
     public static void SeedData(CentroEventoContext context)
     {
+
         // Crear persona con permisos
-        var persona1 = new Persona("12345678", "Juan", "Pérez", "juan@email.com", "123456789", "password123");
-        
-        // Asignarle algunos permisos
+        var persona1 = new Persona("123456", "Juan", "Pérez", "juan@email.com", "123456789", "password123");
+
+        // crimenes de guerra miscelaneos
+        string pass = AltaPersona.hashearPassword(persona1);
+        persona1._contraseña = pass;
+
+        //Asignarle algunos permisos
         var permisoCrearEvento = context.Permisos.First(p => p._nombre == "EventoAlta");
         var permisoCrearReserva = context.Permisos.First(p => p._nombre == "ReservaAlta");
         
         persona1._permisos.Add(permisoCrearEvento);
         persona1._permisos.Add(permisoCrearReserva);
-        
+        persona1._permisos.Add(context.Permisos.First(p => p._nombre == "UsuarioModificacion"));
+        persona1._permisos.Add(context.Permisos.First(p => p._nombre == "UsuarioBaja"));
+
         context.Personas.Add(persona1);
         context.SaveChanges();
         

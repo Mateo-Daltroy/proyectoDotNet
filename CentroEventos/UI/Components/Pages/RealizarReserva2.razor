@@ -23,7 +23,7 @@
                     <p><strong>Cupo:</strong> @evento._cupoMaximo</p>
                 </div>
                 
-                <EditForm Model="@formModel" OnSubmit="RealizarReserva" FormName="reservaForm">
+                <EditForm Model="@formModel" OnValidSubmit="RealizarReserva" FormName="reservaForm">
                     <div class="mb-3">
                         <label for="dni" class="form-label">DNI de la Persona:</label>
                         <input type="text" id="dni" class="form-control" @bind="formModel.Dni" required />
@@ -78,6 +78,8 @@
     // Modelo simplificado sin atributos de validación
     private class ReservaFormModel
     {
+        [Required(ErrorMessage = "El DNI es obligatorio")]
+        [StringLength(8, ErrorMessage = "El DNI no puede tener más de 8 caracteres")]
         public string Dni { get; set; } = string.Empty;
     }
     
@@ -104,6 +106,8 @@
         mensajeError = null;
         mensajeExito = null;
         
+        Console.WriteLine($"DNI ingresado: '{formModel.Dni}'"); // Para DEBUG
+
         // Validación manual del DNI
         if (string.IsNullOrWhiteSpace(formModel.Dni))
         {
@@ -145,6 +149,6 @@
     
     private void Volver()
     {
-        Navigation.NavigateTo("/GestionEventoDeportivo");
+        Navigation.NavigateTo("/GestionEventos");
     }
 }

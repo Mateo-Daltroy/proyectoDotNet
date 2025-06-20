@@ -43,16 +43,21 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
         }
     }
 
-    public async Task<bool> TienePermisoAsync(int personaId, string nombrePermiso)
+    public bool TienePermisoAsync(string nombrePermiso)
     {
-        try
+        if (_usuarioActual != null)
         {
-            // USAR el método de tu entidad Persona directamente
-            var persona = _repositorioPersona.getPersonaConId(personaId);
-            return persona?.tienePermiso(nombrePermiso) ?? false;
-        }
-        catch (Exception)
-        {
+            try
+            {
+                // USAR el método de tu entidad Persona directamente
+                var persona = _repositorioPersona.getPersonaConId(_usuarioActual._id);
+                return persona?.tienePermiso(nombrePermiso) ?? false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }else {
             return false;
         }
     }

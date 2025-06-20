@@ -260,11 +260,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (UsuarioActual != null)
-        {
             this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
             this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
-
+            if (UsuarioActual != null)
+            {
             permisoModificacionUsuario = personaPoseeElPermiso.Ejecutar(UsuarioActual._id, "UsuarioModificacion");
             permisoEliminarUsuario = personaPoseeElPermiso.Ejecutar(UsuarioActual._id, "UsuarioBaja");
             //permisoModificacionUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioModificacion");
@@ -272,7 +271,7 @@ else
             this.soloMiInfo = false;
 
             StateHasChanged();
-        }
+            }
     }
 
 }

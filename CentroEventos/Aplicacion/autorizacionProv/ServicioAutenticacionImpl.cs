@@ -49,7 +49,6 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
         {
             try
             {
-                // USAR el método de tu entidad Persona directamente
                 var persona = _repositorioPersona.getPersonaConId(_usuarioActual._id);
                 return persona?.tienePermiso(nombrePermiso) ?? false;
             }
@@ -68,12 +67,11 @@ public class ServicioAutenticacionImpl : IServicioAutenticacion
         {
             try
             {
-                // RECARGAR para obtener permisos actualizados
                 _usuarioActual = _repositorioPersona.getPersonaConId(_usuarioActual._id);
             }
             catch (Exception)
             {
-                // Mantener instancia actual si hay error
+                _usuarioActual = null; // Si falla, limpio el usuario actual
             }
         }
         return _usuarioActual;

@@ -1,16 +1,107 @@
 ﻿@page "/mis-reservas"
+@rendermode InteractiveServer
 @using Aplicacion.entidades
 @inject ListarTodasLasReservas ListarTodasLasReservas
 @inject BajaReserva BajaReserva
 @inject ModificarReserva ModificarReserva
 @inject IServicioAutenticacion Autenticacion
+@inject PersonaPoseeElPermiso PersonaPoseeElPermiso
 
 <h3>Reservas</h3>
 
-<button class="btn btn-primary" @onclick="toggleMios">Ver Mis/Todas las Reservas</button>
+<!--
+@if (mostrarConfirmacion)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Acción</h5>
+                    <button type="button" class="close" @onclick="CancelarConfirmacion">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>@mensajeConfirmacion</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelarConfirmacion">Cancelar</button>
+                    <button type="button" class="btn btn-primary" @onclick="ConfirmarAccion">Confirmar</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    </div>
+}
 
-<DialogoConfirmacion @ref="dialogo" OnConfirmado="AccionConfirmada"/>
-<DialogoEdicionAsistencia @ref="dialogoEdicion" OnGuardar="GuardarEdicion"/>
+@if (mostrarEdicion && reservaAEditar != null)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Estado de Asistencia</h5>
+                    <button type="button" class="close" @onclick="CancelarEdicion">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="estadoAsistencia">Estado de Asistencia:</label>
+                        <select id="estadoAsistencia" class="form-control" @bind="estadoAsistenciaSeleccionado">
+                            @foreach (var estado in Enum.GetValues(typeof(Asistencia)))
+                            {
+                                <option value="@estado">@estado</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+                    <button type="button" class="btn btn-primary" @onclick="GuardarEdicionAsistencia">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    </div>
+}
+-->
+
+<ul class="list-group">
+                @foreach (var reserva in reservas)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @if (reservaEditando != null && reservaEditando._id == reserva._id)
+                        {
+                            <div>
+                                nombre: <input class="form-control mb-2" @bind="reservaEditando._estadoAsistencia" />
+                            </div>
+                            <span>
+                                <button class="btn btn-success btn-sm me-2" @onclick="EditarPersonaDC">Guardar</button>
+                                <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">Cancelar</button>
+                            </span>
+                        }
+                        else
+                        {
+                            <!-- Modo vista -->
+                            <span>@reserva.Persona._nombre @reserva.EventoDeportivo._nombre @reserva._estadoAsistencia </span>
+                            <span>
+                                @if (permisoModificar)
+                                {
+                                    <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPersona(persona)">Editar</button>
+                                    <button class="btn btn-sm btn-primary me-2" @onclick="() => EditarPermisos(persona)">Editar
+                                        Permisos</button>
+                                }
+                                @if (permidoEliminar)
+                                {
+                                    <button class="btn btn-sm btn-danger" @onclick="() => EliminarPersonaDC(persona)">Eliminar</button>
+                                }
+                            </span>
+                        }
+                    </li>
+                }
+            </ul>
+
 
 @if (reservas == null)
 {
@@ -22,273 +113,119 @@ else if (!reservas.Any())
 }
 else
 {
-    @if (!soloMios)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Evento</th>
-                    <th>Fecha</th>
-                    <th>Estado Asistencia</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var reserva in reservas)
-            {
-                <tr>
-                    <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
-                    <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
-                    <td>@(reserva._estadoAsistencia.ToString())</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=>ConfirmarEdicion(reserva)">Editar</button>
-                        <button class="btn btn-danger" @onclick="()=>ConfirmarEliminacion(reserva)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
-    else if (reservasMias != null) 
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Evento</th>
-                    <th>Fecha</th>
-                    <th>Estado Asistencia</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var reserva in reservasMias)
-            {
-                <tr>
-                    <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
-                    <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
-                    <td>@(reserva._estadoAsistencia.ToString())</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="()=>ConfirmarEdicion(reserva)">Editar</button>
-                        <button class="btn btn-danger" @onclick="()=>ConfirmarEliminacion(reserva)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table> 
-    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Evento</th>
+                <th>Fecha</th>
+                <th>Estado Asistencia</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var reserva in reservas)
+        {
+            <tr>
+                <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
+                <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                <td>@(reserva._estadoAsistencia.ToString())</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => ConfirmarEdicion(reserva)">Editar</button>
+                    <button class="btn btn-danger" @onclick="() => ConfirmarEliminacion(reserva)">Eliminar</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 }
 
 @code {
     public int personaId { get; set; } 
-    private bool soloMios = false;
-    private IEnumerable<Reserva>? reservasMias;
-    private IEnumerable<Reserva>? reservas;
+    private IEnumerable<Reserva> reservas = new List<Reserva>();
     private string? accionPendiente;
+    private string mensajeConfirmacion = "";
+    private bool mostrarConfirmacion = false;
+    private bool mostrarEdicion = false;
+    private Asistencia estadoAsistenciaSeleccionado = Asistencia.Pendiente;
+    private Reserva reservaEditando;
+    private Reserva reservaOriginal;
+    private Boolean permisoModificar;
+    private Boolean permidoEliminar;
 
-    private void toggleMios() {
-        soloMios = !soloMios;
-        StateHasChanged();
-    }
-
-    DialogoConfirmacion dialogo = null!;
-    DialogoEdicionAsistencia dialogoEdicion = null!;
     Reserva? reservaAEliminar = null;
     Reserva? reservaAEditar = null;
     
     private void ConfirmarEliminacion(Reserva res) {
         reservaAEliminar = res;
         accionPendiente = "eliminar";
-        dialogo.Mensaje = $"¿Desea eliminar la reserva?";
-        dialogo.Mostrar();
+        mensajeConfirmacion = "¿Desea eliminar la reserva?";
+        mostrarConfirmacion = true;
     }
 
     private void ConfirmarEdicion(Reserva res) {
         reservaAEditar = res;
         accionPendiente = "editar";
-        dialogo.Mensaje = $"¿Desea editar la reserva?";
-        dialogo.Mostrar();
+        mensajeConfirmacion = "¿Desea editar la reserva?";
+        mostrarConfirmacion = true;
     }
 
-    private void AccionConfirmada() {
+    private void CancelarConfirmacion() {
+        mostrarConfirmacion = false;
+        accionPendiente = null;
+    }
+
+    private void CancelarEdicion() {
+        mostrarEdicion = false;
+        reservaAEditar = null;
+    }
+
+    private void ConfirmarAccion() {
+        mostrarConfirmacion = false;
+        
         if (accionPendiente == "eliminar" && reservaAEliminar != null)
         {
             Console.WriteLine("Eliminando Reserva ReservasPersona.raz");
             BajaReserva.Ejecutar(reservaAEliminar._id);
             // Reload the data
             ActualizarListas();
+            reservaAEliminar = null;
         }
         else if (accionPendiente == "editar" && reservaAEditar != null)
         {
-            dialogoEdicion.Mostrar(reservaAEditar);
+            estadoAsistenciaSeleccionado = reservaAEditar._estadoAsistencia;
+            mostrarEdicion = true;
         }
+        
         accionPendiente = null;
-        StateHasChanged();
     }
 
-    private void GuardarEdicion(Reserva reservaEditada) {
-        ModificarReserva.Ejecutar(reservaEditada);
-        ActualizarListas();
+    private void GuardarEdicionAsistencia() {
+        if (reservaAEditar != null)
+        {
+            reservaAEditar._estadoAsistencia = estadoAsistenciaSeleccionado;
+            ModificarReserva.Ejecutar(reservaAEditar);
+            ActualizarListas();
+        }
+        
+        mostrarEdicion = false;
         reservaAEditar = null;
-        StateHasChanged();
     }
     
     private void ActualizarListas()
     {
-        // Refresh the data
         reservas = ListarTodasLasReservas.Ejecutar();
-        if (personaId != 0)
-        {
-            reservasMias = reservas.Where(res => res._personaId == personaId).ToList();
-        }
+    }
+
+    protected void consultaPermisos (){
+        this.permisoModificar = this.PersonaPoseeElPermiso.Ejecutar(personaId, "ReservaModificacion");
+        this.permidoEliminar = this.PersonaPoseeElPermiso.Ejecutar(personaId, "ReservaBaja");
     }
 
     protected override void OnInitialized()
     {
-        reservas = ListarTodasLasReservas.Ejecutar();
+        reservas = ListarTodasLasReservas.Ejecutar().ToList();
         Persona? persona = Autenticacion.ObtenerUsuarioActualAsync().Result;
-        if (persona != null)
-        {
-            personaId = persona._id;
-            reservasMias = reservas.Where(res => res._personaId == personaId).ToList();
-        }
+        consultaPermisos();
+        
     }
 }
-<!---
-@page "/mis-reservas"
-@using Aplicacion.entidades
-@inject ListarTodasLasReservas ListarTodasLasReservas
-@inject BajaReserva BajaReserva
-@inject ModificarReserva ModificarReserva
-@inject IServicioAutenticacion Autenticacion
-
-<h3>Reservas</h3>
-
-<button class="btn btn-primary" @onclick="toggleMios">Ver Mis/Todas las Reservas</button>
-
-<DialogoConfirmacion @ref="dialogo" OnConfirmado="AccionConfirmada"/>
-
-@if (reservas == null)
-{
-    <p>Cargando reservas...</p>
-}
-else if (!reservas.Any())
-{
-    <p>No tiene reservas registradas.</p>
-}
-else
-{
-    @if (!soloMios)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Evento</th>
-                    <th>Fecha</th>
-                    <th>Estado Asistencia</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var reserva in reservas)
-            {
-                <tr>
-                    <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
-                    <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
-                    <td>@(reserva._estadoAsistencia.ToString())</td>
-                    <td>
-                        <button class="btn btn-primary">Editar</button>
-                        <button class="btn btn-danger" @onclick="()=>ConfirmarEliminacion(reserva)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
-    else if (reservasMias != null) 
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Evento</th>
-                    <th>Fecha</th>
-                    <th>Estado Asistencia</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var reserva in reservasMias)
-            {
-                <tr>
-                    <td>@(reserva.EventoDeportivo?._nombre ?? "Sin evento")</td>
-                    <td>@(reserva.EventoDeportivo?._fechaHoraInicio.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
-                    <td>@(reserva._estadoAsistencia.ToString())</td>
-                    <td>
-                        <button class="btn btn-primary">Editar</button>
-                        <button class="btn btn-danger" @onclick="()=>ConfirmarEliminacion(reserva)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table> 
-    }
-}
-
-@code {
-    public int personaId { get; set; } 
-    private bool soloMios = false;
-    private IEnumerable<Reserva>? reservasMias;
-    private IEnumerable<Reserva>? reservas;
-    private string? accionPendiente;
-
-    private void toggleMios() {
-        soloMios = !soloMios;
-        StateHasChanged();
-    }
-
-    DialogoConfirmacion dialogo = null!;
-    Reserva? reservaAEliminar = null;
-    private void ConfirmarEliminacion(Reserva res) {
-        reservaAEliminar = res;
-        accionPendiente = "eliminar";
-        dialogo.Mensaje = $"¿Desea eliminar la reserva?";
-        dialogo.Mostrar();
-    }
-
-    private void ConfirmarEdicion(Reserva res) {
-        reservaAEliminar = res;
-        accionPendiente = "editar";
-        dialogo.Mensaje = $"¿Desea editar la reserva?";
-        dialogo.Mostrar();
-    }
-
-    private void AccionConfirmada() {
-        if (accionPendiente == "eliminar" && reservaAEliminar != null)
-        {
-            Console.WriteLine("Eliminando Reserva ReservasPersona.raz");
-            BajaReserva.Ejecutar(reservaAEliminar._id);
-        }
-        else if (accionPendiente == "editar")
-        {
-            GuardarEdicion();
-
-        }
-        accionPendiente = null;
-        StateHasChanged();
-    }
-
-    private void GuardarEdicion() {
-
-    }
-
-    protected override void OnInitialized()
-    {
-        reservas = ListarTodasLasReservas.Ejecutar();
-        Persona? persona = Autenticacion.ObtenerUsuarioActualAsync().Result;
-        if (persona != null)
-        {
-            personaId = persona._id;
-            reservasMias = reservas.Where(res => res._personaId == personaId).ToList();
-        }
-    }
-}
--->

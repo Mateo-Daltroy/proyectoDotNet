@@ -91,12 +91,16 @@ public class RepoReservas : IRepositorioReserva
     public bool ExisteId(int idPers, int idEv)
     {
 
+        Reserva? res = _context.Reservas.FirstOrDefault(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv));
+        return (res != null);
         // Esta debe ser la implementacion menos eficiente posible pero bueno señores, es lo que hay
+        /*
         return _context
         .Reservas
         .Where(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv))
         .ToList()
         .Count == 1;
+        */
     }
 
     public bool ExisteId(int idRes)

@@ -18,9 +18,16 @@
         <div>No hay personas registradas.</div>
     }
     else
-    {   @if (soloMiInfo){
-        <button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">mostrar todos los datos</button>
-    }else{<button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">mostrar solo mis datos</button>}
+    {
+        @if (soloMiInfo)
+        {
+            <button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">mostrar todos los datos</button>
+        }
+        else
+        {
+
+            <button class="btn btn-success btn-sm me-2" @onclick="SoloMiInfoToggle">mostrar solo mis datos</button>
+        }
         @if (!soloMiInfo)
         {
             <ul class="list-group">
@@ -126,7 +133,7 @@ else
 
     public void goToIndex()
     {
-        Navigation.NavigateTo("/Index");
+        Navigation.NavigateTo("/");
     }
 
     public void SoloMiInfoToggle()
@@ -141,10 +148,11 @@ else
         StateHasChanged();
     }
 
-    private void EliminarPersonaDC(Persona persona)
+    private void EliminarPersonaDC(Persona? persona)
     {
-        if (dialogoConfirmacion == null) {
-            Console.WriteLine ("hubo un error con DialogoConfirmacion");
+        if (dialogoConfirmacion == null)
+        {
+            Console.WriteLine("hubo un error con DialogoConfirmacion");
             return;
         }
         personaAOperar = persona;
@@ -155,20 +163,22 @@ else
 
     private void EditarPersonaDC()
     {
-        if (dialogoConfirmacion == null) {
-            Console.WriteLine ("hubo un error con DialogoConfirmacion");
-            return;
+        if (personaAEditarOriginal != null)
+        {
+            if (dialogoConfirmacion == null)
+            {
+                Console.WriteLine("hubo un error con DialogoConfirmacion");
+                return;
+            }
+            mensajeDialogo = $"¿Seguro que quieres editar a {personaAEditarOriginal._nombre}?";
+            accionPendiente = "editar";
+            dialogoConfirmacion.Mostrar();
         }
-        mensajeDialogo = $"¿Seguro que quieres editar a {personaAEditarOriginal._nombre}?";
-        accionPendiente = "editar";
-        dialogoConfirmacion.Mostrar();
     }
-
     private void AccionConfirmada()
     {
         if (accionPendiente == "eliminar")
         {
-            Console.WriteLine("entro a eliminar");
             EliminarPersona(personaAOperar);
 
         }
@@ -185,26 +195,30 @@ else
 
 
 
-    protected void EditarPersona(Persona p)
+    protected void EditarPersona(Persona? p)
     {
-
-        editandoPersona = new Persona(p._dni, p._nombre, p._apellido, p._mail, p._telefono, "");
-        editandoPersona._id = p._id;
-        personaAEditarOriginal = p;
-        StateHasChanged();
-
+        if (editandoPersona != null && p != null)
+        {
+            editandoPersona = new Persona(p._dni, p._nombre, p._apellido, p._mail, p._telefono, "");
+            editandoPersona._id = p._id;
+            personaAEditarOriginal = p;
+            StateHasChanged();
+        }
     }
 
-    protected void EliminarPersona(Persona p)
+    protected void EliminarPersona(Persona? p)
     {
-        new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
-        this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
-        if (UsuarioActual._id == p._id)
+        if (UsuarioActual != null && p != null)
         {
-            servicioAuth.CerrarSesionAsync();
-            Navigation.NavigateTo("/home");
+            new BajaPersona(this.ServicioPersona).Ejecutar(p._id);
+            this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
+            if (UsuarioActual._id == p._id)
+            {
+                servicioAuth.CerrarSesionAsync();
+                Navigation.NavigateTo("/");
+            }
+            StateHasChanged();
         }
-        StateHasChanged();
     }
 
     protected void GuardarEdicion()
@@ -234,7 +248,7 @@ else
     }
 
 
-    protected void EditarPermisos(Persona p)
+    protected void EditarPermisos(Persona? p)
     {
         Navigation.NavigateTo($"/GestionDePermisos/{p._id}");
     }
@@ -242,22 +256,17 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        if (UsuarioActual != null)
+        {
+            this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
+            this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
 
-        this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
-        this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
-        if (UsuarioActual == null){
-            Console.WriteLine("soy null");
-        } else {
-            Console.WriteLine(UsuarioActual.ToString());
+            permisoModificacionUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioModificacion");
+            permisoEliminarUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioBaja");
+            this.soloMiInfo = false;
+
+            StateHasChanged();
         }
-        //permisoModificacionUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioModificacion").Result;
-        //permisoEliminarUsuario = servicioAuth.TienePermisoAsync(UsuarioActual._id, "UsuarioBaja").Result;
-
-        permisoModificacionUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioModificacion");
-        permisoEliminarUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioBaja");
-        this.soloMiInfo = false;
-
-        StateHasChanged();
     }
 
 }

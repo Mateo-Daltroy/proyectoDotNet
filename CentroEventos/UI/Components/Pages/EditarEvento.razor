@@ -187,7 +187,7 @@
     public int EventoId { get; set; }
 
     private EventoDeportivo? evento;
-    private List<Persona>? personas;
+    private List<Persona> personas = new List<Persona>();
     private EventoFormModel formModel = new();
     
     private bool cargando = true;

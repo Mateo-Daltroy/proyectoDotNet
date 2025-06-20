@@ -63,15 +63,26 @@
     private Permiso? permisoSeleccionadoPersona;
     private Permiso? permisoSeleccionadoDisponible;
     private Persona p ;
+    private Boolean permisoModificar;
 
     protected void DarPermiso (){
+        if (permisoModificar){
         ServicioPersona.agregarPermiso(id,permisoSeleccionadoDisponible);
+        consultaPermiso();
         StateHasChanged();
+        }else{
+            Navigation.NavigateTo("/");
+        }
     }
 
     protected void QuitarPermiso (){
-        ServicioPersona.eliminarPermiso(id,permisoSeleccionadoPersona);
+         if (permisoModificar){
+        ServicioPersona.eliminarPermiso(id, permisoSeleccionadoPersona);
+        consultaPermiso();
         StateHasChanged();
+        }else{
+            Navigation.NavigateTo("/");
+        }
 
     }
 
@@ -85,13 +96,18 @@
         permisoSeleccionadoDisponible = permiso;
     }
 
+
+    protected void consultaPermiso (){
+        permisoModificar = ServicioPersona.PoseeElPermiso(id,"UsuarioModificacion");
+    }
+
     protected override async Task  OnInitializedAsync()
     {   
         this.UsuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
         p = ServicioPersona.getPersonaConId(id);
         this.permisosPersona = p._permisos.ToList();
         this.permisosDisponibles = ServicioPersona.obtenerPermisosDisponiblesParaPersona(id);
-
+        consultaPermiso();
         StateHasChanged();
     }
 

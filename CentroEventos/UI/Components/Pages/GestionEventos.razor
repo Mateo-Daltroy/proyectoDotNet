@@ -3,6 +3,7 @@
 
 @using Aplicacion.entidades
 @using Aplicacion.UseCases
+@using Aplicacion.excepciones
 @using UI.Components.Pages
 
 @using System.Data.Common;
@@ -12,6 +13,7 @@
 @inject NavigationManager Navigation
 @inject IRepositorioEventoDeportivo ServicioEvento
 @inject IRepositorioPersona ServicioPersona
+@inject BajaEvento BajaEvento
 
 <h1>Gestión de Eventos Deportivos</h1>
 
@@ -73,9 +75,11 @@ else
                             </div>
                         </div>
                         <div class="card-footer">
+                            <!--
                             <button class="btn btn-success btn-sm me-2" @onclick="EditarEventoDC">
                                 <i class="fas fa-save"></i> Guardar
                             </button>
+                            -->
                             <button class="btn btn-secondary btn-sm" @onclick="CancelarEdicion">
                                 <i class="fas fa-times"></i> Cancelar
                             </button>
@@ -170,27 +174,17 @@ else
     }
 
     private void EditarEvento(EventoDeportivo evento)
-    {
-        editandoEvento = new EventoDeportivo(
-            evento._nombre,
-            evento._descripcion,
-            evento._fechaHoraInicio,
-            evento._duracionHoras,
-            evento._cupoMaximo,
-            evento._responsableId
-        );
-        editandoEvento._id = evento._id;
-        fechaHoraEdicion = evento._fechaHoraInicio;
-        eventoAEditarOriginal = evento;
-        StateHasChanged();
+        {
+        Navigation.NavigateTo($"/EditarEvento/{evento._id}");
     }
 
-    private void EditarEventoDC()
+
+   /* private void EditarEventoDC()
     {
         mensajeDialogo = $"¿Seguro que quieres guardar los cambios del evento '{eventoAEditarOriginal?._nombre}'?";
         accionPendiente = "editar";
         dialogoConfirmacion?.Mostrar();
-    }
+    }*/
 
     private void EliminarEventoDC(EventoDeportivo evento)
     {
@@ -207,10 +201,6 @@ else
             if (accionPendiente == "eliminar" && eventoAOperar != null)
             {
                 await EliminarEvento(eventoAOperar);
-            }
-            else if (accionPendiente == "editar")
-            {
-                await GuardarEdicion();
             }
         }
         catch (Exception ex)
@@ -231,14 +221,32 @@ else
     {
         try
         {
-            await ServicioEvento.EliminarAsync(evento._id);
-            await CargarDatos(); // Recargar lista
+            // Obtener usuario actual para permisos
+            var usuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
+            if (usuarioActual == null)
+            {
+                Console.WriteLine("Error: Usuario no autenticado para eliminar evento");
+                return;
+            }
+
+            // ✅ USAR CASO DE USO: BajaEvento (elimina evento Y reservas asociadas)
+            await BajaEvento.Ejecutar(evento._id, usuarioActual._id);
+            
+            // Recargar lista después de eliminar
+            await CargarDatos();
+            
+            Console.WriteLine($"Evento '{evento._nombre}' eliminado correctamente");
+        }
+        catch (EntidadNotFoundException)
+        {
+            Console.WriteLine($"Error: El evento con ID {evento._id} no existe");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error eliminando evento: {ex.Message}");
         }
     }
+
 
     private async Task GuardarEdicion()
     {

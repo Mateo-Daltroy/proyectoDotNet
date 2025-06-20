@@ -10,6 +10,7 @@ public class AltaReserva (IRepositorioReserva repositorio, IRepositorioPersona _
 {
     public void Ejecutar(int idPers, int idEv/*, int idUser*/)
     {
+        Console.WriteLine("Adentro del metodo");
         try
         {
             //if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaAlta)) { throw new FalloAutorizacionException(); }
@@ -20,10 +21,12 @@ public class AltaReserva (IRepositorioReserva repositorio, IRepositorioPersona _
             }
             //int id = _gestor.ObtenerNuevoId(_pathId);
             Reserva resGenerada = new(idPers, idEv);
+            Console.WriteLine("che pero esto no tiene nigun sentido");
             this.repo.Agregar(resGenerada);
         }
         catch (Exception e)
         {
+            Console.WriteLine("gilazo");
             Console.WriteLine(e.Message);
         }
     }

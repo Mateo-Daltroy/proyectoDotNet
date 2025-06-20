@@ -86,6 +86,8 @@ builder.Services.AddScoped<ListarEventosConCupo>();
 builder.Services.AddScoped<ListarEventosPasados>();
 builder.Services.AddScoped<ListarEventosSinReservas>();
 builder.Services.AddScoped<ObtenerEventoPorId>();
+//servicios:
+builder.Services.AddScoped<ValidadorEventoDeportivo>();
 
 // Casos Uso Reserva
 builder.Services.AddScoped<AltaReserva>();

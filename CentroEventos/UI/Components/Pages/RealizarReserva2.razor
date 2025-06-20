@@ -1,4 +1,5 @@
 ﻿@page "/RealizarReservas/{EventoId:int}"
+@rendermode InteractiveServer
 
 @using Aplicacion.entidades
 @using System.ComponentModel.DataAnnotations
@@ -23,22 +24,21 @@
                     <p><strong>Cupo:</strong> @evento._cupoMaximo</p>
                 </div>
                 
-                <EditForm Model="@formModel" OnValidSubmit="RealizarReserva" FormName="reservaForm">
-                    <div class="mb-3">
-                        <label for="dni" class="form-label">DNI de la Persona:</label>
-                        <input type="text" id="dni" class="form-control" @bind="formModel.Dni" required />
-                        <div class="form-text">Ingrese el DNI de la persona que desea registrar</div>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between mt-4">
-                        <button type="button" class="btn btn-secondary" @onclick="Volver">
-                            <i class="bi bi-arrow-left"></i> Volver
-                        </button>
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-calendar-plus"></i> Crear Reserva
-                        </button>
-                    </div>
-                </EditForm>
+                <!-- Simple form without EditForm -->
+                <div class="mb-3">
+                    <label for="dni" class="form-label">DNI de la Persona:</label>
+                    <input type="text" id="dni" class="form-control" @bind="dniInput" />
+                    <div class="form-text">Ingrese el DNI de la persona que desea registrar</div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" @onclick="Volver">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </button>
+                    <button type="button" class="btn btn-success" @onclick="RealizarReserva">
+                        <i class="bi bi-calendar-plus"></i> Crear Reserva
+                    </button>
+                </div>
             }
             else
             {
@@ -71,17 +71,9 @@
     public int EventoId { get; set; }
     
     private EventoDeportivo? evento;
-    private ReservaFormModel formModel = new();
+    private string dniInput = string.Empty;
     private string? mensajeError;
     private string? mensajeExito;
-    
-    // Modelo simplificado sin atributos de validación
-    private class ReservaFormModel
-    {
-        [Required(ErrorMessage = "El DNI es obligatorio")]
-        [StringLength(8, ErrorMessage = "El DNI no puede tener más de 8 caracteres")]
-        public string Dni { get; set; } = string.Empty;
-    }
     
     protected override void OnInitialized()
     {
@@ -106,10 +98,10 @@
         mensajeError = null;
         mensajeExito = null;
         
-        Console.WriteLine($"DNI ingresado: '{formModel.Dni}'"); // Para DEBUG
+        Console.WriteLine($"DNI ingresado: '{dniInput}'"); // Para DEBUG
 
         // Validación manual del DNI
-        if (string.IsNullOrWhiteSpace(formModel.Dni))
+        if (string.IsNullOrWhiteSpace(dniInput))
         {
             mensajeError = "El DNI es obligatorio";
             return;
@@ -118,28 +110,27 @@
         try
         {
             // 1. Obtener ID de la persona por DNI
-            int personaId = ObtenerIdPorDocumento.Ejecutar(formModel.Dni);
+            int personaId = ObtenerIdPorDocumento.Ejecutar(dniInput);
+            
+            Console.WriteLine($"PersonaId obtenido: {personaId}"); // Debug
             
             if (personaId <= 0)
             {
-                mensajeError = $"No se encontró ninguna persona con el DNI: {formModel.Dni}";
+                mensajeError = $"No se encontró ninguna persona con el DNI: {dniInput}";
                 return;
             }
             
             // 2. Crear la reserva
+            Console.WriteLine("Entro a altareserva");
             AltaReserva.Ejecutar(personaId, EventoId);
             
             // 3. Mostrar mensaje de éxito
             mensajeExito = "Reserva creada exitosamente";
-            formModel = new ReservaFormModel(); // Limpiar el formulario
+            dniInput = string.Empty; // Limpiar el campo
+            StateHasChanged(); // Forzar actualización de UI
             
-            // 4. Configurar redirección
-            // Usamos InvokeAsync para garantizar que la redirección 
-            // ocurra después de que el render se complete
-            InvokeAsync(async () => {
-                await Task.Delay(1500);
-                Navigation.NavigateTo("/GestionEventoDeportivo");
-            });
+            // 4. Redirección
+            Navigation.NavigateTo("/GestionEventos");
         }
         catch (Exception ex)
         {

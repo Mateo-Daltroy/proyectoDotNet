@@ -1,0 +1,346 @@
+@page "/EditarEvento/{EventoId:int}"
+@rendermode InteractiveServer
+
+@using Aplicacion.entidades
+@using Aplicacion.UseCases.UseCasesEvento
+@using Aplicacion.validadores
+@using System.ComponentModel.DataAnnotations
+
+@inject NavigationManager Navigation
+@inject ModificarEvento ModificarEvento
+@inject ObtenerEventoPorId ObtenerEventoPorId
+@inject ListarTodasLasPersonas ListarTodasLasPersonas
+@inject Aplicacion.interfacesServ.IServicioAutenticacion ServicioAuth
+
+<PageTitle>Editar Evento</PageTitle>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">
+                        <i class="fas fa-edit"></i> Editar Evento
+                    </h3>
+                </div>
+                
+                <div class="card-body">
+                    @if (evento != null && !cargando)
+                    {
+                        <EditForm Model="@formModel" OnValidSubmit="GuardarCambios" FormName="editarEventoForm">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="alert alert-danger" />
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre del Evento:</label>
+                                        <InputText id="nombre" 
+                                                  class="form-control" 
+                                                  @bind-Value="formModel.Nombre" />
+                                        <ValidationMessage For="@(() => formModel.Nombre)" class="text-danger" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="responsable" class="form-label">Responsable:</label>
+                                        <InputSelect id="responsable" 
+                                                    class="form-control" 
+                                                    @bind-Value="formModel.ResponsableId">
+                                            <option value="0">Seleccionar responsable...</option>
+                                            @foreach (var persona in personas)
+                                            {
+                                                <option value="@persona._id">@persona._nombre @persona._apellido</option>
+                                            }
+                                        </InputSelect>
+                                        <ValidationMessage For="@(() => formModel.ResponsableId)" class="text-danger" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción:</label>
+                                <InputTextArea id="descripcion" 
+                                              class="form-control" 
+                                              rows="3"
+                                              @bind-Value="formModel.Descripcion" />
+                                <ValidationMessage For="@(() => formModel.Descripcion)" class="text-danger" />
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fechaHora" class="form-label">Fecha y Hora de Inicio:</label>
+                                        <InputDate Type="InputDateType.DateTimeLocal" 
+                                                  id="fechaHora"
+                                                  class="form-control" 
+                                                  @bind-Value="formModel.FechaHoraInicio" />
+                                        <ValidationMessage For="@(() => formModel.FechaHoraInicio)" class="text-danger" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="duracion" class="form-label">Duración (horas):</label>
+                                        <InputNumber id="duracion" 
+                                                    class="form-control" 
+                                                    step="0.5"
+                                                    @bind-Value="formModel.DuracionHoras" />
+                                        <ValidationMessage For="@(() => formModel.DuracionHoras)" class="text-danger" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="cupo" class="form-label">Cupo Máximo:</label>
+                                        <InputNumber id="cupo" 
+                                                    class="form-control" 
+                                                    @bind-Value="formModel.CupoMaximo" />
+                                        <ValidationMessage For="@(() => formModel.CupoMaximo)" class="text-danger" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Fecha de Finalización:</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               value="@ObtenerFechaFin()" 
+                                               readonly />
+                                        <div class="form-text">Se calcula automáticamente</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (evento._fechaHoraInicio < DateTime.Now)
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <strong>Advertencia:</strong> Este evento ya ha comenzado. Las modificaciones pueden estar limitadas.
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-secondary" @onclick="Cancelar">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" 
+                                        class="btn btn-warning" 
+                                        disabled="@guardando">
+                                    @if (guardando)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        <span>Guardando...</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-save"></i>
+                                        <span>Guardar Cambios</span>
+                                    }
+                                </button>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (cargando)
+                    {
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando evento...</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            No se pudo cargar el evento solicitado.
+                        </div>
+                        <button class="btn btn-secondary" @onclick="Volver">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </button>
+                    }
+
+                    @if (!string.IsNullOrEmpty(mensajeError))
+                    {
+                        <div class="alert alert-danger mt-3">
+                            <i class="fas fa-exclamation-triangle"></i> @mensajeError
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(mensajeExito))
+                    {
+                        <div class="alert alert-success mt-3">
+                            <i class="fas fa-check-circle"></i> @mensajeExito
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int EventoId { get; set; }
+
+    private EventoDeportivo? evento;
+    private List<Persona>? personas;
+    private EventoFormModel formModel = new();
+    
+    private bool cargando = true;
+    private bool guardando = false;
+    private string mensajeError = string.Empty;
+    private string mensajeExito = string.Empty;
+
+    // Modelo para el formulario con validaciones
+    public class EventoFormModel
+    {
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
+        public string Nombre { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La descripción es obligatoria")]
+        [StringLength(500, ErrorMessage = "La descripción no puede tener más de 500 caracteres")]
+        public string Descripcion { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La fecha y hora de inicio es obligatoria")]
+        public DateTime FechaHoraInicio { get; set; } = DateTime.Now.AddDays(1);
+
+        [Required(ErrorMessage = "La duración es obligatoria")]
+        [Range(0.5, 24, ErrorMessage = "La duración debe estar entre 0.5 y 24 horas")]
+        public double DuracionHoras { get; set; } = 1.0;
+
+        [Required(ErrorMessage = "El cupo máximo es obligatorio")]
+        [Range(1, 1000, ErrorMessage = "El cupo debe estar entre 1 y 1000 personas")]
+        public int CupoMaximo { get; set; } = 10;
+
+        [Required(ErrorMessage = "Debe seleccionar un responsable")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un responsable válido")]
+        public int ResponsableId { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDatos();
+    }
+
+    private async Task CargarDatos()
+    {
+        try
+        {
+            cargando = true;
+            
+            // Cargar evento
+            evento = ObtenerEventoPorId.Ejecutar(EventoId);
+            if (evento == null)
+            {
+                mensajeError = "No se encontró el evento solicitado.";
+                return;
+            }
+
+            // Cargar personas para el dropdown
+            personas = ListarTodasLasPersonas.Ejecutar();
+
+            // Llenar el modelo del formulario
+            formModel = new EventoFormModel
+            {
+                Nombre = evento._nombre,
+                Descripcion = evento._descripcion,
+                FechaHoraInicio = evento._fechaHoraInicio,
+                DuracionHoras = evento._duracionHoras,
+                CupoMaximo = evento._cupoMaximo,
+                ResponsableId = evento._responsableId
+            };
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar los datos: {ex.Message}";
+            Console.WriteLine($"Error cargando datos: {ex.Message}");
+        }
+        finally
+        {
+            cargando = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task GuardarCambios()
+    {
+        try
+        {
+            guardando = true;
+            mensajeError = string.Empty;
+            mensajeExito = string.Empty;
+
+            // Obtener usuario actual para permisos
+            var usuarioActual = await ServicioAuth.ObtenerUsuarioActualAsync();
+            if (usuarioActual == null)
+            {
+                mensajeError = "Debe estar autenticado para realizar esta acción.";
+                return;
+            }
+
+            // Crear evento actualizado
+            var eventoActualizado = new EventoDeportivo(
+                formModel.Nombre,
+                formModel.Descripcion,
+                formModel.FechaHoraInicio,
+                formModel.DuracionHoras,
+                formModel.CupoMaximo,
+                formModel.ResponsableId
+            );
+            
+            // Asignar el ID del evento existente
+            eventoActualizado._id = evento._id;
+
+            // Crear validador
+            var validador = new ValidadorEventoDeportivo();
+
+            // Ejecutar caso de uso
+            ModificarEvento.Ejecutar(eventoActualizado, usuarioActual._id, validador);
+
+            mensajeExito = "Evento actualizado correctamente.";
+            
+            // Recargar datos actualizados
+            await CargarDatos();
+
+            // Opcional: Redireccionar después de un delay
+            InvokeAsync(async () => {
+                await Task.Delay(2000);
+                Volver();
+            });
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al guardar los cambios: {ex.Message}";
+            Console.WriteLine($"Error guardando evento: {ex.Message}");
+        }
+        finally
+        {
+            guardando = false;
+            StateHasChanged();
+        }
+    }
+
+    private string ObtenerFechaFin()
+    {
+        if (formModel.FechaHoraInicio != default && formModel.DuracionHoras > 0)
+        {
+            return formModel.FechaHoraInicio.AddHours(formModel.DuracionHoras).ToString("dd/MM/yyyy HH:mm");
+        }
+        return "No calculado";
+    }
+
+    private void Cancelar()
+    {
+        Volver();
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/GestionEvento");
+    }
+}

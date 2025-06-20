@@ -18,26 +18,57 @@ public class RepoReservas : IRepositorioReserva
         this._context = repo;
     }
 
+
+    public IEnumerable<Reserva> ObtenerTodos()
+    {
+        return _context.Reservas
+            .Include(r => r.Persona)          
+            .Include(r => r.EventoDeportivo)  
+            .ToList();
+    }
+
     public IEnumerable<Reserva> ObtenerPorPersona(int idPersona)
     {
-        return _context
-            .Reservas
+        return _context.Reservas
+            .Include(r => r.Persona)            
+            .Include(r => r.EventoDeportivo)    
             .Where(res => res._personaId == idPersona)
+            .ToList();
+    }
+
+    public Reserva ObtenerPorId(int id)
+    {
+        Reserva? reserva = _context.Reservas
+            .Include(r => r.Persona)            
+            .Include(r => r.EventoDeportivo) 
+            .FirstOrDefault(r => r._id == id);
+
+        if (reserva == null)
+        {
+            throw new EntidadNotFoundException();
+        }
+        return reserva;
+    }
+
+    public IEnumerable<Reserva> ObtenerPorEvento(int idEvento)
+    {
+        return _context.Reservas
+            .Include(r => r.Persona)           
+            .Include(r => r.EventoDeportivo)    
+            .Where(res => res._eventoDeportivoId == idEvento)
             .ToList();
     }
 
     public void EliminarPorPersona(int id)
     {
-        _context
-            .Reservas
+        _context.Reservas
             .Where(res => res._personaId == id)
             .ExecuteDelete();
     }
 
     public void EliminarPorEvento(int id)
     {
-        _context
-            .Reservas
+        _context.Reservas
             .Where(res => res._eventoDeportivoId == id)
             .ExecuteDelete();
     }
@@ -45,20 +76,7 @@ public class RepoReservas : IRepositorioReserva
     public void Agregar(Reserva res)
     {
         _context.Reservas.Add(res);
-
         _context.SaveChanges();
-    }
-
-    public Reserva ObtenerPorId(int id)
-    {
-        Reserva? reserva = _context
-            .Reservas
-            .Find(id);
-        if (reserva == null)
-        {
-            throw new EntidadNotFoundException();
-        }
-        return(reserva);
     }
 
     public void Actualizar(Reserva res)
@@ -90,17 +108,9 @@ public class RepoReservas : IRepositorioReserva
 
     public bool ExisteId(int idPers, int idEv)
     {
-
-        Reserva? res = _context.Reservas.FirstOrDefault(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv));
+        Reserva? res = _context.Reservas
+            .FirstOrDefault(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv));
         return (res != null);
-        // Esta debe ser la implementacion menos eficiente posible pero bueno señores, es lo que hay
-        /*
-        return _context
-        .Reservas
-        .Where(res => (res._personaId == idPers) && (res._eventoDeportivoId == idEv))
-        .ToList()
-        .Count == 1;
-        */
     }
 
     public bool ExisteId(int idRes)
@@ -117,13 +127,7 @@ public class RepoReservas : IRepositorioReserva
 
     public int GetAsistentes(int idEv)
     {
-        return _context
-        .Reservas
-        .Count(res => res._eventoDeportivoId == idEv);
-    }
-
-    public IEnumerable<Reserva> ObtenerTodos()
-    {
-        return _context.Reservas;
+        return _context.Reservas
+            .Count(res => res._eventoDeportivoId == idEv);
     }
 }

@@ -185,7 +185,6 @@
 @code {
     [Parameter]
     public int EventoId { get; set; }
-
     private EventoDeportivo? evento;
     private List<Persona> personas = new List<Persona>();
     private EventoFormModel formModel = new();
@@ -233,7 +232,6 @@
         {
             cargando = true;
             
-            // Cargar evento
             evento = ObtenerEventoPorId.Ejecutar(EventoId);
             if (evento == null)
             {
@@ -241,10 +239,9 @@
                 return;
             }
 
-            // Cargar personas para el dropdown
+
             personas = ListarTodasLasPersonas.Ejecutar();
 
-            // Llenar el modelo del formulario
             formModel = new EventoFormModel
             {
                 Nombre = evento._nombre,
@@ -275,7 +272,6 @@
             mensajeError = string.Empty;
             mensajeExito = string.Empty;
 
-            // Obtener usuario actual para permisos
             var usuarioActual = await ServicioAuth.ObtenerUsuarioActualAsync();
             if (usuarioActual == null)
             {
@@ -283,7 +279,6 @@
                 return;
             }
 
-            // Crear evento actualizado
             var eventoActualizado = new EventoDeportivo(
                 formModel.Nombre,
                 formModel.Descripcion,
@@ -292,22 +287,19 @@
                 formModel.CupoMaximo,
                 formModel.ResponsableId
             );
-            
-            // Asignar el ID del evento existente
-            eventoActualizado._id = evento._id;
+  
+            if (evento != null) {
+                eventoActualizado._id = evento._id;
+            }
 
-            // Crear validador
             var validador = new ValidadorEventoDeportivo();
 
-            // Ejecutar caso de uso
             ModificarEvento.Ejecutar(eventoActualizado, usuarioActual._id, validador);
 
             mensajeExito = "Evento actualizado correctamente.";
             
-            // Recargar datos actualizados
             await CargarDatos();
 
-            // Opcional: Redireccionar después de un delay
             InvokeAsync(async () => {
                 await Task.Delay(2000);
                 Volver();

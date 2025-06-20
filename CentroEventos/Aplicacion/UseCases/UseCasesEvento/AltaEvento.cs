@@ -13,10 +13,6 @@ public class AltaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioPe
     {
         try
         {
-            /*
-            if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoAlta))
-                throw new FalloAutorizacionException();
-                */
 
             validadorEventoDeportivo.Validar(evento, repositorioPersona);
 

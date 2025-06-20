@@ -13,10 +13,7 @@ public class BajaEvento (IRepositorioEventoDeportivo repositorio, IRepositorioRe
     {
         try
         {
-            /*
-            if (!servicioAuth.PoseeElPermiso(idUsuario, Permiso.EventoBaja))
-                throw new FalloAutorizacionException();
-                */
+
             if (!await repositorio.ContieneAsync(id))
                 throw new EntidadNotFoundException();
 

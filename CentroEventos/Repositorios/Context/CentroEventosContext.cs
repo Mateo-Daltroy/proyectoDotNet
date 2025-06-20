@@ -17,21 +17,20 @@ public class CentroEventoContext : DbContext
     {
         optionsBuilder.UseSqlite("data source=CentroEventos.sqlite");
     }
-
+     // CHICOS ESTO SERIAN COMO LAS MIGRACIONES Q MANDE A NOTION
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-         // ===== CONFIGURACIÓN DE LA ENTIDAD PERMISO =====
+         // ===== CONFIGURACION DE LA ENTIDAD PERMISO =====
         modelBuilder.Entity<Permiso>(entity =>
         {
             entity.HasKey(p => p._id);
             
             entity.Property(p => p._nombre).IsRequired().HasMaxLength(100);
             
-            // Índice único para el nombre del permiso
             entity.HasIndex(p => p._nombre).IsUnique();
         });
 
-        // ===== CONFIGURACIÓN DE LA ENTIDAD PERSONA =====
+        // ===== CONFIGURACION DE LA ENTIDAD PERSONA =====
         modelBuilder.Entity<Persona>(entity =>
         {
             entity.HasKey(p => p._id);
@@ -63,12 +62,12 @@ public class CentroEventoContext : DbContext
             
         });
 
-        // ===== CONFIGURACIÓN DE LA ENTIDAD EVENTO DEPORTIVO =====
+        // ===== CONFIGURACION DE LA ENTIDAD EVENTO DEPORTIVO =====
         modelBuilder.Entity<EventoDeportivo>(entity =>
         {
             entity.HasKey(e => e._id);
             
-            // Propiedades básicas
+
             entity.Property(e => e._nombre).IsRequired().HasMaxLength(200);
             entity.Property(e => e._descripcion).IsRequired().HasMaxLength(500);
             entity.Property(e => e._fechaHoraInicio).IsRequired();
@@ -84,28 +83,28 @@ public class CentroEventoContext : DbContext
                   .IsRequired();
         });
 
-        // ===== CONFIGURACIÓN DE LA ENTIDAD RESERVA =====
+        // ===== CONFIGURACION DE LA ENTIDAD RESERVA =====
         modelBuilder.Entity<Reserva>(entity =>
         {
             entity.HasKey(r => r._id);
             
-            // Propiedades básicas
+
             entity.Property(r => r._personaId).IsRequired();
             entity.Property(r => r._eventoDeportivoId).IsRequired();
             entity.Property(r => r._fechaAltaReserva).IsRequired();
             
-            // Configuración del enum Asistencia
+
             entity.Property(r => r._estadoAsistencia)
                   .HasConversion<int>();
             
-            // RELACIÓN CON PROPIEDADES DE NAVEGACIÓN: Reserva -> Persona
+
             entity.HasOne(r => r.Persona)
                   .WithMany(p => p.Reservas)
                   .HasForeignKey(r => r._personaId)
                   .OnDelete(DeleteBehavior.Cascade)
                   .IsRequired();
             
-            // RELACIÓN CON PROPIEDADES DE NAVEGACIÓN: Reserva -> EventoDeportivo  
+
             entity.HasOne(r => r.EventoDeportivo)
                   .WithMany(e => e.Reservas)
                   .HasForeignKey(r => r._eventoDeportivoId)

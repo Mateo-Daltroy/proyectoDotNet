@@ -13,13 +13,11 @@ public class AltaReserva (IRepositorioReserva repositorio, IRepositorioPersona _
         Console.WriteLine("Adentro del metodo");
         try
         {
-            //if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaAlta)) { throw new FalloAutorizacionException(); }
             string mensaje = "";
             if (!ValidadorReserva.validarDatos(idPers, idEv, DateTime.Now, repo, _repoEv, _repoPers, ref mensaje))
             {
                 throw new ValidacionException(mensaje);
             }
-            //int id = _gestor.ObtenerNuevoId(_pathId);
             Reserva resGenerada = new(idPers, idEv);
             Console.WriteLine("che pero esto no tiene nigun sentido");
             this.repo.Agregar(resGenerada);

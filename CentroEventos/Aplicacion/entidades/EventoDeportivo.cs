@@ -8,7 +8,6 @@ namespace Aplicacion.entidades
 {
     public class EventoDeportivo
     {
-        // Propiedades originales
         [Key] public int _id { get; set;}
         public string _nombre { get; set; }
         public string _descripcion { get; set; }
@@ -17,11 +16,9 @@ namespace Aplicacion.entidades
         public int _cupoMaximo { get; set; }
         public int _responsableId { get; set; }
 
-        // NUEVAS PROPIEDADES DE NAVEGACIÓN
-        public virtual Persona ?Responsable { get; set; } // El responsable del evento
-        public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>(); // Todas las reservas del evento
+        public virtual Persona ?Responsable { get; set; } //responsable del evento
+        public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>(); //reservas del evento
 
-        // CONSTRUCTOR SIN ID (original)
         public EventoDeportivo(
             string nombre,
             string descripcion,
@@ -36,14 +33,14 @@ namespace Aplicacion.entidades
             this._duracionHoras = duracionHoras;
             this._cupoMaximo = cupoMaximo;
             this._responsableId = responsableId;
-            this.Reservas = new List<Reserva>(); // Inicializar la colección
+            this.Reservas = new List<Reserva>(); 
         }
 
         protected EventoDeportivo() // Lo pide Entity Framework Core
         {
             _nombre = string.Empty;
             _descripcion = string.Empty;
-            Reservas = new List<Reserva>(); // Inicializar la colección
+            Reservas = new List<Reserva>(); 
         }            
 
         // Métodos originales
@@ -57,7 +54,6 @@ namespace Aplicacion.entidades
             return participantesActuales < _cupoMaximo;
         }
 
-        // NUEVO MÉTODO usando propiedades de navegación
         public bool TieneCupoDisponible()
         {
             return Reservas.Count < _cupoMaximo;

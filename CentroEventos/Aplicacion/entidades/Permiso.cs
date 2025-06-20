@@ -7,10 +7,8 @@ namespace Aplicacion.entidades
         [Key] public int _id { get; set; }
         public string _nombre { get; set; } = string.Empty;
         
-        // Propiedad de navegación hacia personas que tienen este permiso
         public virtual ICollection<Persona> Personas { get; set; } = new List<Persona>();
 
-        // Constructor con parámetros
         public Permiso(string nombre)
         {
             _nombre = nombre;

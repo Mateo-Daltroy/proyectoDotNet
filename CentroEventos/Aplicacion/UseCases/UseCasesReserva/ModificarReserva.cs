@@ -11,7 +11,6 @@ public class ModificarReserva (IRepositorioReserva repositorio) : ReservaUseCase
     {
         try
         {
-            //if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaModificacion)) { throw new FalloAutorizacionException(); }
             if (!repo.ExisteId(Res._id)) { throw new EntidadNotFoundException(); }
             repo.Actualizar(Res);
         }

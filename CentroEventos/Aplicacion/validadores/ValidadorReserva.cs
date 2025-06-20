@@ -12,13 +12,13 @@ public static class ValidadorReserva
         {
             mens = new EntidadNotFoundException().Message;
             return false;
-            //throw new EntidadNotFoundException();
+
         }
         if (repoRes.ExisteId(idPers, idEv))
         {
             mens = new DuplicadoException().Message;
             return false;
-            //throw new DuplicadoException();
+
         }
         if (repoRes.GetAsistentes(idEv) >= repoEv.ObtenerPorIdAsync(idEv).Result._cupoMaximo)
         {

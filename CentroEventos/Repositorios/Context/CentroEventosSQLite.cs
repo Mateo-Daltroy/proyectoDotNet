@@ -7,9 +7,8 @@ namespace Repositorios.Context;
 public static class CentroEventosSQLite
    // Esta clase es para inicializar la base de datos SQLite
    // y crearla si no existe.
-   // Se debe llamar al método Inicializar() al inicio de la aplicación.
 
-   // Requiere que el paquete NuGet Microsoft.EntityFrameworkCore.Sqlite esté instalado.
+   // Requiere paquete NuGet Microsoft.EntityFrameworkCore.Sqlite 
 
 {
    public static void Inicializar()

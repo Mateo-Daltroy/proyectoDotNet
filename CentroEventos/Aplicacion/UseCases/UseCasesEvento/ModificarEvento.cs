@@ -12,10 +12,6 @@ public class ModificarEvento (IRepositorioEventoDeportivo repositorio, IReposito
     {
         try
         {
-            /*
-            if (!_auth.PoseeElPermiso(idUsuario, Permiso.EventoModificacion))
-                throw new FalloAutorizacionException();
-                */
 
             if (!repositorio.ContieneAsync(evento._id).Result)
                 throw new EntidadNotFoundException();

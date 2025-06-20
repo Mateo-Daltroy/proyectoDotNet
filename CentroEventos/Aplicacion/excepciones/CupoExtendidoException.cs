@@ -4,7 +4,7 @@ namespace Aplicacion.excepciones;
 
 public class CupoExtendidoException : Exception
 {
-    // Constructor sin parámetros
+    // Constructor sin parametros
     public CupoExtendidoException() 
         : base("Reserva invalida, el cupo ya esta lleno.") { }
 

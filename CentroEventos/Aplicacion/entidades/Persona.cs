@@ -23,11 +23,10 @@ public class Persona
     public string _contraseña { get; set; }
 
 
-    // NUEVAS PROPIEDADES DE NAVEGACIÓN
     public virtual ICollection<Permiso> _permisos { get; set; } = new List<Permiso>();
     public virtual ICollection<Reserva> Reservas { get; set; } = new List<Reserva>(); // Sus reservas
 
-    // Constructor original
+
     public Persona(string dni, string nombre, string apellido, string mail, string telefono, string contraseña)
     {
         _dni = dni;
@@ -38,13 +37,13 @@ public class Persona
         _contraseña = contraseña;
 
         _permisos = new List<Permiso>(); // 
-        // Inicializar las nuevas colecciones
+
         Reservas = new List<Reserva>();
     }
 
     protected Persona()
     {
-        // Constructor protegido sin parametros para Entity Framework Core
+
         _dni = string.Empty;
         _nombre = string.Empty;
         _apellido = string.Empty;
@@ -52,12 +51,11 @@ public class Persona
         _telefono = string.Empty;
         _contraseña = string.Empty;
 
-        _permisos = new List<Permiso>(); // 
-        // Inicializar las nuevas colecciones
+        _permisos = new List<Permiso>();
+
         Reservas = new List<Reserva>();
     }
 
-    // Métodos originales
     public override String ToString()
     {
         return $"Dni: {this._dni}, Nombre: {this._nombre}, Apellido: {this._apellido}, Mail: {this._mail}, Telefono: {this._telefono}";

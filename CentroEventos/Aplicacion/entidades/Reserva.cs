@@ -14,14 +14,13 @@ public class Reserva
     public DateTime _fechaAltaReserva { get; set; }
     public Asistencia _estadoAsistencia { get; set; }
 
-   //NUEVAS PROPIEDADES DE NAVEGACIÓN
+
     public virtual Persona ?Persona { get; set; } // La persona que reservó
     public virtual EventoDeportivo ?EventoDeportivo { get; set; } // El evento reservado
 
     public Reserva (int unaPer, int elEv) 
     {
-        // No se deberian crear reservas directamente desde new Reserva, 
-        // usar el metodo de CreadorReservas, que asegura una validacion apropiada
+
         this._personaId = unaPer;
         this._eventoDeportivoId = elEv;
         this._fechaAltaReserva = DateTime.Now;

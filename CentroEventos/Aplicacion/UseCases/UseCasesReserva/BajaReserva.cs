@@ -9,7 +9,6 @@ public class BajaReserva (IRepositorioReserva repositorio) : ReservaUseCase(repo
     {
         try
         {
-            //if (!_auth.PoseeElPermiso(idUser, Permiso.ReservaBaja)) { throw new FalloAutorizacionException(); }
             if (!repo.ExisteId(idRes)) { throw new EntidadNotFoundException(); }
             repo.Eliminar(idRes);
         }

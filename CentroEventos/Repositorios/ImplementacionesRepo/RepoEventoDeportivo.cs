@@ -19,7 +19,7 @@ public class RepoEventoDeportivo : IRepositorioEventoDeportivo
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    // Obtener evento con todas sus reservas y personas
+
     public async Task<EventoDeportivo?> ObtenerEventoCompleto(int eventoId)
     {
         try 
@@ -28,7 +28,7 @@ public class RepoEventoDeportivo : IRepositorioEventoDeportivo
                 .Include(e => e.Reservas)
                     .ThenInclude(r => r.Persona)
                 .Include(e => e.Responsable)
-                .FirstOrDefaultAsync(e => e._id == eventoId); // ✅ Async version
+                .FirstOrDefaultAsync(e => e._id == eventoId); 
         } 
         catch (Exception ex)
         {
@@ -72,7 +72,7 @@ public class RepoEventoDeportivo : IRepositorioEventoDeportivo
                 throw new EntidadNotFoundException($"Evento con ID {ev._id} no encontrado para actualizar.");
             }
 
-            // Actualizar propiedades
+
             eventoExistente._nombre = ev._nombre;
             eventoExistente._descripcion = ev._descripcion;
             eventoExistente._fechaHoraInicio = ev._fechaHoraInicio;

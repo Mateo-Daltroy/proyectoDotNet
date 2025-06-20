@@ -8,6 +8,7 @@
 @inject Aplicacion.interfacesServ.IServicioAutenticacion servicioAuth
 @inject NavigationManager Navigation
 @inject IRepositorioPersona ServicioPersona
+@inject PersonaPoseeElPermiso personaPoseeElPermiso
 
 <h1> Gestion de Usuarios </h1>
 @if (UsuarioActual != null)
@@ -155,10 +156,13 @@ else
             Console.WriteLine("hubo un error con DialogoConfirmacion");
             return;
         }
-        personaAOperar = persona;
-        mensajeDialogo = $"¿Seguro que quieres eliminar a {persona._nombre}?";
-        accionPendiente = "eliminar";
-        dialogoConfirmacion.Mostrar();
+        if (persona != null)
+        {
+            personaAOperar = persona;
+            mensajeDialogo = $"¿Seguro que quieres eliminar a {persona._nombre}?";
+            accionPendiente = "eliminar";
+            dialogoConfirmacion.Mostrar();
+        }
     }
 
     private void EditarPersonaDC()
@@ -261,8 +265,10 @@ else
             this.personas = new ListarTodasLasPersonas(ServicioPersona).Ejecutar();
             this.UsuarioActual = servicioAuth.ObtenerUsuarioActualAsync().Result;
 
-            permisoModificacionUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioModificacion");
-            permisoEliminarUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioBaja");
+            permisoModificacionUsuario = personaPoseeElPermiso.Ejecutar(UsuarioActual._id, "UsuarioModificacion");
+            permisoEliminarUsuario = personaPoseeElPermiso.Ejecutar(UsuarioActual._id, "UsuarioBaja");
+            //permisoModificacionUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioModificacion");
+            //permisoEliminarUsuario = ServicioPersona.PoseeElPermiso(UsuarioActual._id, "UsuarioBaja");
             this.soloMiInfo = false;
 
             StateHasChanged();

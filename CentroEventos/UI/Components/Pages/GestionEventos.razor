@@ -14,6 +14,7 @@
 @inject IRepositorioEventoDeportivo ServicioEvento
 @inject IRepositorioPersona ServicioPersona
 @inject BajaEvento BajaEvento
+@inject ListarTodasLasReservas ListarTodasLasReservas
 
 <h1>Gestión de Eventos Deportivos</h1>
 
@@ -221,7 +222,6 @@ else
     {
         try
         {
-            // Obtener usuario actual para permisos
             var usuarioActual = await servicioAuth.ObtenerUsuarioActualAsync();
             if (usuarioActual == null)
             {
@@ -229,10 +229,8 @@ else
                 return;
             }
 
-            // ✅ USAR CASO DE USO: BajaEvento (elimina evento Y reservas asociadas)
             await BajaEvento.Ejecutar(evento._id, usuarioActual._id);
             
-            // Recargar lista después de eliminar
             await CargarDatos();
             
             Console.WriteLine($"Evento '{evento._nombre}' eliminado correctamente");
@@ -292,8 +290,20 @@ else
 
     private int GetCupoDisponible(EventoDeportivo evento)
     {
-        // Aquí podrías cargar las reservas del evento si las necesitas
-        // Por ahora retornamos el cupo máximo menos un valor estimado
-        return evento._cupoMaximo; // Temporal - deberías cargar las reservas reales
+        try
+        {
+            // Obtener todas las reservas y filtrar por evento
+            var todasLasReservas = ListarTodasLasReservas.Ejecutar();
+            var reservasDelEvento = todasLasReservas
+                .Where(r => r._eventoDeportivoId == evento._id)
+                .Count();
+            
+            return Math.Max(0, evento._cupoMaximo - reservasDelEvento);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error obteniendo cupo: {ex.Message}");
+            return evento._cupoMaximo; 
+        }
     }
 }

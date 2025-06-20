@@ -70,6 +70,8 @@ public static class CentroEventosSQLite
         persona1._permisos.Add(permisoCrearReserva);
         persona1._permisos.Add(context.Permisos.First(p => p._nombre == "UsuarioModificacion"));
         persona1._permisos.Add(context.Permisos.First(p => p._nombre == "UsuarioBaja"));
+        persona1._permisos.Add(context.Permisos.First(p => p._nombre == "ReservaModificacion"));
+        persona1._permisos.Add(context.Permisos.First(p => p._nombre == "ReservaBaja"));
 
         context.Personas.Add(persona1);
         context.SaveChanges();
